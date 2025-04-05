@@ -3,6 +3,7 @@ import morgan from "morgan";
 
 import { env } from "config/env";
 import { errorMiddleware } from "middlewares/error.middleware";
+import { initializeDatabase } from "config/database";
 
 import { HttpError } from "errors/http.error";
 
@@ -10,6 +11,7 @@ class App {
   private app = express();
 
   constructor() {
+    initializeDatabase();
     this.initializeMiddlewares();
     this.initializeErrorHandling();
   }
