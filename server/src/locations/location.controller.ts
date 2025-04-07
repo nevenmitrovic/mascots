@@ -20,16 +20,17 @@ export class LocationController extends Controller {
     this.router.post(
       `${this.path}`,
       validationMiddleware(this.schema),
-      (req: Request, res: Response, _next: NextFunction) =>
-        this.createLocation(req, res)
+      (req: Request, res: Response, next: NextFunction) =>
+        this.createLocation(req, res, next)
     );
   }
 
-  async createLocation(
-    req: Request,
-    res: Response
-  ): Promise<Response<any, Record<string, any>>> {
-    const newLocation = await this.locationService.createLocation(req.body);
-    return res.status(201).json(newLocation);
+  async createLocation(req: Request, res: Response, next: NextFunction) {
+    try {
+      const newLocation = await this.locationService.createLocation(req.body);
+      return res.status(201).json(newLocation);
+    } catch (err) {
+      next(err);
+    }
   }
 }

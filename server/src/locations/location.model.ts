@@ -23,6 +23,7 @@ const locationSchema = new Schema<ILocation>(
     location: {
       type: String,
       required: true,
+      unique: true,
     },
     name: {
       type: String,
