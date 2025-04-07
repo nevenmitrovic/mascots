@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
+import helmet from "helmet";
 
 import { env } from "config/env";
 import { errorMiddleware } from "middlewares/error.middleware";
@@ -20,6 +21,7 @@ class App {
   private initializeMiddlewares(): void {
     this.app.use(morgan("combined"));
     this.app.use(express.json());
+    this.app.use(helmet());
   }
 
   private initializeControllers(controllers: Controller[]): void {
