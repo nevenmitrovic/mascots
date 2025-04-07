@@ -13,6 +13,11 @@ export interface ILocationDocument extends ILocation, Document {
   updatedAt: Date;
 }
 
+export interface ILocationResponse {
+  message: string;
+  data: ILocation;
+}
+
 const locationSchema = new Schema<ILocation>(
   {
     location: {
