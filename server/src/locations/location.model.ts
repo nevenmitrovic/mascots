@@ -10,10 +10,9 @@ export interface ILocation {
 export interface ILocationDocument extends ILocation, Document {
   _id: Types.ObjectId;
   createdAt: Date;
-  updatedAt: Date;
 }
 
-export interface ILocationResponse {
+export interface ILocationPostResponse {
   message: string;
   data: ILocation;
 }
@@ -38,7 +37,13 @@ const locationSchema = new Schema<ILocation>(
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: {
+      createdAt: true,
+      updatedAt: false,
+    },
+    versionKey: false,
+  }
 );
 
 export const LocationModel = model("Location", locationSchema);

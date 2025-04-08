@@ -1,6 +1,11 @@
 import { MongoServerError } from "mongodb";
+import { Types } from "mongoose";
 
-import { ILocation, LocationModel } from "locations/location.model";
+import {
+  ILocation,
+  LocationModel,
+  ILocationDocument,
+} from "locations/location.model";
 import { DatabaseError } from "errors/database.error";
 import { UniqueConstraintError } from "errors/unique-constraint.error";
 
@@ -25,12 +30,24 @@ export class LocationRepository {
     }
   }
 
-  getLocations(): Promise<ILocation[]> {
+  getLocations(): Promise<ILocationDocument[]> {
     try {
-      return this.locationModel.find({}, { __v: 0 });
+      return this.locationModel.find({});
     } catch (err) {
       if (err instanceof MongoServerError) {
         throw new DatabaseError("failed to get locations: MongooseError");
+      }
+
+      throw new Error("unknown error in location repository");
+    }
+  }
+
+  getLocationById(id: Types.ObjectId): Promise<ILocationDocument | null> {
+    try {
+      return this.locationModel.findById(id);
+    } catch (err) {
+      if (err instanceof MongoServerError) {
+        throw new DatabaseError("failed to get location by id: MongooseError");
       }
 
       throw new Error("unknown error in location repository");

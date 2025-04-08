@@ -29,6 +29,12 @@ export class LocationController extends Controller {
       (req: Request, res: Response, next: NextFunction) =>
         this.getLocations(req, res, next)
     );
+
+    this.router.get(
+      `${this.path}/:id`,
+      (req: Request, res: Response, next: NextFunction) =>
+        this.getLocationById(req, res, next)
+    );
   }
 
   async createLocation(req: Request, res: Response, next: NextFunction) {
@@ -44,6 +50,20 @@ export class LocationController extends Controller {
     try {
       const locations = await this.locationService.getLocations();
       return res.status(200).json(locations);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getLocationById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        throw new BadRequestError("missing id in request params");
+      }
+
+      const location = await this.locationService.getLocationById(id);
+      return res.status(200).json(location);
     } catch (err) {
       next(err);
     }
