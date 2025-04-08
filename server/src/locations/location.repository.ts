@@ -18,11 +18,21 @@ export class LocationRepository {
       }
 
       if (err instanceof MongoServerError) {
-        console.error(err);
         throw new DatabaseError("failed to create location: MongooseError");
       }
 
-      console.error(err);
+      throw new Error("unknown error in location repository");
+    }
+  }
+
+  getLocations(): Promise<ILocation[]> {
+    try {
+      return this.locationModel.find({}, { __v: 0 });
+    } catch (err) {
+      if (err instanceof MongoServerError) {
+        throw new DatabaseError("failed to get locations: MongooseError");
+      }
+
       throw new Error("unknown error in location repository");
     }
   }

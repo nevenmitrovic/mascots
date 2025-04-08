@@ -1,4 +1,4 @@
-import { Router, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import { LocationService } from "locations/location.service";
 import { ILocation } from "locations/location.model";
@@ -23,12 +23,27 @@ export class LocationController extends Controller {
       (req: Request, res: Response, next: NextFunction) =>
         this.createLocation(req, res, next)
     );
+
+    this.router.get(
+      `${this.path}`,
+      (req: Request, res: Response, next: NextFunction) =>
+        this.getLocations(req, res, next)
+    );
   }
 
   async createLocation(req: Request, res: Response, next: NextFunction) {
     try {
       const newLocation = await this.locationService.createLocation(req.body);
       return res.status(201).json(newLocation);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getLocations(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const locations = await this.locationService.getLocations();
+      return res.status(200).json(locations);
     } catch (err) {
       next(err);
     }
