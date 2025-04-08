@@ -12,7 +12,7 @@ export interface ILocationDocument extends ILocation, Document {
   createdAt: Date;
 }
 
-export interface ILocationPostResponse {
+export interface ILocationMessageResponse {
   message: string;
   data: ILocation;
 }

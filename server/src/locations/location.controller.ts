@@ -46,6 +46,12 @@ export class LocationController extends Controller {
       (req: Request, res: Response, next: NextFunction) =>
         this.updateLocation(req, res, next)
     );
+
+    this.router.delete(
+      `${this.path}/:id`,
+      (req: Request, res: Response, next: NextFunction) =>
+        this.deleteLocation(req, res, next)
+    );
   }
 
   async createLocation(req: Request, res: Response, next: NextFunction) {
@@ -92,6 +98,20 @@ export class LocationController extends Controller {
         req.body
       );
       return res.status(200).json(updatedLocation);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteLocation(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        throw new BadRequestError("missing id in request params");
+      }
+
+      const deletedLocation = await this.locationService.deleteLocation(id);
+      return res.status(200).json(deletedLocation);
     } catch (err) {
       next(err);
     }

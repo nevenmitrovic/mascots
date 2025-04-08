@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 import { LocationRepository } from "locations/location.repository";
 import {
-  ILocationPostResponse,
+  ILocationMessageResponse,
   ILocation,
   ILocationDocument,
 } from "locations/location.model";
@@ -16,7 +16,7 @@ export class LocationService {
 
   async createLocation(
     locationData: ILocation
-  ): Promise<ILocationPostResponse> {
+  ): Promise<ILocationMessageResponse> {
     try {
       const location = await this.locationRepository.createLocation(
         locationData
@@ -59,7 +59,7 @@ export class LocationService {
   async updateLocation(
     id: string,
     data: Partial<ILocation>
-  ): Promise<ILocationPostResponse> {
+  ): Promise<ILocationMessageResponse> {
     try {
       if (!Types.ObjectId.isValid(id)) {
         throw new BadRequestError("invalid ID format");
@@ -75,6 +75,25 @@ export class LocationService {
       }
 
       return { message: "location updated successfully", data: location };
+    } catch (err) {
+      const error = this.errorHandler.handleError(err as Error);
+      throw error;
+    }
+  }
+
+  async deleteLocation(id: string): Promise<ILocationMessageResponse> {
+    try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid ID format");
+      }
+
+      const objectId = new Types.ObjectId(id);
+      const location = await this.locationRepository.deleteLocation(objectId);
+      if (!location) {
+        throw new NotFoundError("location not found");
+      }
+
+      return { message: "location deleted successfully", data: location };
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
       throw error;

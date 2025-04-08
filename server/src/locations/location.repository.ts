@@ -77,4 +77,16 @@ export class LocationRepository {
       throw new Error("unknown error in location repository");
     }
   }
+
+  async deleteLocation(id: Types.ObjectId): Promise<ILocationDocument | null> {
+    try {
+      return await this.locationModel.findByIdAndDelete(id);
+    } catch (err) {
+      if (err instanceof MongoServerError) {
+        throw new DatabaseError("failed to delete location: MongooseError");
+      }
+
+      throw new Error("unknown error in location repository");
+    }
+  }
 }
