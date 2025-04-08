@@ -37,7 +37,7 @@ export class LocationService {
     }
   }
 
-  async getLocationById(id: string): Promise<ILocationDocument | null> {
+  async getLocationById(id: string): Promise<ILocationDocument> {
     try {
       if (!Types.ObjectId.isValid(id)) {
         throw new BadRequestError("invalid ID format");
@@ -50,6 +50,31 @@ export class LocationService {
       }
 
       return location;
+    } catch (err) {
+      const error = this.errorHandler.handleError(err as Error);
+      throw error;
+    }
+  }
+
+  async updateLocation(
+    id: string,
+    data: Partial<ILocation>
+  ): Promise<ILocationPostResponse> {
+    try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid ID format");
+      }
+
+      const objectId = new Types.ObjectId(id);
+      const location = await this.locationRepository.updateLocation(
+        objectId,
+        data
+      );
+      if (!location) {
+        throw new NotFoundError("location not found");
+      }
+
+      return { message: "location updated successfully", data: location };
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
       throw error;

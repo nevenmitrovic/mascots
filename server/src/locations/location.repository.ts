@@ -53,4 +53,28 @@ export class LocationRepository {
       throw new Error("unknown error in location repository");
     }
   }
+
+  async updateLocation(
+    id: Types.ObjectId,
+    data: Partial<ILocation>
+  ): Promise<ILocationDocument | null> {
+    try {
+      return await this.locationModel.findByIdAndUpdate(id, data, {
+        new: true,
+        timestamps: false,
+      });
+    } catch (err) {
+      if (err instanceof MongoServerError && err.code === 11000) {
+        const field = Object.keys(err.keyPattern)[0];
+        const value = Object.values(err.keyValue)[0];
+        throw new UniqueConstraintError(field, value);
+      }
+
+      if (err instanceof MongoServerError) {
+        throw new DatabaseError("failed to update location: MongooseError");
+      }
+
+      throw new Error("unknown error in location repository");
+    }
+  }
 }
