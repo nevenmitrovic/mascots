@@ -9,12 +9,12 @@ export interface ILocation {
 
 export interface ILocationDocument extends ILocation {
   _id: string;
-  createdAt: Date;
+  createdAt?: Date;
 }
 
 export interface ILocationMessageResponse {
   message: string;
-  data: ILocation;
+  data: ILocationDocument;
 }
 
 const locationSchema = new Schema<ILocation>(

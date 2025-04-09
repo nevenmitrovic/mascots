@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 import { LocationRepository } from "locations/location.repository";
 import {
   ILocationMessageResponse,
@@ -37,6 +39,10 @@ export class LocationService {
 
   async getLocationById(id: string): Promise<ILocationDocument> {
     try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid id");
+      }
+
       const location = await this.locationRepository.getLocationById(id);
       if (!location) {
         throw new NotFoundError("location not found");
@@ -72,6 +78,10 @@ export class LocationService {
 
   async deleteLocation(id: string): Promise<ILocationMessageResponse> {
     try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid id");
+      }
+
       const location = await this.locationRepository.deleteLocation(id);
       if (!location) {
         throw new NotFoundError("location not found");

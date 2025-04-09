@@ -11,9 +11,13 @@ import { UniqueConstraintError } from "errors/unique-constraint.error";
 export class LocationRepository {
   private locationModel = LocationModel;
 
-  async createLocation(locationData: ILocation): Promise<ILocation> {
+  async createLocation(locationData: ILocation): Promise<ILocationDocument> {
     try {
-      return await this.locationModel.create(locationData);
+      const res = await this.locationModel.create(locationData);
+      return {
+        ...res.toObject(),
+        _id: res._id.toString(),
+      } as ILocationDocument;
     } catch (err) {
       if (err instanceof MongoServerError && err.code === 11000) {
         const field = Object.keys(err.keyPattern)[0];
