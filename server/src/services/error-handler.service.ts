@@ -1,7 +1,7 @@
 import { HttpError } from "errors/http.error";
 import { DatabaseError } from "errors/database.error";
 import { UniqueConstraintError } from "errors/unique-constraint.error";
-import { BadRequestError } from "errors/bad-request.error.js";
+import { BadRequestError } from "errors/bad-request.error";
 import { NotFoundError } from "errors/not-found.error";
 import { ConflictError } from "errors/conflict.error";
 import { ForbiddenError } from "errors/forbidden.error";

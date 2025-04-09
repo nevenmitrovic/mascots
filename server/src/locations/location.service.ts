@@ -1,5 +1,3 @@
-import { Types } from "mongoose";
-
 import { LocationRepository } from "locations/location.repository";
 import {
   ILocationMessageResponse,
@@ -7,7 +5,7 @@ import {
   ILocationDocument,
 } from "locations/location.model";
 import { ErrorHandlerService } from "services/error-handler.service";
-import { BadRequestError } from "errors/bad-request.error.js";
+import { BadRequestError } from "errors/bad-request.error";
 import { NotFoundError } from "errors/not-found.error";
 
 export class LocationService {
@@ -39,12 +37,7 @@ export class LocationService {
 
   async getLocationById(id: string): Promise<ILocationDocument> {
     try {
-      if (!Types.ObjectId.isValid(id)) {
-        throw new BadRequestError("invalid ID format");
-      }
-
-      const objectId = new Types.ObjectId(id);
-      const location = await this.locationRepository.getLocationById(objectId);
+      const location = await this.locationRepository.getLocationById(id);
       if (!location) {
         throw new NotFoundError("location not found");
       }
@@ -61,15 +54,11 @@ export class LocationService {
     data: Partial<ILocation>
   ): Promise<ILocationMessageResponse> {
     try {
-      if (!Types.ObjectId.isValid(id)) {
-        throw new BadRequestError("invalid ID format");
+      if (!data) {
+        throw new BadRequestError("not provided data");
       }
 
-      const objectId = new Types.ObjectId(id);
-      const location = await this.locationRepository.updateLocation(
-        objectId,
-        data
-      );
+      const location = await this.locationRepository.updateLocation(id, data);
       if (!location) {
         throw new NotFoundError("location not found");
       }
@@ -83,12 +72,7 @@ export class LocationService {
 
   async deleteLocation(id: string): Promise<ILocationMessageResponse> {
     try {
-      if (!Types.ObjectId.isValid(id)) {
-        throw new BadRequestError("invalid ID format");
-      }
-
-      const objectId = new Types.ObjectId(id);
-      const location = await this.locationRepository.deleteLocation(objectId);
+      const location = await this.locationRepository.deleteLocation(id);
       if (!location) {
         throw new NotFoundError("location not found");
       }

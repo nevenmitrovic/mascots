@@ -7,8 +7,8 @@ export interface ILocation {
   address: string;
 }
 
-export interface ILocationDocument extends ILocation, Document {
-  _id: Types.ObjectId;
+export interface ILocationDocument extends ILocation {
+  _id: string;
   createdAt: Date;
 }
 

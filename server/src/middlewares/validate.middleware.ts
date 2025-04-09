@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AnyObjectSchema, ValidationError } from "yup";
 
-import { BadRequestError } from "errors/bad-request.error.js";
+import { BadRequestError } from "errors/bad-request.error";
 
 export const validationMiddleware =
   (schema: AnyObjectSchema) =>

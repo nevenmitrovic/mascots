@@ -8,7 +8,7 @@ import {
   locationSchema,
   locationUpdateSchema,
 } from "locations/location.validate";
-import { BadRequestError } from "errors/bad-request.error.js";
+import { BadRequestError } from "errors/bad-request.error";
 
 export class LocationController extends Controller {
   private readonly locationService = new LocationService();

@@ -1,5 +1,4 @@
 import { MongoServerError } from "mongodb";
-import { Types } from "mongoose";
 
 import {
   ILocation,
@@ -42,7 +41,7 @@ export class LocationRepository {
     }
   }
 
-  getLocationById(id: Types.ObjectId): Promise<ILocationDocument | null> {
+  getLocationById(id: string): Promise<ILocationDocument | null> {
     try {
       return this.locationModel.findById(id);
     } catch (err) {
@@ -55,7 +54,7 @@ export class LocationRepository {
   }
 
   async updateLocation(
-    id: Types.ObjectId,
+    id: string,
     data: Partial<ILocation>
   ): Promise<ILocationDocument | null> {
     try {
@@ -78,7 +77,7 @@ export class LocationRepository {
     }
   }
 
-  async deleteLocation(id: Types.ObjectId): Promise<ILocationDocument | null> {
+  async deleteLocation(id: string): Promise<ILocationDocument | null> {
     try {
       return await this.locationModel.findByIdAndDelete(id);
     } catch (err) {
