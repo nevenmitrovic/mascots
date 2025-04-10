@@ -1,15 +1,18 @@
-import { Request, Response, NextFunction } from "express";
 import request from "supertest";
+import { NextFunction, Request, Response } from "express";
 import express from "express";
 import { LocationController } from "../locations/location.controller";
 import { LocationService } from "../locations/location.service";
 import { ErrorHandlerService } from "../services/error-handler.service";
-import {
-  ILocation,
-  ILocationDocument,
-  ILocationMessageResponse,
-} from "../locations/location.model";
 import { errorMiddleware } from "../middlewares/error.middleware";
+import {
+  mockLocations,
+  mockLocation,
+  mockDeleteMessageResponse,
+  updateData,
+  uniqueData,
+  updatedLocation,
+} from "../../mock-data/mock-data";
 import { HttpError } from "../errors/http.error";
 import { NotFoundError } from "../errors/not-found.error";
 import { BadRequestError } from "../errors/bad-request.error";
@@ -18,84 +21,11 @@ import { UniqueConstraintError } from "../errors/unique-constraint.error";
 
 jest.mock("../locations/location.service");
 
-describe("LocationController", () => {
+describe("Location Controller with errorMiddleware", () => {
   let app: express.Application;
   let mockLocationService: jest.Mocked<LocationService>;
   let locationController: LocationController;
   let errorHandlerService: ErrorHandlerService;
-
-  const mockDate = new Date();
-  const mockLocations: ILocationDocument[] = [
-    {
-      _id: "67f5237dcaf56ff295efd4a9",
-      location: "https://maps.app.goo.gl/RNH27NG3xDQipTFy6",
-      name: "Mock1",
-      phone: "+381656196083",
-      address: "Kralja Petra 41",
-      createdAt: mockDate,
-    },
-    {
-      _id: "67f53c68bf7547741b0e2eef",
-      location: "https://maps.app.goo.gl/RNH27NG3xDQipT",
-      name: "Mock2",
-      phone: "+381656196083",
-      address: "Kralja Petra 41",
-      createdAt: mockDate,
-    },
-    {
-      _id: "67f55bcc755956e39523251a",
-      location: "https://maps.app.goo.gl/RNH27NG3xDQipTqSSSSS",
-      name: "Mock3",
-      phone: "+381656196083",
-      address: "Kralja Petra 41",
-      createdAt: mockDate,
-    },
-    {
-      _id: "67f5639fa26f52b544484236",
-      location: "https://maps.app.goo.gl/RNH27NG3xDQipTqSSSS123123S",
-      name: "Mock4",
-      phone: "+381656196083",
-      address: "Kralja Petra 41",
-      createdAt: mockDate,
-    },
-  ];
-  const mockLocation: ILocationDocument = {
-    _id: "67f5237dcaf56ff295efd4a9",
-    location: "https://maps.app.goo.gl/RNH27NG3xDQipTFy6",
-    name: "Mock1",
-    phone: "+381656196083",
-    address: "Kralja Petra 41",
-    createdAt: mockDate,
-  };
-  const mockDeleteMessageResponse: ILocationMessageResponse = {
-    message: "location deleted successfully",
-    data: {
-      _id: "67f5237dcaf56ff295efd4a9",
-      location: "https://maps.app.goo.gl/RNH27NG3xDQipTFy6",
-      name: "Mock1",
-      phone: "+381656196083",
-      address: "Kralja Petra 41",
-      createdAt: mockDate,
-    },
-  };
-  const updateData: Partial<ILocation> = {
-    name: "Updated Location",
-    address: "Updated Address",
-  };
-  const uniqueData = {
-    location: "https://maps.app.goo.gl/RNH27NG3xDQipTFy6",
-  };
-  const updatedLocation: ILocationMessageResponse = {
-    message: "location updated successfully",
-    data: {
-      _id: "67f5237dcaf56ff295efd4a9",
-      location: "https://maps.app.goo.gl/RNH27NG3xDQipTFy6",
-      name: "Updated Location",
-      phone: "+381656196083",
-      address: "Updated Address",
-      createdAt: mockDate,
-    },
-  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -107,7 +37,6 @@ describe("LocationController", () => {
     );
 
     errorHandlerService = new ErrorHandlerService();
-
     locationController = new LocationController();
 
     app = express();
