@@ -1,8 +1,11 @@
 import Paper from "@mui/material/Paper";
-import TableContainerComponent from "./TContainer";
-import { locations } from "./tableData";
+import TContainer from "./TContainer";
+import { useContextHook } from "../../hooks/useContext";
+import { LocationContext } from "../../store/LocationContext";
 
 export default function TComponent() {
+  const data = useContextHook(LocationContext);
+
   return (
     <Paper
       sx={{
@@ -11,7 +14,7 @@ export default function TComponent() {
         backgroundColor: "var(--background-color)",
       }}
     >
-      <TableContainerComponent data={locations} />
+      <TContainer data={data} />
     </Paper>
   );
 }

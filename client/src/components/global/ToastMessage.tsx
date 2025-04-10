@@ -1,12 +1,10 @@
 import { Snackbar } from "@mui/material";
 import { useState } from "react";
+
 const ToastMessage = ({ message }: { message: string }) => {
   const [open, setOpen] = useState(false);
 
-  const handleClose = (
-    e?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
+  const handleClose = (reason?: string) => {
     if (reason === "clickaway") return;
     setOpen(false);
   };
@@ -15,7 +13,7 @@ const ToastMessage = ({ message }: { message: string }) => {
       <Snackbar
         open={open}
         autoHideDuration={4000}
-        onClose={(e) => handleClose(e)}
+        onClose={() => handleClose()}
         message={message}
       />
     </>

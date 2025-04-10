@@ -1,17 +1,43 @@
 import { Box, Divider, Typography } from "@mui/material";
-import GridComponent from "../components/dataGrid/GridComponent";
-import { Location, locationColumns } from "../components/dataGrid/tableData";
-import { LocationContext } from "../store/LocationContext";
-import { useContextHook } from "../hooks/useContext";
 import TComponent from "../components/table/TComponent";
+import useToastMessage from "../hooks/useToastMessage";
+import { useEffect } from "react";
+import { fetchAllLocations } from "../api/locationActions";
+import FormComponent from "../components/form/FormComponent";
+import { FormInputConfig } from "../utils/types/formTypes";
+import { Location } from "../store/LocationContext";
+
+const defaultLocation: Location = {
+  id: "",
+  name: "",
+  location: "",
+  phone: "",
+  adress: "",
+};
+
+const locationInputs: FormInputConfig<Location>[] = [
+  { name: "name", label: "Name", type: "text", sx: { mb: "2" } },
+  { name: "adress", label: "Address", type: "text", sx: { mb: "2" } },
+  { name: "phone", label: "Phone", type: "text", sx: { mb: "2" } },
+  { name: "location", label: "Location URL", type: "text", sx: { mb: "2" } },
+];
 
 const Locations = () => {
-  const { locations, updateLocation } = useContextHook(LocationContext);
+  const { showToast, ToastComponent } = useToastMessage();
 
-  const handleLocationUpdate = (updatedLocation: Location) => {
-    console.log(1, 'calling update from page')
-    updateLocation(updatedLocation);
+  const handleLocationSubmit = (data: Location) => {
+    console.log(data);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchAllLocations();
+      if (!data) {
+        showToast("Data not recieved. Please try again later!");
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <Box sx={{ padding: "1rem", margin: "1rem" }}>
@@ -19,12 +45,13 @@ const Locations = () => {
         Lokacije proslava
       </Typography>
       <Divider />
-      {/* <GridComponent
-        columns={locationColumns}
-        rows={locations}
-        onRowUpdate={handleLocationUpdate}
-      /> */}
-      <TComponent/>
+      {/* <TComponent /> */}
+      <ToastComponent severity="error" />
+      <FormComponent<Location>
+        formInputs={locationInputs}
+        initialValues={defaultLocation}
+        handleFormSubmitt={handleLocationSubmit}
+      />
     </Box>
   );
 };

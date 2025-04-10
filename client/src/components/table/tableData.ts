@@ -1,4 +1,6 @@
-import { type Location } from "../../utils/types";
+import { type Location } from "../../store/LocationContext";
+
+
 
 export const locations: Location[] = [
   {

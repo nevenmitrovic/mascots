@@ -5,16 +5,13 @@ import TableContent from "./TContent";
 import React from "react";
 import TablePaginationComponent from "./TPagination";
 import { getObjectKeys } from "../../utils/helper/helperFunctions";
+import { LocationContextValue } from "../../store/LocationContext";
 
-const TableContainerComponent = <T extends Record<string, unknown>>({
-  data,
-}: {
-  data: T[];
-}) => {
+const TContainer = ({ data }: { data: LocationContextValue }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const headers = getObjectKeys(data[0]);
+  const headers = getObjectKeys(data.locations[0]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -26,7 +23,7 @@ const TableContainerComponent = <T extends Record<string, unknown>>({
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-  
+
   return (
     <>
       <TableContainer>
@@ -45,4 +42,4 @@ const TableContainerComponent = <T extends Record<string, unknown>>({
   );
 };
 
-export default TableContainerComponent;
+export default TContainer;

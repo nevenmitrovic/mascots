@@ -1,11 +1,19 @@
 import { createContext, useReducer } from "react";
-import { locations, type Location } from "../components/dataGrid/tableData";
+import { locations } from "../components/table/tableData";
+
+export type Location = {
+  id: string;
+  location: string;
+  name: string;
+  adress: string;
+  phone: string;
+};
 
 type LocationState = {
   locations: Location[];
 };
 
-type LocationContextValue = LocationState & {
+export type LocationContextValue = LocationState & {
   addLocation: (location: Location) => void;
   updateLocation: (location: Location) => void;
   deleteLocation: (id: string) => void;
