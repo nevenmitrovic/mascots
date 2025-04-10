@@ -12,6 +12,10 @@ import {
   updateData,
   uniqueData,
   updatedLocation,
+  newLocation,
+  createdLocation,
+  newLocationBadRequest,
+  newLocationBadRequestName,
 } from "../../mock-data/mock-data";
 import { HttpError } from "../errors/http.error";
 import { NotFoundError } from "../errors/not-found.error";
@@ -21,7 +25,7 @@ import { UniqueConstraintError } from "../errors/unique-constraint.error";
 
 jest.mock("../locations/location.service");
 
-describe("Location Controller with errorMiddleware", () => {
+describe("Location Controller with errorMiddleware and validationMiddleware", () => {
   let app: express.Application;
   let mockLocationService: jest.Mocked<LocationService>;
   let locationController: LocationController;
@@ -192,36 +196,130 @@ describe("Location Controller with errorMiddleware", () => {
     });
   });
 
-  // describe("POST /locations", () => {
-  //   it("should create a location with status 201", async () => {
-  //     const mockDate = new Date();
-  //     const newLocation = {
-  //       location: "https://maps.app.goo.gl/new",
-  //       name: "New Location",
-  //       phone: "+381656196000",
-  //       address: "New Address 123"
-  //     };
+  describe("POST /locations", () => {
+    it("should create a location with status 201", async () => {
+      mockLocationService.createLocation.mockResolvedValue(createdLocation);
 
-  //     const createdLocation = {
-  //       _id: "67f5999dcaf56ff295efd4a9",
-  //       ...newLocation,
-  //       createdAt: mockDate
-  //     };
+      const response = await request(app)
+        .post("/locations")
+        .send(newLocation)
+        .expect(201);
 
-  //     mockLocationService.createLocation.mockResolvedValue(createdLocation);
+      expect(response.body).toEqual({
+        message: "location created successfully",
+        data: {
+          ...newLocation,
+          _id: "67f5999dcaf56ff295efd4a9",
+          createdAt: createdLocation.data.createdAt?.toISOString(),
+        },
+      });
+      expect(mockLocationService.createLocation).toHaveBeenCalledWith(
+        newLocation
+      );
+      expect(mockLocationService.createLocation).toHaveBeenCalledTimes(1);
+    });
 
-  //     const response = await request(app)
-  //       .post("/locations")
-  //       .send(newLocation)
-  //       .expect(201);
+    it("should handle error with bad request when location is not valid", async () => {
+      const mockError = new BadRequestError(
+        "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
+      );
+      mockLocationService.createLocation.mockRejectedValue(mockError);
 
-  //     expect(response.body).toEqual({
-  //       ...createdLocation,
-  //       createdAt: createdLocation.createdAt.toISOString()
-  //     });
-  //     expect(mockLocationService.createLocation).toHaveBeenCalledWith(newLocation);
-  //   });
-  // });
+      const response = await request(app)
+        .post("/locations")
+        .send(newLocationBadRequest)
+        .expect(400);
+
+      expect(response.body).toEqual({
+        message:
+          "location must be a valid Google Maps link (https://maps.app.goo.gl/...)",
+        statusCode: 400,
+        name: "BadRequestError",
+      });
+      expect(mockLocationService.createLocation).toHaveBeenCalledTimes(0);
+    });
+
+    it("should handle error with bad request name required", async () => {
+      const mockError = new BadRequestError("name is required");
+      mockLocationService.createLocation.mockRejectedValue(mockError);
+
+      const response = await request(app)
+        .post("/locations")
+        .send(newLocationBadRequestName)
+        .expect(400);
+
+      expect(response.body).toEqual({
+        message: "name is required",
+        statusCode: 400,
+        name: "BadRequestError",
+      });
+      expect(mockLocationService.createLocation).toHaveBeenCalledTimes(0);
+    });
+
+    it("should handle error when an unknown error occurs", async () => {
+      const mockError = new Error("unknown error in location repository");
+      mockLocationService.createLocation.mockRejectedValue(mockError);
+
+      const response = await request(app)
+        .post("/locations")
+        .send(newLocation)
+        .expect(500);
+
+      expect(response.body).toEqual({
+        message: "unknown error in location repository",
+        statusCode: 500,
+        name: "Error",
+      });
+      expect(mockLocationService.createLocation).toHaveBeenCalledWith(
+        newLocation
+      );
+      expect(mockLocationService.createLocation).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle error when a database error occurs", async () => {
+      const mockError = new DatabaseError(
+        "failed to create location: MongooseError"
+      );
+      mockLocationService.createLocation.mockRejectedValue(mockError);
+
+      const response = await request(app)
+        .post("/locations")
+        .send(newLocation)
+        .expect(500);
+
+      expect(response.body).toEqual({
+        message: "failed to create location: MongooseError",
+        statusCode: 500,
+        name: "DatabaseError",
+      });
+      expect(mockLocationService.createLocation).toHaveBeenCalledWith(
+        newLocation
+      );
+      expect(mockLocationService.createLocation).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle error when unique constraint error occurs", async () => {
+      const mockError = new UniqueConstraintError(
+        "location",
+        uniqueData.location
+      );
+      const handledError = errorHandlerService.handleError(mockError);
+      mockLocationService.createLocation.mockRejectedValue(handledError);
+
+      const response = await request(app)
+        .post("/locations")
+        .send(newLocation)
+        .expect(409);
+
+      expect(response.body).toHaveProperty("message");
+      expect(response.body).toHaveProperty("statusCode");
+      expect(response.body).toHaveProperty("name");
+      expect(mockLocationService.createLocation).toHaveBeenCalledWith(
+        newLocation
+      );
+      expect(mockLocationService.createLocation).toHaveBeenCalledTimes(1);
+    });
+  });
 
   describe("PUT /locations/:id", () => {
     it("should update a location with status 200", async () => {
@@ -244,6 +342,26 @@ describe("Location Controller with errorMiddleware", () => {
         updateData
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle error with bad request when location is not valid", async () => {
+      const mockError = new BadRequestError(
+        "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
+      );
+      mockLocationService.createLocation.mockRejectedValue(mockError);
+
+      const response = await request(app)
+        .put("/locations/67f5237dcaf56ff295efd4a9")
+        .send(newLocationBadRequest)
+        .expect(400);
+
+      expect(response.body).toEqual({
+        message:
+          "location must be a valid Google Maps link (https://maps.app.goo.gl/...)",
+        statusCode: 400,
+        name: "BadRequestError",
+      });
+      expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(0);
     });
 
     it("should handle error when location is not found", async () => {
@@ -301,29 +419,6 @@ describe("Location Controller with errorMiddleware", () => {
         message: "unknown error in location repository",
         statusCode: 500,
         name: "Error",
-      });
-      expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
-        "67f5237dcaf56ff295efd4a9",
-        updateData
-      );
-      expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
-    });
-
-    it("should handle error when an database throw error ", async () => {
-      const mockError = new DatabaseError(
-        "failed to update location: MongooseError"
-      );
-      mockLocationService.updateLocation.mockRejectedValue(mockError);
-
-      const response = await request(app)
-        .put("/locations/67f5237dcaf56ff295efd4a9")
-        .send(updateData)
-        .expect(500);
-
-      expect(response.body).toEqual({
-        message: "failed to update location: MongooseError",
-        statusCode: 500,
-        name: "DatabaseError",
       });
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",

@@ -76,3 +76,31 @@ export const updatedLocation: ILocationMessageResponse = {
     createdAt: mockDate,
   },
 };
+export const newLocation: ILocation = {
+  location: "https://maps.app.goo.gl/new",
+  name: "New Location",
+  phone: "+381656196000",
+  address: "New Address 123",
+};
+
+export const createdLocation: ILocationMessageResponse = {
+  message: "location created successfully",
+  data: {
+    ...newLocation,
+    _id: "67f5999dcaf56ff295efd4a9",
+    createdAt: mockDate,
+  },
+};
+
+export const newLocationBadRequest: ILocation = {
+  location: "https://maps.app.gl/new",
+  name: "New Location",
+  phone: "+381656196000",
+  address: "New Address 123",
+};
+
+export const newLocationBadRequestName: Omit<ILocation, "name"> = {
+  location: "https://maps.app.goo.gl/new",
+  phone: "+381656196000",
+  address: "New Address 123",
+};
