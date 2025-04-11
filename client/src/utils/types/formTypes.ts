@@ -1,6 +1,7 @@
 import { Theme } from "@emotion/react";
 import { SxProps } from "@mui/material";
 import { Control, FieldValues, Path, SubmitHandler } from "react-hook-form";
+import * as yup from "yup";
 
 export type FormInputProps<T extends FieldValues> = {
   name: Path<T>;
@@ -19,6 +20,6 @@ export type FormInputConfig<T extends FieldValues> = Omit<
 export type FormProps<T extends FieldValues> = {
   formInputs: FormInputConfig<T>[];
   handleFormSubmitt: SubmitHandler<T>;
-  initialValues?: Partial<T>;
-  //   validationSchema: yup.Schema<T>;
+  schema: yup.ObjectSchema<T>;
+  item?: T;
 };

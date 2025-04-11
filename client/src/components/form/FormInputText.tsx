@@ -13,7 +13,7 @@ const FormInputText = <T extends FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <TextField
           type={type}
           size="small"
@@ -21,6 +21,8 @@ const FormInputText = <T extends FieldValues>({
           fullWidth
           label={label}
           variant="outlined"
+          error={!!fieldState.error}
+          helperText={fieldState.error?.message}
           sx={sx}
         />
       )}

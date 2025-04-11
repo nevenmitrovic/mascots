@@ -2,28 +2,41 @@ import { Box, Dialog, Divider, Typography } from "@mui/material";
 import useToastMessage from "../hooks/useToastMessage";
 import FormComponent from "../components/form/FormComponent";
 import { FormInputConfig } from "../utils/types/formTypes";
-import { locationSchema } from "../utils/validations/yupSchemas";
+import {
+  animatorSchema,
+} from "../utils/validations/yupSchemas";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useToggle } from "../hooks/useToggle";
 import TComponent from "../components/table/TComponent";
-import { Location } from "../store/LocationContext";
 
-const locationInputs: FormInputConfig<Location>[] = [
+const animatorInputs: FormInputConfig<Animator>[] = [
   { name: "name", label: "Name", type: "text", sx: { mb: "2rem" } },
-  { name: "adress", label: "Address", type: "text", sx: { mb: "2rem" } },
   { name: "phone", label: "Phone", type: "text", sx: { mb: "2rem" } },
-  { name: "location", label: "Location URL", type: "text", sx: { mb: "2rem" } },
+  { name: "email", label: "Email", type: "text", sx: { mb: "2rem" } },
 ];
 
-const Locations = () => {
+type Animator = {
+  name: string;
+  phone: string;
+  email: string;
+  id?: string;
+};
+
+const testAnimator = {
+  name: "Neven",
+  phone: "Neki tamo broj",
+  email: "neven.mitrovic4@gmail.com",
+  id: '1'
+};
+
+const Animators = () => {
   const { showToast, ToastComponent } = useToastMessage();
-  
   const [dialog, toggleDialog] = useToggle(false);
 
-  const handleLocationSubmit = (data: Location) => {
+  const handleLocationSubmit = (data: Animator) => {
     console.log(data);
     toggleDialog();
-    showToast("Lokacija je uspesno sacuvana");
+    showToast("Animator je uspesno sacuvan");
   };
 
   return (
@@ -53,7 +66,7 @@ const Locations = () => {
             component="p"
             sx={{ display: "flex", alignItems: "flex-end" }}
           >
-            Dodaj lokaciju
+            Dodaj animatora
             <AddCircleIcon
               sx={{ ml: "0.5rem", color: "var(--color-primary)" }}
             />
@@ -64,14 +77,15 @@ const Locations = () => {
       <TComponent />
       <ToastComponent />
       <Dialog open={dialog} onClose={() => toggleDialog()}>
-        <FormComponent<Location>
-          formInputs={locationInputs}
+        <FormComponent<Animator>
+          formInputs={animatorInputs}
           handleFormSubmitt={handleLocationSubmit}
-          schema={locationSchema}
+          schema={animatorSchema}
+          item={testAnimator}
         />
       </Dialog>
     </Box>
   );
 };
 
-export default Locations;
+export default Animators;

@@ -1,24 +1,40 @@
-import { Paper, Typography } from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import {
-  DefaultValues,
   FieldValues,
   SubmitHandler,
   useForm,
+  Resolver,
+  DefaultValues,
 } from "react-hook-form";
 import FormInputText from "./FormInputText";
 import { FormProps } from "../../utils/types/formTypes";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { DevTool } from "@hookform/devtools";
 
 const FormComponent = <T extends FieldValues>({
   formInputs,
   handleFormSubmitt,
-  initialValues,
+  schema,
+  item,
 }: FormProps<T>) => {
-  const { handleSubmit, control } = useForm<T>({
-    defaultValues: initialValues as DefaultValues<T>,
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+    reset,
+  } = useForm<T>({
+    resolver: yupResolver(schema) as Resolver<T>,
+    defaultValues: item ? (item as DefaultValues<T>) : undefined,
   });
 
-  const onSubmit: SubmitHandler<T> = (data) => {
-    handleFormSubmitt(data);
+  const onSubmit: SubmitHandler<T> = async (data) => {
+    console.log(data);
+    await new Promise((res) =>
+      setTimeout(() => {
+        handleFormSubmitt(data);
+        reset();
+      }, 2000)
+    );
   };
 
   return (
@@ -30,7 +46,7 @@ const FormComponent = <T extends FieldValues>({
         margin: "1rem 2rem",
       }}
     >
-      <Typography variant="h4">Location form</Typography>
+      <Typography variant="h4">Dodaj lokaciju</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         {formInputs.map((input) => (
           <FormInputText<T>
@@ -39,8 +55,17 @@ const FormComponent = <T extends FieldValues>({
             control={control}
           />
         ))}
-        <button type="submit">Submit</button>
+        <Button
+          disabled={isSubmitting}
+          type="submit"
+          variant="contained"
+          sx={{ w: "100" }}
+          loading={isSubmitting}
+        >
+          Sacuvaj
+        </Button>
       </form>
+      <DevTool control={control} />
     </Paper>
   );
 };

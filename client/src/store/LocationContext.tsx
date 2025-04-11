@@ -2,7 +2,7 @@ import { createContext, useReducer } from "react";
 import { locations } from "../components/table/tableData";
 
 export type Location = {
-  id: string;
+  id?: string;
   location: string;
   name: string;
   adress: string;

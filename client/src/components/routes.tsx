@@ -3,6 +3,7 @@ import Calendar from "../pages/Calendar";
 import Layout from "./Layout";
 import NotFound from "../pages/NotFound";
 import Locations from "../pages/Locations";
+import Animators from "../pages/Animators";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/animators",
+        element: <Animators/>
       },
       {
         path: "/locations",
