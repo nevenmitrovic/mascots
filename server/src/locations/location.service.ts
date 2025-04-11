@@ -64,6 +64,10 @@ export class LocationService {
         throw new BadRequestError("not provided data");
       }
 
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid id");
+      }
+
       const location = await this.locationRepository.updateLocation(id, data);
       if (!location) {
         throw new NotFoundError("location not found");

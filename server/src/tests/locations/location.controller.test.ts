@@ -1,10 +1,10 @@
 import request from "supertest";
 import { NextFunction, Request, Response } from "express";
 import express from "express";
-import { LocationController } from "../locations/location.controller";
-import { LocationService } from "../locations/location.service";
-import { ErrorHandlerService } from "../services/error-handler.service";
-import { errorMiddleware } from "../middlewares/error.middleware";
+import { LocationController } from "../../locations/location.controller";
+import { LocationService } from "../../locations/location.service";
+import { ErrorHandlerService } from "../../services/error-handler.service";
+import { errorMiddleware } from "../../middlewares/error.middleware";
 import {
   mockLocations,
   mockLocation,
@@ -16,16 +16,16 @@ import {
   createdLocation,
   newLocationBadRequest,
   newLocationBadRequestName,
-} from "../../mock-data/mock-data";
-import { HttpError } from "../errors/http.error";
-import { NotFoundError } from "../errors/not-found.error";
-import { BadRequestError } from "../errors/bad-request.error";
-import { DatabaseError } from "../errors/database.error";
-import { UniqueConstraintError } from "../errors/unique-constraint.error";
+} from "../../../mocks/mock-data";
+import { HttpError } from "../../errors/http.error";
+import { NotFoundError } from "../../errors/not-found.error";
+import { BadRequestError } from "../../errors/bad-request.error";
+import { DatabaseError } from "../../errors/database.error";
+import { UniqueConstraintError } from "../../errors/unique-constraint.error";
 
-jest.mock("../locations/location.service");
+jest.mock("../../locations/location.service");
 
-describe("Location Controller with errorMiddleware and validationMiddleware", () => {
+describe("Location Controller with errorMiddleware, validationMiddleware, error-handler.service", () => {
   let app: express.Application;
   let mockLocationService: jest.Mocked<LocationService>;
   let locationController: LocationController;
