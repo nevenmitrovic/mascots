@@ -1,5 +1,4 @@
 import { MongoServerError } from "mongodb";
-import { Types } from "mongoose";
 
 import {
   ILocation,
@@ -12,9 +11,13 @@ import { UniqueConstraintError } from "errors/unique-constraint.error";
 export class LocationRepository {
   private locationModel = LocationModel;
 
-  async createLocation(locationData: ILocation): Promise<ILocation> {
+  async createLocation(locationData: ILocation): Promise<ILocationDocument> {
     try {
-      return await this.locationModel.create(locationData);
+      const res = await this.locationModel.create(locationData);
+      return {
+        ...res.toObject(),
+        _id: res._id.toString(),
+      } as ILocationDocument;
     } catch (err) {
       if (err instanceof MongoServerError && err.code === 11000) {
         const field = Object.keys(err.keyPattern)[0];
@@ -42,7 +45,7 @@ export class LocationRepository {
     }
   }
 
-  getLocationById(id: Types.ObjectId): Promise<ILocationDocument | null> {
+  getLocationById(id: string): Promise<ILocationDocument | null> {
     try {
       return this.locationModel.findById(id);
     } catch (err) {
@@ -55,7 +58,7 @@ export class LocationRepository {
   }
 
   async updateLocation(
-    id: Types.ObjectId,
+    id: string,
     data: Partial<ILocation>
   ): Promise<ILocationDocument | null> {
     try {
@@ -78,7 +81,7 @@ export class LocationRepository {
     }
   }
 
-  async deleteLocation(id: Types.ObjectId): Promise<ILocationDocument | null> {
+  async deleteLocation(id: string): Promise<ILocationDocument | null> {
     try {
       return await this.locationModel.findByIdAndDelete(id);
     } catch (err) {

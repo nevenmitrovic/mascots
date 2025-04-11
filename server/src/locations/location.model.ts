@@ -7,14 +7,14 @@ export interface ILocation {
   address: string;
 }
 
-export interface ILocationDocument extends ILocation, Document {
-  _id: Types.ObjectId;
-  createdAt: Date;
+export interface ILocationDocument extends ILocation {
+  _id: string;
+  createdAt?: Date;
 }
 
 export interface ILocationMessageResponse {
   message: string;
-  data: ILocation;
+  data: ILocationDocument;
 }
 
 const locationSchema = new Schema<ILocation>(
