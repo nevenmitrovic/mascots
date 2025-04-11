@@ -4,32 +4,24 @@ import { LocationRepository } from "../../locations/location.repository";
 import {
   mockLocations,
   mockLocation,
-  mockDeleteMessageResponse,
   updateData,
   uniqueData,
-  updatedLocation,
   newLocation,
-  createdLocation,
-  newLocationBadRequest,
-  newLocationBadRequestName,
+  mockDeleteMessageResponse,
 } from "../../../mocks/mock-data";
 import { HttpError } from "../../errors/http.error";
-import { NotFoundError } from "../../errors/not-found.error";
-import { BadRequestError } from "../../errors/bad-request.error";
 import { DatabaseError } from "../../errors/database.error";
 import { UniqueConstraintError } from "../../errors/unique-constraint.error";
-import { Types } from "mongoose";
 
 jest.mock("../../locations/location.repository");
 
-describe("LocationService", () => {
+describe("Location Service with error-handler.service", () => {
   let locationService: LocationService;
   let errorHandlerService: ErrorHandlerService;
   let mockLocationRepository: jest.Mocked<LocationRepository>;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-
+  beforeAll(() => {
+    // mock the location repository
     mockLocationRepository =
       new LocationRepository() as jest.Mocked<LocationRepository>;
     (LocationRepository as jest.Mock).mockImplementation(
@@ -38,6 +30,10 @@ describe("LocationService", () => {
 
     errorHandlerService = new ErrorHandlerService();
     locationService = new LocationService();
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   describe("GET /locations", () => {
@@ -262,6 +258,76 @@ describe("LocationService", () => {
         locationService.updateLocation("67f5237dcaf56ff295efd4a9", updateData)
       ).rejects.toThrow(HttpError);
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("DELETE /locations/:id", () => {
+    it("should delete a location successfully", async () => {
+      mockLocationRepository.deleteLocation.mockResolvedValue(mockLocation);
+
+      const result = await locationService.deleteLocation(
+        "67f5237dcaf56ff295efd4a9"
+      );
+
+      expect(result).toEqual({
+        message: "location deleted successfully",
+        data: {
+          ...mockDeleteMessageResponse.data,
+          createdAt: expect.any(Date),
+        },
+      });
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledWith(
+        "67f5237dcaf56ff295efd4a9"
+      );
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledTimes(1);
+    });
+
+    it("should throw BadRequestError for invalid id", async () => {
+      await expect(
+        locationService.deleteLocation("invalid-id")
+      ).rejects.toThrow(HttpError);
+      expect(mockLocationRepository.deleteLocation).not.toHaveBeenCalled();
+    });
+
+    it("should throw NotFoundError when location not found", async () => {
+      mockLocationRepository.deleteLocation.mockResolvedValue(null);
+
+      await expect(
+        locationService.deleteLocation("67f5237dcaf56ff295efd4a9")
+      ).rejects.toThrow(HttpError);
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledWith(
+        "67f5237dcaf56ff295efd4a9"
+      );
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle database error", async () => {
+      const mockError = new DatabaseError(
+        "failed to delete location: MongooseError"
+      );
+      mockLocationRepository.deleteLocation.mockRejectedValue(mockError);
+
+      await expect(
+        locationService.deleteLocation("67f5237dcaf56ff295efd4a9")
+      ).rejects.toThrow(HttpError);
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledWith(
+        "67f5237dcaf56ff295efd4a9"
+      );
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const handledError = errorHandlerService.handleError(mockError);
+      mockLocationRepository.deleteLocation.mockRejectedValue(handledError);
+
+      await expect(
+        locationService.deleteLocation("67f5237dcaf56ff295efd4a9")
+      ).rejects.toThrow(HttpError);
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledWith(
+        "67f5237dcaf56ff295efd4a9"
+      );
+      expect(mockLocationRepository.deleteLocation).toHaveBeenCalledTimes(1);
     });
   });
 });

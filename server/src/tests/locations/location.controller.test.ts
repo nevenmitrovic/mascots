@@ -31,10 +31,8 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
   let locationController: LocationController;
   let errorHandlerService: ErrorHandlerService;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    // implementation of mockLocationService
+  beforeAll(() => {
+    // mock the location service
     mockLocationService = new LocationService() as jest.Mocked<LocationService>;
     (LocationService as jest.Mock).mockImplementation(
       () => mockLocationService
@@ -51,6 +49,10 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
         errorMiddleware(err, req, res, _next);
       }
     );
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   describe("GET /locations", () => {
