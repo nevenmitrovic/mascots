@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Location } from "../utils/types/dataTypes";
+import { Location } from "../types/locationTypes";
 
 const renderError = (error: unknown): { message: string } => {
   return {

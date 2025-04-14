@@ -8,8 +8,8 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { defaultValues } from "../../utils/helper/helperFunctions";
-import { FormProps } from "../../utils/types/formTypes";
+import { FormProps } from "../../types/formTypes";
+import { defaultValues } from "../../utils/helperFunctions";
 import FormInputText from "./FormInputText";
 
 const FormComponent = <T extends FieldValues>({

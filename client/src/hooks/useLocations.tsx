@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchAllLocations } from "../api/locationActions";
 import { queryKeys } from "../reactQuery/constants";
-import { Location } from "../utils/types/dataTypes";
+import { Location } from "../types/locationTypes";
 
 export const useLocations = (): Location[] => {
   const fallback: Location[] = [];

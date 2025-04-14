@@ -1,6 +1,5 @@
 import * as yup from "yup";
 
-
 export const locationSchema = yup.object({
   _id: yup.string().optional(),
   name: yup.string().required("Lokacija mora da sadrzi ime."),
@@ -19,11 +18,4 @@ export const locationSchema = yup.object({
     )
     .required("Lokacija mora da ima adresu."),
   location: yup.string().required("Lokacija mora da ima link"),
-});
-
-export const animatorSchema = yup.object({
-  name: yup.string().required(),
-  phone: yup.string().required(),
-  email: yup.string().required(),
-  id: yup.string(),
 });

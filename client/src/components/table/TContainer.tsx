@@ -1,40 +1,57 @@
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-import React from "react";
-import TablePaginationComponent from "../table2/TPagination";
-import TableContent from "./TContent";
+import { useState } from "react";
+import TableContent from "./TableContent";
+import TableHeader from "./TableHeader";
+import TPagination from "./TPagination";
 
-const TContainer = ({ data }: { data: unknown }) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+type TContainerProps<T extends { _id: string }> = {
+  data: T[];
+  headers: { name: string; label: string }[];
+  onEdit: (item: T) => void;
+  onDelete: (_id: string) => void;
+};
 
-  // const headers = getObjectKeys(data?.locations[0]);
+const TContainer = <T extends { _id: string }>({
+  data,
+  headers,
+  onEdit,
+  onDelete,
+}: TContainerProps<T>) => {
+  const rowsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+  const numOfPages = Math.ceil(data.length / rowsPerPage);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
   ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    setCurrentPage(value);
   };
+
+  const dataOnCurrentPage = data.slice(
+    currentPage * rowsPerPage - rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   return (
     <>
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
-          {/* <TableHeader data={headers} /> */}
-          <TableContent page={page} rowsPerPage={10} data={data} />
+          <TableHeader data={headers} />
+          <TableContent
+            data={dataOnCurrentPage}
+            headers={headers}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
         </Table>
+        <TPagination
+          currentPage={currentPage}
+          numOfPages={numOfPages}
+          handlePageChange={handlePageChange}
+        />
       </TableContainer>
-      <TablePaginationComponent
-        page={page}
-        rowsPerPage={rowsPerPage}
-        handleChangePage={handleChangePage}
-        handleChangeRowsPerPage={handleChangeRowsPerPage}
-      />
     </>
   );
 };
