@@ -1,24 +1,37 @@
 import { TableCell, TableHead, TableRow } from "@mui/material";
 
-const TableHeader =<T extends object> ({ data }: { data: T[] }) => {
+type HeaderProps = {
+  data: { name: string; label: string }[];
+};
+
+const TableHeader = ({ data }: HeaderProps) => {
   return (
     <TableHead>
-      <TableRow sx={{ backgroundColor: "var(--color-background)" }}>
-        {data.map((item, i) => (
+      <TableRow>
+        {data.map((item) => (
           <TableCell
-            key={i}
+            key={item.name}
             align="left"
             sx={{
               backgroundColor: "var(--color-background)",
-              capitalize: "capitalize",
               color: "var(--color-text-dark)",
               fontWeight: "bold",
               textTransform: "capitalize",
             }}
           >
-            {item}
+            {item.label}
           </TableCell>
         ))}
+        <TableCell
+          align="left"
+          sx={{
+            backgroundColor: "var(--color-background)",
+            color: "var(--color-text-dark)",
+            fontWeight: "bold",
+          }}
+        >
+          Akcija
+        </TableCell>
       </TableRow>
     </TableHead>
   );

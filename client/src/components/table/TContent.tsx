@@ -1,24 +1,25 @@
 import { TableBody, TableCell, TableRow } from "@mui/material";
-import { locations } from "./tableData";
 
 const TableContent = ({
   page,
   rowsPerPage,
+  data,
 }: {
   page: number;
   rowsPerPage: number;
+  data: Location[];
 }) => {
   return (
     <TableBody>
-      {locations
+      {data
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((location) => {
+        .map((item) => {
           return (
-            <TableRow hover role="checkbox" tabIndex={-1} key={location.id}>
-              <TableCell>{location.name}</TableCell>
-              <TableCell>{location.adress}</TableCell>
-              <TableCell>{location.location}</TableCell>
-              <TableCell>{location.phone}</TableCell>
+            <TableRow hover role="checkbox" tabIndex={-1} key={item.id}>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.address}</TableCell>
+              <TableCell>{item.location}</TableCell>
+              <TableCell>{item.phone}</TableCell>
             </TableRow>
           );
         })}

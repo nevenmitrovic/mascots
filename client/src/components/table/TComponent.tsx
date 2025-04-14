@@ -1,11 +1,8 @@
 import Paper from "@mui/material/Paper";
 import TContainer from "./TContainer";
-import { useContextHook } from "../../hooks/useContext";
-import { LocationContext } from "../../store/LocationContext";
 
-export default function TComponent() {
-  const data = useContextHook(LocationContext);
-
+export default function TComponent<T>(data: T[]) {
+  
   return (
     <Paper
       sx={{

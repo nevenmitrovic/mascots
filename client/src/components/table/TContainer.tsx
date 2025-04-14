@@ -1,17 +1,14 @@
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-import TableHeader from "./THeader";
-import TableContent from "./TContent";
 import React from "react";
-import TablePaginationComponent from "./TPagination";
-import { getObjectKeys } from "../../utils/helper/helperFunctions";
-import { LocationContextValue } from "../../store/LocationContext";
+import TablePaginationComponent from "../table2/TPagination";
+import TableContent from "./TContent";
 
-const TContainer = ({ data }: { data: LocationContextValue }) => {
+const TContainer = ({ data }: { data: unknown }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const headers = getObjectKeys(data.locations[0]);
+  // const headers = getObjectKeys(data?.locations[0]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -28,8 +25,8 @@ const TContainer = ({ data }: { data: LocationContextValue }) => {
     <>
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
-          <TableHeader data={headers} />
-          <TableContent page={page} rowsPerPage={10} />
+          {/* <TableHeader data={headers} /> */}
+          <TableContent page={page} rowsPerPage={10} data={data} />
         </Table>
       </TableContainer>
       <TablePaginationComponent
