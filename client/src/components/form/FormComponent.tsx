@@ -8,8 +8,11 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { ObjectSchema } from "yup";
 import { FormProps } from "../../types/formTypes";
 import { defaultValues } from "../../utils/helperFunctions";
+import { selectValidation } from "../../validations/selectValidation";
+import FormInputSelect from "./FormInputSelect";
 import FormInputText from "./FormInputText";
 
 const FormComponent = <T extends FieldValues>({
@@ -18,13 +21,18 @@ const FormComponent = <T extends FieldValues>({
   schema,
   item,
 }: FormProps<T>) => {
+  // Check if any input is of type "select"
+  const hasSelectInput = formInputs.find((input) => input.type === "select");
+  // If so, add selectValidation to the schema
+  const finalSchema = hasSelectInput ? schema.concat(selectValidation) : schema;
+
   const {
     handleSubmit,
     control,
     formState: { isSubmitting },
     reset,
   } = useForm<T>({
-    resolver: yupResolver(schema) as Resolver<T>,
+    resolver: yupResolver(finalSchema as ObjectSchema<T>) as Resolver<T>,
     defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
 
@@ -48,13 +56,25 @@ const FormComponent = <T extends FieldValues>({
     >
       <Typography variant="h4">Dodaj lokaciju</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {formInputs.map((input) => (
-          <FormInputText<T>
-            key={String(input.name)}
-            {...input}
-            control={control}
-          />
-        ))}
+        {formInputs.map((input) =>
+          input.type === "text" ? (
+            <FormInputText<T>
+              key={String(input.name)}
+              {...input}
+              control={control}
+            />
+          ) : (
+            <FormInputSelect<T>
+              name={input.name}
+              control={control}
+              label="Izaberi"
+              options={input.options || []}
+              type={input.type}
+              sx={{ mb: "2rem" }}
+            />
+          )
+        )}
+
         <Button
           disabled={isSubmitting}
           type="submit"

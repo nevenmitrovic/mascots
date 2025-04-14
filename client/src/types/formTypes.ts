@@ -7,7 +7,8 @@ export type FormInputProps<T extends FieldValues> = {
   name: Path<T>;
   control: Control<T>;
   label: string;
-  type: "text";
+  options?: { value: string; label: string }[];
+  type: "text" | "select";
   sx?: SxProps<Theme>;
 };
 
