@@ -1,12 +1,17 @@
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router";
 import { router } from "./components/routes";
-import LocationContextProvider from "./store/LocationContext";
+import { queryClient } from "./reactQuery/queryClient";
+import Loading from "./components/Loading";
 
 function App() {
   return (
-    <LocationContextProvider>
-      <RouterProvider router={router} />
-    </LocationContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />;
+      <ReactQueryDevtools initialIsOpen={false} />
+      <Loading />
+    </QueryClientProvider>
   );
 }
 

@@ -1,6 +1,7 @@
-import { Outlet } from "react-router";
-import NavBar from "./navbar/NavBar";
 import { Box } from "@mui/material";
+import { Outlet } from "react-router";
+import Loading from "./Loading";
+import NavBar from "./navbar/NavBar";
 
 export const appBarHeight = 64;
 
@@ -21,6 +22,7 @@ const Layout = () => {
         }}
       >
         <Outlet />
+        <Loading />
       </Box>
     </>
   );

@@ -8,7 +8,6 @@ export type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   label: string;
   type: "text";
-  setValue?: unknown;
   sx?: SxProps<Theme>;
 };
 

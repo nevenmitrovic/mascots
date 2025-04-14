@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Location } from "../store/LocationContext";
+import { Location } from "../utils/types/dataTypes";
 
 const renderError = (error: unknown): { message: string } => {
   return {
@@ -8,7 +8,7 @@ const renderError = (error: unknown): { message: string } => {
 };
 
 const api = axios.create({
-  baseURL: `http://localhost:8000`,
+  baseURL: `http://localhost:8000/api/v1`,
 });
 
 export const fetchAllLocations = async () => {
@@ -27,6 +27,7 @@ export const fetchAllLocations = async () => {
 export const createLocation = async (formData: Location) => {
   try {
     const response = await api.post(`/locations`, formData);
+    console.log(response);
     if (!response.status) {
       return;
     }

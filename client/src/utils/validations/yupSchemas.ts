@@ -1,9 +1,8 @@
 import * as yup from "yup";
 
-export type LocationObject = yup.InferType<typeof locationSchema>;
 
 export const locationSchema = yup.object({
-  id: yup.string(),
+  _id: yup.string().optional(),
   name: yup.string().required("Lokacija mora da sadrzi ime."),
   phone: yup
     .string()
@@ -12,25 +11,19 @@ export const locationSchema = yup.object({
       "Lokacija mora da ima broj registrovan u Srbiji"
     )
     .required("Lokacija mora da ima broj."),
-  adress: yup
+  address: yup
     .string()
     .matches(
       /^\d{0,4}?\s?[A-ZČĆŽŠĐa-zčćžšđ\s\-\.]+(\s\d+[A-Za-z]?((\/|,| - )?\d*[A-Za-z]?)?)?$/,
       "Lokacija mora da ima adresu."
     )
     .required("Lokacija mora da ima adresu."),
-  location: yup
-    .string()
-    .matches(
-      /^(https?:\/\/)?(www\.)?google\.com\/maps\/(place\/[^\/]+\/)?(@[\-0-9\.]+,[\-0-9\.]+,[0-9]+z\/)?(search\/[^\/]+\/)?([^\/]+\/)?(dir\/[^\/]+\/[^\/]+\/)?.*?$/,
-      "Link mora vodi na google maps"
-    )
-    .required("Lokacija mora da ima link"),
+  location: yup.string().required("Lokacija mora da ima link"),
 });
 
 export const animatorSchema = yup.object({
   name: yup.string().required(),
   phone: yup.string().required(),
   email: yup.string().required(),
-  id: yup.string()
+  id: yup.string(),
 });

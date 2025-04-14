@@ -1,15 +1,16 @@
+import { DevTool } from "@hookform/devtools";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Paper, Typography } from "@mui/material";
 import {
+  DefaultValues,
   FieldValues,
+  Resolver,
   SubmitHandler,
   useForm,
-  Resolver,
-  DefaultValues,
 } from "react-hook-form";
-import FormInputText from "./FormInputText";
+import { defaultValues } from "../../utils/helper/helperFunctions";
 import { FormProps } from "../../utils/types/formTypes";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { DevTool } from "@hookform/devtools";
+import FormInputText from "./FormInputText";
 
 const FormComponent = <T extends FieldValues>({
   formInputs,
@@ -24,11 +25,10 @@ const FormComponent = <T extends FieldValues>({
     reset,
   } = useForm<T>({
     resolver: yupResolver(schema) as Resolver<T>,
-    defaultValues: item ? (item as DefaultValues<T>) : undefined,
+    defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
 
   const onSubmit: SubmitHandler<T> = async (data) => {
-    console.log(data);
     await new Promise((res) =>
       setTimeout(() => {
         handleFormSubmitt(data);
