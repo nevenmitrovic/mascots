@@ -11,7 +11,7 @@ import {
 import { ObjectSchema } from "yup";
 import { FormProps } from "../../types/formTypes";
 import { defaultValues } from "../../utils/helperFunctions";
-import { selectValidation } from "../../validations/selectValidation";
+import { selectValidation } from "../../validations/selectSchema";
 import FormInputSelect from "./FormInputSelect";
 import FormInputText from "./FormInputText";
 

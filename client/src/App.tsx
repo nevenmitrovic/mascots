@@ -3,8 +3,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { RouterProvider } from "react-router";
 import Loading from "./components/Loading";
 import { router } from "./components/routes";
+import { ToastProvider } from "./contexts/ToastContext";
 import { queryClient } from "./reactQuery/queryClient";
-import { ToastProvider } from "./context/ToastContext";
 
 function App() {
   return (
