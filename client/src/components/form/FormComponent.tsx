@@ -12,7 +12,7 @@ import { ObjectSchema } from "yup";
 import { FormProps } from "../../types/formTypes";
 import { defaultValues } from "../../utils/helperFunctions";
 import { selectValidation } from "../../validations/selectSchema";
-import FormInputSelect from "./FormInputSelect";
+import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
 
 const FormComponent = <T extends FieldValues>({
@@ -67,11 +67,11 @@ const FormComponent = <T extends FieldValues>({
               control={control}
             />
           ) : (
-            <FormInputSelect<T>
-              key={String(input.name)}
+            <FormInputAutocomplete<T>
+              key={input.name}
               name={input.name}
               control={control}
-              label="Izaberi"
+              label={input.label}
               options={input.options || []}
               type={input.type}
               sx={{ mb: "2rem" }}

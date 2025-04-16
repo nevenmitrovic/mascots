@@ -44,9 +44,9 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "anim1", label: "Marko Marković" },
-      { value: "anim2", label: "Ana Anić" },
-      { value: "anim3", label: "Petar Petrović" },
+      { value: "1", label: "Novi Beograd" },
+      { value: "2", label: "Ub" },
+      { value: "3", label: "Niiiiiis" },
     ],
   },
   {

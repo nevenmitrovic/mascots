@@ -57,6 +57,7 @@ const Locations = () => {
 
       <Dialog open={dialog} onClose={handleDialogClose}>
         <FormComponent<Partial<Location>>
+          header="Unesite podatke o lokaciji"
           formInputs={locationInputs}
           handleFormSubmitt={handleLocationSubmit}
           schema={locationSchema}
