@@ -1,7 +1,9 @@
+import { EventDropArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
 import { useContext, useState } from "react";
+
 import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
 
 export const Calendar = () => {
@@ -10,6 +12,21 @@ export const Calendar = () => {
 
   const addNewEvent = (event: any) => {
     toggleDialog();
+  };
+
+  const handleDateClick = (info: DateClickArg) => {
+    setDate(info.dateStr);
+    console.log(`Date clicked: ${info.dateStr}`);
+  };
+
+  const handleEventDrop = (eventDropInfo: EventDropArg) => {
+    const event = eventDropInfo.event;
+    const newDate = event.startStr;
+
+    console.log(`Event "${event.title}" was moved to ${newDate}`);
+
+    // Logic to update the event with edit item form
+    // toggleDialog();
   };
 
   // MOCK DATA
@@ -74,17 +91,20 @@ export const Calendar = () => {
           center: "addEvent",
         }}
         editable={true}
-        selectable={true}
-        unselectAuto={true}
+        eventResizableFromStart={false}
+        eventDurationEditable={false}
+        selectMirror={true}
+        selectMinDistance={5}
         height={"90vh"}
         dayMaxEvents={true}
         moreLinkClick={"popover"}
-        dateClick={(info) => setDate(info.dateStr)}
+        dateClick={handleDateClick}
         events={events}
-        eventClick={(info) => {
-          toggleDialog();
-          console.log(info.event.title);
-        }}
+        eventDrop={handleEventDrop}
+        // eventClick={(info) => {
+        //   toggleDialog();
+        //   console.log(info.event.title);
+        // }}
       />
     </>
   );

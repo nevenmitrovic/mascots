@@ -68,6 +68,7 @@ const FormComponent = <T extends FieldValues>({
             />
           ) : (
             <FormInputSelect<T>
+              key={String(input.name)}
               name={input.name}
               control={control}
               label="Izaberi"

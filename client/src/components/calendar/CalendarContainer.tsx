@@ -29,6 +29,7 @@ const CalendarContainer = () => {
           formInputs={eventFormInputs}
           handleFormSubmitt={handleEventSubmit}
           schema={eventSchema}
+          header="Dodaj dogadjaj"
         />
       </Dialog>
     </>
