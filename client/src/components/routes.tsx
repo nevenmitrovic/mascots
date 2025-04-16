@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router";
-import Calendar from "../pages/Calendar";
-import Layout from "./Layout";
-import NotFound from "../pages/NotFound";
-import Locations from "../pages/Locations";
 import Animators from "../pages/Animators";
+import Calendar from "../pages/Calendar";
+import Locations from "../pages/Locations";
+import NotFound from "../pages/NotFound";
+import SignIn from "../pages/SignIn";
+import Layout from "./Layout";
 
 export const router = createBrowserRouter([
   {
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/animators",
-        element: <Animators/>
+        element: <Animators />,
       },
       {
         path: "/locations",
@@ -30,5 +31,10 @@ export const router = createBrowserRouter([
         path: "/finance",
       },
     ],
+  },
+  {
+    path: "/signin",
+    element: <SignIn />,
+    errorElement: <NotFound />,
   },
 ]);
