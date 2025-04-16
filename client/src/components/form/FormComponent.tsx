@@ -20,6 +20,7 @@ const FormComponent = <T extends FieldValues>({
   handleFormSubmitt,
   schema,
   item,
+  header,
 }: FormProps<T>) => {
   // Check if any input is of type "select"
   const hasSelectInput = formInputs.find((input) => input.type === "select");
@@ -54,10 +55,12 @@ const FormComponent = <T extends FieldValues>({
         margin: "1rem 2rem",
       }}
     >
-      <Typography variant="h4">Dodaj lokaciju</Typography>
+      <Typography variant="h4">{header}</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         {formInputs.map((input) =>
-          input.type === "text" ? (
+          input.type === "text" ||
+          input.type === "password" ||
+          input.type === "email" ? (
             <FormInputText<T>
               key={String(input.name)}
               {...input}
