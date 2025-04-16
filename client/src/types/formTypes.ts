@@ -8,7 +8,7 @@ export type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   label: string;
   options?: { value: string; label: string }[];
-  type: "text" | "select";
+  type: "text" | "select" | "password" | "email";
   sx?: SxProps<Theme>;
 };
 
@@ -22,4 +22,5 @@ export type FormProps<T extends FieldValues> = {
   handleFormSubmitt: SubmitHandler<T>;
   schema: yup.ObjectSchema<T>;
   item?: T;
+  header: string;
 };
