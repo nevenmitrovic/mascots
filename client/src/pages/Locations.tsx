@@ -3,7 +3,7 @@ import { useState } from "react";
 import FormComponent from "../components/form/FormComponent";
 import PageHeader from "../components/global/PageHeader";
 import TContainer from "../components/table/TContainer";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../contexts/ToastContext";
 import { useLocations } from "../hooks/useLocations";
 import { useToggle } from "../hooks/useToggle";
 import { Location, locationInputs } from "../types/locationTypes";
@@ -36,7 +36,7 @@ const Locations = () => {
     console.log(`Delete item with id: ${id}`);
     showToast("Lokacija je obrisana", "success");
   };
-  
+
   const handleDialogClose = () => {
     toggleDialog();
     setEditItem(undefined);
@@ -57,6 +57,7 @@ const Locations = () => {
 
       <Dialog open={dialog} onClose={handleDialogClose}>
         <FormComponent<Partial<Location>>
+          header="Unesite podatke o lokaciji"
           formInputs={locationInputs}
           handleFormSubmitt={handleLocationSubmit}
           schema={locationSchema}

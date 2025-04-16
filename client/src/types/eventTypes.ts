@@ -12,9 +12,9 @@ export const eventInputs: FormInputConfig<Partial<Location>>[] = [
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "Novi Beograd", label: "Novi Beograd" },
-      { value: "Ub", label: "Ub" },
-      { value: "Idemo", label: "Niiiiiis" },
+      { value: "1", label: "Novi Beograd" },
+      { value: "2", label: "Ub" },
+      { value: "3", label: "Niiiiiis" },
     ],
   },
 ];
