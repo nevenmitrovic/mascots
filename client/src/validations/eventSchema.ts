@@ -1,6 +1,7 @@
 import * as yup from "yup";
 
 export const eventSchema = yup.object().shape({
+  _id: yup.string().optional(),
   date: yup
     .string()
     .required("Datium događaja je obavezan")
@@ -14,7 +15,11 @@ export const eventSchema = yup.object().shape({
     .required("Vreme događaja je obavezno")
     .matches(/^\d{2}:\d{2}$/, "Vreme mora biti u formatu HH:MM (19:00)"),
 
-  location: yup.array().of(yup.string().required("lokacija je obavezna")),
+  location: yup
+    .array()
+    .of(yup.string().required("Lokacija je obavezna"))
+    .min(1, "Lokacija je obavezna")
+    .required("Lokacija je obavezna"),
 
   maskotas: yup
     .array()
@@ -32,4 +37,13 @@ export const eventSchema = yup.object().shape({
     .string()
     .required("Cena je obavezna")
     .matches(/^\d+$/, "Cena mora biti broj"),
+
+  title: yup
+    .string()
+    .required("Naslov je obavezan")
+    .min(3, "Naslov mora imati najmanje 3 karaktera"),
+
+  collector: yup.string().optional(),
+
+  confirmed: yup.string().optional(),
 });

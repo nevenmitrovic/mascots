@@ -44,7 +44,10 @@ const FormInputAutocomplete = <T extends FieldValues>({
               options={options}
               disableCloseOnSelect
               getOptionLabel={(option) => option.label}
-              sx={sx}
+              sx={{
+                width: "100%",
+                ...sx,
+              }}
               renderOption={(props, option, { selected }) => {
                 const { key, ...optionProps } = props;
                 return (
@@ -59,7 +62,6 @@ const FormInputAutocomplete = <T extends FieldValues>({
                   </li>
                 );
               }}
-              style={{ width: 500 }}
               renderInput={(params) => (
                 <TextField
                   error={!!fieldState.error}

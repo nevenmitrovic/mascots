@@ -6,7 +6,7 @@ import FormComponent from "../../components/form/FormComponent";
 import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
 
 import { useToast } from "../../contexts/ToastContext";
-import { eventFormInputs } from "../../types/eventTypes";
+import { Event, eventFormInputs } from "../../types/eventTypes";
 import { eventSchema } from "../../validations/eventSchema";
 
 const CalendarContainer = () => {
@@ -16,7 +16,7 @@ const CalendarContainer = () => {
   const handleEventSubmit = (data: any) => {
     console.log(data);
     toggleDialog();
-    showToast("Lokacija je uspesno sacuvana");
+    showToast("Lokacija je uspesno sacuvana", "success");
   };
 
   return (
@@ -25,7 +25,7 @@ const CalendarContainer = () => {
         <Calendar />
       </Box>
       <Dialog open={open} onClose={toggleDialog}>
-        <FormComponent<any>
+        <FormComponent<Partial<Event>>
           formInputs={eventFormInputs}
           handleFormSubmitt={handleEventSubmit}
           schema={eventSchema}

@@ -1,5 +1,18 @@
 import { FormInputConfig } from "./formTypes";
 
+export interface Event {
+  _id?: string;
+  date: string;
+  time: string;
+  location: string[];
+  maskotas: string[];
+  animators: string[];
+  price: string;
+  title: string;
+  collector: string;
+  confirmed: string;
+}
+
 // MOCK DATA
 export const eventFormInputs: FormInputConfig<any>[] = [
   {

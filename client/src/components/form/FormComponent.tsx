@@ -11,7 +11,6 @@ import {
 import { ObjectSchema } from "yup";
 import { FormProps } from "../../types/formTypes";
 import { defaultValues } from "../../utils/helperFunctions";
-import { selectValidation } from "../../validations/selectSchema";
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
 
@@ -22,18 +21,13 @@ const FormComponent = <T extends FieldValues>({
   item,
   header,
 }: FormProps<T>) => {
-  // Check if any input is of type "select"
-  const hasSelectInput = formInputs.find((input) => input.type === "select");
-  // If so, add selectValidation to the schema
-  const finalSchema = hasSelectInput ? schema.concat(selectValidation) : schema;
-
   const {
     handleSubmit,
     control,
     formState: { isSubmitting },
     reset,
   } = useForm<T>({
-    resolver: yupResolver(finalSchema as ObjectSchema<T>) as Resolver<T>,
+    resolver: yupResolver(schema as ObjectSchema<T>) as Resolver<T>,
     defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
 

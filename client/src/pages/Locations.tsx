@@ -62,7 +62,6 @@ const Locations = () => {
           handleFormSubmitt={handleLocationSubmit}
           schema={locationSchema}
           item={editItem}
-          header="Dodaj lokaciju"
         />
       </Dialog>
     </Box>
