@@ -1,7 +1,6 @@
 import * as yup from "yup";
 
 export const eventSchema = yup.object().shape({
-  _id: yup.string().optional(),
   date: yup
     .string()
     .required("Datium događaja je obavezan")
@@ -46,4 +45,24 @@ export const eventSchema = yup.object().shape({
   collector: yup.string().optional(),
 
   confirmed: yup.string().optional(),
+
+  customLocationAddress: yup.string().when("location", {
+    is: (val: string[]) => Array.isArray(val) && val.includes("none"),
+    then: (schema) => schema.required("Adresa lokacije je obavezna"),
+    otherwise: (schema) => schema.optional(),
+  }),
+
+  customLocationLink: yup
+    .string()
+    .matches(
+      /^https:\/\/maps\.app\.goo\.gl\/.+/,
+      "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
+    )
+    .when("location", {
+      is: (val: string[]) => Array.isArray(val) && val.includes("none"),
+      then: (schema) => schema.required("Link lokacije je obavezan"),
+      otherwise: (schema) => schema.optional(),
+    }),
 });
+
+export type EventSchemaType = yup.InferType<typeof eventSchema>;

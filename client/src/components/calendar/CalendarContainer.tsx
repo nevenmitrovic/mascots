@@ -6,8 +6,8 @@ import FormComponent from "../../components/form/FormComponent";
 import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
 
 import { useToast } from "../../contexts/ToastContext";
-import { Event, eventFormInputs } from "../../types/eventTypes";
-import { eventSchema } from "../../validations/eventSchema";
+import { IEvent, eventFormInputs } from "../../types/eventTypes";
+import { eventSchema, EventSchemaType } from "../../validations/eventSchema";
 
 const CalendarContainer = () => {
   const { open, toggleDialog } = useContext(CalendarDialogContext);
@@ -25,7 +25,7 @@ const CalendarContainer = () => {
         <Calendar />
       </Box>
       <Dialog open={open} onClose={toggleDialog}>
-        <FormComponent<Partial<Event>>
+        <FormComponent<EventSchemaType>
           formInputs={eventFormInputs}
           handleFormSubmitt={handleEventSubmit}
           schema={eventSchema}

@@ -1,6 +1,6 @@
 import { FormInputConfig } from "./formTypes";
 
-export interface Event {
+export interface IEvent {
   _id?: string;
   date: string;
   time: string;
@@ -28,16 +28,43 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     sx: { mb: "2rem" },
   },
   {
+    name: "title",
+    label: "Naziv događaja",
+    type: "text",
+    sx: { mb: "2rem" },
+  },
+  {
     name: "location",
     label: "Lokacija",
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "lokacija1", label: "Beograd" },
-      { value: "lokacija2", label: "Novi Sad" },
-      { value: "lokacija3", label: "Niš" },
-      { value: "lokacija4", label: "Kragujevac" },
+      {
+        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL9",
+        label: "Igraonica Test3",
+      },
+      {
+        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL9",
+        label: "Igraonica Test2",
+      },
+      {
+        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL9",
+        label: "Igraonica Test",
+      },
+      { value: "none", label: "Lokacija nije u ponudi" },
     ],
+  },
+  {
+    name: "customLocationAddress",
+    label: "Adresa Lokacije",
+    type: "text",
+    sx: { mb: "2rem", display: `none` },
+  },
+  {
+    name: "customLocationLink",
+    label: "Google maps link Lokacije",
+    type: "text",
+    sx: { mb: "2rem", display: `none` },
   },
   {
     name: "maskotas",
@@ -45,10 +72,9 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "maskota1", label: "Miki Maus" },
-      { value: "maskota2", label: "Elsa" },
-      { value: "maskota3", label: "Spajdermen" },
-      { value: "maskota4", label: "Pepa Prase" },
+      { value: "1", label: "Elsa" },
+      { value: "2", label: "Spajdermen" },
+      { value: "3", label: "Pepa Prase" },
     ],
   },
   {
@@ -57,9 +83,9 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "1", label: "Novi Beograd" },
-      { value: "2", label: "Ub" },
-      { value: "3", label: "Niiiiiis" },
+      { value: "1", label: "Neven" },
+      { value: "2", label: "Igor" },
+      { value: "3", label: "Neki Lik" },
     ],
   },
   {
