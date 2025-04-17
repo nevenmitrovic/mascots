@@ -1,4 +1,4 @@
-import { model, Schema, Document, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 
 export interface ILocation {
   location: string; // link from google maps
