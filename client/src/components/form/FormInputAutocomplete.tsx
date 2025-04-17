@@ -36,7 +36,7 @@ const FormInputAutocomplete = <T extends FieldValues>({
                 selectedValues.includes(option.value)
               )}
               multiple
-              onChange={(event, newValue) => {
+              onChange={(_event, newValue) => {
                 onChange(newValue.map((option) => option.value));
               }}
               id={name}
