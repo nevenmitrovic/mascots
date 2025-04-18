@@ -12,7 +12,7 @@ import { mapEventsToCalendar } from "../../utils/helperFunctions";
 
 export const Calendar = () => {
   const { toggleDialog } = useContext(CalendarDialogContext);
-  const { formData, setFormData } = useContext(FormDataContext);
+  const { setFormData } = useContext(FormDataContext);
 
   const addNewEvent = () => {
     toggleDialog();
@@ -102,7 +102,6 @@ export const Calendar = () => {
     },
   ];
 
-  // MOCK DATA
   const events = mapEventsToCalendar(mockEventsData);
 
   return (
