@@ -1,12 +1,12 @@
 import { MongoServerError } from "mongodb";
 
-import {
-  ILocation,
-  LocationModel,
-  ILocationDocument,
-} from "locations/location.model";
 import { DatabaseError } from "errors/database.error";
 import { UniqueConstraintError } from "errors/unique-constraint.error";
+import {
+  ILocation,
+  ILocationDocument,
+  LocationModel,
+} from "locations/location.model";
 
 export class LocationRepository {
   private locationModel = LocationModel;
