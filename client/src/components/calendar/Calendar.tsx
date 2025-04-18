@@ -2,21 +2,37 @@ import { EventDropArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
-import { useContext, useState } from "react";
 
+import { useContext } from "react";
+
+import { FormDataContext } from "../../contexts/FormDataContext";
 import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
 
 export const Calendar = () => {
-  const [date, setDate] = useState<string | null>(null);
   const { toggleDialog } = useContext(CalendarDialogContext);
+  const { formData, setFormData } = useContext(FormDataContext);
 
   const addNewEvent = (event: any) => {
     toggleDialog();
   };
 
   const handleDateClick = (info: DateClickArg) => {
-    setDate(info.dateStr);
-    console.log(`Date clicked: ${info.dateStr}`);
+    const data = {
+      title: "",
+      date: info.dateStr,
+
+      time: "",
+      location: [],
+      maskotas: [],
+      animators: [],
+      price: "",
+      confirmed: "",
+      collector: "",
+      customLocationAddress: "",
+      customLocationLink: "",
+    };
+    setFormData(data);
+    toggleDialog();
   };
 
   const handleEventDrop = (eventDropInfo: EventDropArg) => {

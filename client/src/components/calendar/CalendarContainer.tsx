@@ -1,20 +1,19 @@
 import { Box, Dialog } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import Calendar from "../../components/calendar/Calendar";
 import FormComponent from "../../components/form/FormComponent";
-import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
 
+import { FormDataContext } from "../../contexts/FormDataContext";
+import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
 import { useToast } from "../../contexts/ToastContext";
-import { IEvent, eventFormInputs } from "../../types/eventTypes";
+
+import { eventFormInputs } from "../../types/eventTypes";
 import { eventSchema, EventSchemaType } from "../../validations/eventSchema";
 
 const CalendarContainer = () => {
-  const { eventFormData, setEventFormData } = useState<null | EventSchemaType>(
-    null
-  );
-
   const { open, toggleDialog } = useContext(CalendarDialogContext);
+  const { formData } = useContext(FormDataContext);
   const { showToast } = useToast();
 
   const handleEventSubmit = (data: any) => {
@@ -34,6 +33,7 @@ const CalendarContainer = () => {
           handleFormSubmitt={handleEventSubmit}
           schema={eventSchema}
           header="Dodaj dogadjaj"
+          item={formData}
         />
       </Dialog>
     </>

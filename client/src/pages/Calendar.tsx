@@ -1,11 +1,15 @@
 import CalendarContainer from "../components/calendar/CalendarContainer";
+
 import { DialogProvider } from "../contexts/CalendarDialogContext";
+import { FormDataProvider } from "../contexts/FormDataContext";
 
 const Calendar = () => {
   return (
-    <DialogProvider>
-      <CalendarContainer />
-    </DialogProvider>
+    <FormDataProvider>
+      <DialogProvider>
+        <CalendarContainer />
+      </DialogProvider>
+    </FormDataProvider>
   );
 };
 
