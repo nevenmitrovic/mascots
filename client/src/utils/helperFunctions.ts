@@ -35,15 +35,6 @@ export function mapEventsToCalendar(events: IEvent[]) {
       date: event.date,
       backgroundColor: color,
       borderColor: color,
-      extendedProps: {
-        time: event.time,
-        location: event.location,
-        maskotas: event.maskotas,
-        animators: event.animators,
-        price: event.price,
-        confirmed: event.confirmed,
-        collector: event.collector,
-      },
     };
   });
 }
