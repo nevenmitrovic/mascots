@@ -1,10 +1,12 @@
 import { FormInputConfig } from "./formTypes";
 
+import { Location } from "./locationTypes";
+
 export interface IEvent {
   _id?: string;
   date: string;
   time: string;
-  location: string[];
+  location: Omit<Location, "_id" | "name" | "phone">[];
   maskotas: string[];
   animators: string[];
   price: string;
