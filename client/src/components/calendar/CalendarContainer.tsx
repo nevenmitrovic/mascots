@@ -1,19 +1,23 @@
 import { Box, Dialog } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 
 import Calendar from "../../components/calendar/Calendar";
 import FormComponent from "../../components/form/FormComponent";
 
 import { FormDataContext } from "../../contexts/FormDataContext";
-import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
+import { CalendarFormDialogContext } from "../../contexts/CalendarFormDialogContext";
 import { useToast } from "../../contexts/ToastContext";
+import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
 
 import { eventFormInputs } from "../../types/eventTypes";
 import { eventSchema, EventSchemaType } from "../../validations/eventSchema";
 
 const CalendarContainer = () => {
-  const { open, toggleDialog } = useContext(CalendarDialogContext);
+  const { open, toggleDialog } = useContext(CalendarFormDialogContext);
   const { formData } = useContext(FormDataContext);
+  const { eventCardTuple, toggleEventCardTuple } = useContext(
+    EventCardDialogContext
+  );
   const { showToast } = useToast();
 
   const handleEventSubmit = (data: any) => {
@@ -35,6 +39,12 @@ const CalendarContainer = () => {
           header="Dodaj dogadjaj"
           item={formData}
         />
+      </Dialog>
+      <Dialog
+        open={eventCardTuple[0]}
+        onClose={() => toggleEventCardTuple(null)}
+      >
+        <div>{eventCardTuple[1]}</div>
       </Dialog>
     </>
   );

@@ -1,4 +1,4 @@
-import { EventDropArg } from "@fullcalendar/core";
+import { EventDropArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
@@ -6,13 +6,15 @@ import FullCalendar from "@fullcalendar/react";
 import { useContext } from "react";
 
 import { FormDataContext } from "../../contexts/FormDataContext";
-import { CalendarDialogContext } from "../../contexts/CalendarDialogContext";
+import { CalendarFormDialogContext } from "../../contexts/CalendarFormDialogContext";
+import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
 
 import { mapEventsToCalendar } from "../../utils/helperFunctions";
 
 export const Calendar = () => {
-  const { toggleDialog } = useContext(CalendarDialogContext);
+  const { toggleDialog } = useContext(CalendarFormDialogContext);
   const { setFormData } = useContext(FormDataContext);
+  const { toggleEventCardTuple } = useContext(EventCardDialogContext);
 
   const addNewEvent = () => {
     toggleDialog();
@@ -35,6 +37,10 @@ export const Calendar = () => {
     };
     setFormData(data);
     toggleDialog();
+  };
+
+  const handleEventClick = (info: EventClickArg) => {
+    toggleEventCardTuple(info.event.id);
   };
 
   const handleEventDrop = (eventDropInfo: EventDropArg) => {
@@ -131,10 +137,7 @@ export const Calendar = () => {
         dateClick={handleDateClick}
         events={events}
         eventDrop={handleEventDrop}
-        // eventClick={(info) => {
-        //   toggleDialog();
-        //   console.log(info.event.title);
-        // }}
+        eventClick={handleEventClick}
       />
     </>
   );
