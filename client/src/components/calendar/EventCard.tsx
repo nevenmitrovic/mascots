@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router";
 import {
   CardContent,
@@ -14,10 +14,6 @@ import { EventCardProps } from "../../types/eventTypes";
 import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
 
 const EventCard = ({ id }: EventCardProps) => {
-  const { toggleEventCardTuple } = useContext(EventCardDialogContext);
-
-  if (!id) toggleEventCardTuple(null);
-
   // mock data
   const event: IEvent = {
     _id: "652f3c8e9f1b2a001c8e4d1a",
@@ -40,13 +36,19 @@ const EventCard = ({ id }: EventCardProps) => {
   return (
     <>
       <CardContent
-        sx={{ padding: "1rem", backgroundColor: "--color-background" }}
+        sx={{
+          padding: "1rem",
+          backgroundColor: "var(--color-accent)",
+          color: "var(--color-primary)",
+        }}
       >
-        <Typography gutterBottom sx={{ fontSize: 24 }}>
+        <Typography gutterBottom sx={{ fontSize: 24, fontWeight: "bold" }}>
           {event.title}
         </Typography>
-        <Box sx={{ mb: 2 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, mb: 1 }}>Datum:</Typography>
+        <Box sx={{ mb: 1 }} component={"div"}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+            Datum i vreme:
+          </Typography>
           <Typography sx={{ fontSize: 18 }}>
             {Intl.DateTimeFormat("sr-RS", {
               year: "numeric",
@@ -54,37 +56,70 @@ const EventCard = ({ id }: EventCardProps) => {
               day: "2-digit",
             }).format(new Date(event.date))}
           </Typography>
-          <Typography sx={{ fontSize: 16 }}>{event.time}</Typography>
+          <Typography sx={{ fontSize: 18 }}>{event.time}</Typography>
         </Box>
-        <Box>
-          <Typography sx={{ fontSize: 20, mb: 1 }}>Lokacija:</Typography>
+        <Box sx={{ mb: 1 }} component={"div"}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+            Lokacija:
+          </Typography>
           <Typography sx={{ fontSize: 18 }}>
             {event.location[0].address}
           </Typography>
           <Link
             to={event.location[0].location}
             target="_blank"
-            style={{ textDecoration: "none" }}
+            style={{
+              textDecoration: "none",
+              color: "var(--color-secondary)",
+              fontWeight: "bold",
+            }}
           >
             Google Maps Link
           </Link>
         </Box>
-
-        {/* TODO */}
-        <Typography sx={{ fontSize: 16 }}>
-          {event.maskotas[0]}
-          {event.maskotas[1]}
-        </Typography>
-        <Typography sx={{ fontSize: 16 }}>
-          {event.animators[0]}
-          {event.animators[1]}
-        </Typography>
-        <Typography sx={{ fontSize: 16 }}>{event.price}</Typography>
+        <Box sx={{ mb: 1 }} component={"div"}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+            Maskote:
+          </Typography>
+          {event.maskotas.map((macota) => (
+            <Typography key={macota} sx={{ fontSize: 18 }}>
+              {macota}
+            </Typography>
+          ))}
+        </Box>
+        <Box sx={{ mb: 1 }} component={"div"}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+            Animatori:
+          </Typography>
+          {event.animators.map((animator) => (
+            <Typography key={animator} sx={{ fontSize: 18 }}>
+              {animator}
+            </Typography>
+          ))}
+        </Box>
+        <Box sx={{ mb: 1 }} component={"div"}>
+          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+            Cena:
+          </Typography>
+          <Typography sx={{ fontSize: 18 }}>
+            {Intl.NumberFormat("sr-RS", {
+              style: "currency",
+              currency: "EUR",
+              minimumFractionDigits: 0,
+            }).format(Number(event.price))}
+          </Typography>
+        </Box>
       </CardContent>
       <CardActions>
-        <Button size="small">Potvrdi</Button>
-        <Button size="small">Otkazi</Button>
-        <Button size="small">Prikupio novac</Button>
+        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+          Potvrdi
+        </Button>
+        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+          Otkazi
+        </Button>
+        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+          Prikupio novac
+        </Button>
       </CardActions>
     </>
   );
