@@ -2,6 +2,10 @@ import { FormInputConfig } from "./formTypes";
 
 import { Location } from "./locationTypes";
 
+export interface EventCardProps {
+  id: string | null;
+}
+
 export interface IEvent {
   _id?: string;
   date: string;

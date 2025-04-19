@@ -3,6 +3,7 @@ import { useContext } from "react";
 
 import Calendar from "../../components/calendar/Calendar";
 import FormComponent from "../../components/form/FormComponent";
+import EventCard from "../../components/calendar/EventCard";
 
 import { FormDataContext } from "../../contexts/FormDataContext";
 import { CalendarFormDialogContext } from "../../contexts/CalendarFormDialogContext";
@@ -44,7 +45,9 @@ const CalendarContainer = () => {
         open={eventCardTuple[0]}
         onClose={() => toggleEventCardTuple(null)}
       >
-        <div>{eventCardTuple[1]}</div>
+        <Box sx={{ minWidth: 275 }}>
+          <EventCard id={eventCardTuple[1]} />
+        </Box>
       </Dialog>
     </>
   );
