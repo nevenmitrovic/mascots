@@ -36,12 +36,7 @@ const FormComponent = <T extends FieldValues>({
   const locationValue = watch("location" as Path<T>);
 
   const onSubmit: SubmitHandler<T> = async (data) => {
-    await new Promise((res) =>
-      setTimeout(() => {
-        handleFormSubmitt(data);
-        reset();
-      }, 2000)
-    );
+    handleFormSubmitt(data);
   };
 
   return (

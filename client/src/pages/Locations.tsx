@@ -2,17 +2,19 @@ import { Box, Dialog, Divider } from "@mui/material";
 import { useState } from "react";
 import FormComponent from "../components/form/FormComponent";
 import PageHeader from "../components/global/PageHeader";
+import {
+  useCreateItem,
+  useDeleteItem,
+  useEditItem,
+  useGetItems,
+} from "../hooks/genericHooks";
 import TContainer from "../components/table/TContainer";
-import { useToast } from "../contexts/ToastContext";
-import { useLocations } from "../hooks/useLocations";
 import { useToggle } from "../hooks/useToggle";
+import { queryKeys } from "../reactQuery/constants";
 import { Location, locationInputs } from "../types/locationTypes";
 import { locationSchema } from "../validations/locationSchema";
 
 const Locations = () => {
-  //showing toast message
-  const { showToast } = useToast();
-
   //form data for edit or creating new location
   const [editItem, setEditItem] = useState<Location | undefined>(undefined);
 
@@ -20,23 +22,31 @@ const Locations = () => {
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const locations = useLocations();
+  const { fullData, selectedData } = useGetItems<Location>([
+    queryKeys.locations,
+  ]);
+  console.log(selectedData);
 
-  const handleLocationSubmit = (data: Partial<Location>) => {
-    toggleDialog();
-    showToast("Lokacija je uspesno sacuvana", "success");
-  };
+  //useQuery for CRUD
+  const createLocation = useCreateItem([queryKeys.locations]);
+  const editLocation = useEditItem([queryKeys.locations]);
+  const deleteLocation = useDeleteItem([queryKeys.locations]);
 
-  const handleEdit = (item: Location) => {
-    setEditItem(item);
+  const handleLocationSubmit = (data: Partial<Location> | Location) => {
+    editItem === undefined
+      ? createLocation(data)
+      : editLocation(data as Location);
     toggleDialog();
   };
 
   const handleDelete = (id: string) => {
-    console.log(`Delete item with id: ${id}`);
-    showToast("Lokacija je obrisana", "success");
+    deleteLocation(id);
   };
 
+  const handleEditDialog = (item: Location) => {
+    setEditItem(item);
+    toggleDialog();
+  };
   const handleDialogClose = () => {
     toggleDialog();
     setEditItem(undefined);
@@ -46,11 +56,11 @@ const Locations = () => {
     <Box sx={{ padding: "1rem" }}>
       <PageHeader onAdd={toggleDialog} headline="Lokacije" />
       <Divider />
-      {locations.length > 0 && (
+      {fullData && (
         <TContainer<Location>
-          data={locations}
+          data={fullData}
           headers={locationInputs}
-          onEdit={handleEdit}
+          onEdit={handleEditDialog}
           onDelete={handleDelete}
         />
       )}
