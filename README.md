@@ -1,71 +1,68 @@
--Goal of the app, automatisation process of booking events for parties,
-defining animators who is going and maskotas they are wearing. Keeping track of storage, 
-every mascots has 2 quantities.
+# Mascots
 
--Admin features:
-    -CRUD animators (with all the informations)
-    -CRUD events in less than minut over the phone
-    -CRUD of event locations
-    -CRUD of mascotas
-    -GET financial reports
+Goal of this MERN app is automatisation process of booking events for parties, defining animators who is going and mascots they are wearing. Keeping track of mascots quantities.
 
--Animators features:
-    -READ the calendar
-    -UPDATE events (1.confirming event day before, keep track who confirmed it, 2. Confirmation of money taking from event)
+## Features
 
--Event feature:    
-    -Sending informations to animators when a new event is created
+### Admin features:
 
+- CRUD animators (with all the informations)
+- CRUD events
+- CRUD of event locations
+- CRUD of mascots
+- GET financial reports
 
--Different data collections (maskotas, events, locations, animators, report)
+### Animators features:
 
-    -Maskot model {
-        -Availability
-        -Quantity
-        -Name
-        -Used[{date}]
-    }
-    -Event model {
-        -Date 
-        -Location 
-        -Maskotas [(ref)]
-        -Animators [(ref)]
-        -Price
-        -Who collected the money (ref)
-        -Confirmation by animator (ref)
-        -Organizator {name, number, social}
-    }
-    -Location model {
-        -Link (from google maps)
-        -Name
-        -Number
-        -Address
-    }
-    -Animator {
-        -Full name
-        -Username
-        -Number
-        -Email
-        -Password
-        -Paycheck
-        -Money collected
-        -Events (ref)
-    }
+- READ the calendar
+- UPDATE events:
+  1. Confirming event day before, keep track who confirmed it
+  2. Confirmation of money taking from event
 
-Technologies:
-    MERN stack
-    Front:
-        -React router
-        -Context API
-        -CSS 
-        -Axios
-        -Yup
-    Back:
-        -REST api
-        -Helmet
-        -Morgan
-        -Yup
+### Event feature:
 
+- Sending informations to animators when a new event is created
 
+## Tech
 
+### Frontend:
 
+- React
+- TypeScript
+- MUI
+- React Full Calendar
+- TanStack Queary
+- Axios
+- React Hook Form
+- Yup
+- Jest
+
+### Backend:
+
+- Express
+- TypeScript
+- Yup
+- Helmet
+- Jest
+
+## Installation And Development
+
+### Backend
+
+Install the dependencies and devDependencies and start the server.
+
+```sh
+cd server
+npm i
+npm run dev
+```
+
+### Frontend
+
+Install the dependencies and devDependencies and start the client.
+
+```sh
+cd client
+npm i
+npm run dev
+```
