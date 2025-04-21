@@ -1,15 +1,10 @@
 import { Pagination, Stack } from "@mui/material";
-type TablePaginationComponentProps = {
-  currentPage: number;
-  numOfPages: number;
-  handlePageChange: (event: React.ChangeEvent<unknown>, newPage: number) => void;
-};
+import { TablePaginationComponentProps } from "../../types/tableTypes";
 
 const TPagination = ({
   currentPage,
   numOfPages,
   handlePageChange,
-  
 }: TablePaginationComponentProps) => {
   return (
     <Stack sx={{ display: "flex", justifyContent: "flex-end" }} spacing={2}>
