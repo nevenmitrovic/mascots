@@ -16,8 +16,8 @@ Goal of this MERN app is automatisation process of booking events for parties, d
 
 - READ the calendar
 - UPDATE events:
-  1. Confirming event day before, keep track who confirmed it
-  2. Confirmation of money taking from event
+  - Confirming event day before, keep track who confirmed it
+  - Confirmation of money taking from event
 
 ### Event feature:
 
