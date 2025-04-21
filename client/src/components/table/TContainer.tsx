@@ -4,13 +4,7 @@ import { useState } from "react";
 import TableContent from "./TableContent";
 import TableHeader from "./TableHeader";
 import TPagination from "./TPagination";
-
-type TContainerProps<T extends { _id: string }> = {
-  data: T[];
-  headers: { name: string; label: string }[];
-  onEdit: (item: T) => void;
-  onDelete: (_id: string) => void;
-};
+import { TContainerProps } from "../../types/tableTypes";
 
 const TContainer = <T extends { _id: string }>({
   data,
@@ -23,7 +17,7 @@ const TContainer = <T extends { _id: string }>({
   const numOfPages = Math.ceil(data.length / rowsPerPage);
 
   const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
+    _event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setCurrentPage(value);

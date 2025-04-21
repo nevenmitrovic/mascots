@@ -6,12 +6,12 @@ import {
   FieldValues,
   Resolver,
   SubmitHandler,
+  Path,
   useForm,
 } from "react-hook-form";
 import { ObjectSchema } from "yup";
 import { FormProps } from "../../types/formTypes";
 import { defaultValues } from "../../utils/helperFunctions";
-import { selectValidation } from "../../validations/selectSchema";
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
 
@@ -22,20 +22,18 @@ const FormComponent = <T extends FieldValues>({
   item,
   header,
 }: FormProps<T>) => {
-  // Check if any input is of type "select"
-  const hasSelectInput = formInputs.find((input) => input.type === "select");
-  // If so, add selectValidation to the schema
-  const finalSchema = hasSelectInput ? schema.concat(selectValidation) : schema;
-
   const {
     handleSubmit,
     control,
     formState: { isSubmitting },
     reset,
+    watch, // watching the form value or values
   } = useForm<T>({
-    resolver: yupResolver(finalSchema as ObjectSchema<T>) as Resolver<T>,
+    resolver: yupResolver(schema as ObjectSchema<T>) as Resolver<T>,
     defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
+
+  const locationValue = watch("location" as Path<T>);
 
   const onSubmit: SubmitHandler<T> = async (data) => {
     await new Promise((res) =>
@@ -57,14 +55,28 @@ const FormComponent = <T extends FieldValues>({
     >
       <Typography variant="h4">{header}</Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {formInputs.map((input) =>
-          input.type === "text" ||
-          input.type === "password" ||
-          input.type === "email" ? (
+        {formInputs.map((input) => {
+          let fieldStyle = { ...input.sx };
+
+          // dynamically set visibility based on the location input value
+          if (
+            input.name === "customLocationAddress" ||
+            input.name === "customLocationLink"
+          ) {
+            fieldStyle = {
+              ...fieldStyle,
+              display: locationValue.includes("none") ? "block" : "none",
+            };
+          }
+
+          return input.type === "text" ||
+            input.type === "password" ||
+            input.type === "email" ? (
             <FormInputText<T>
               key={String(input.name)}
               {...input}
               control={control}
+              sx={fieldStyle}
             />
           ) : (
             <FormInputAutocomplete<T>
@@ -74,10 +86,10 @@ const FormComponent = <T extends FieldValues>({
               label={input.label}
               options={input.options || []}
               type={input.type}
-              sx={{ mb: "2rem" }}
+              sx={fieldStyle}
             />
-          )
-        )}
+          );
+        })}
 
         <Button
           disabled={isSubmitting}

@@ -1,13 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton, TableBody, TableCell, TableRow } from "@mui/material";
-
-type TableContentProps<T> = {
-  data: T[];
-  headers: { name: string; label: string }[];
-  onEdit: (item: T) => void;
-  onDelete: (_id: string) => void;
-};
+import { TableContentProps } from "../../types/tableTypes";
 
 const TableContent = <T extends { _id: string }>({
   data,
@@ -15,7 +9,6 @@ const TableContent = <T extends { _id: string }>({
   onEdit,
   onDelete,
 }: TableContentProps<T>) => {
-
   return (
     <TableBody>
       {data.map((item) => (

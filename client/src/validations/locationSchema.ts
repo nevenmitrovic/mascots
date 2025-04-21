@@ -17,5 +17,13 @@ export const locationSchema = yup.object({
       "Lokacija mora da ima adresu."
     )
     .required("Lokacija mora da ima adresu."),
-  location: yup.string().required("Lokacija mora da ima link"),
+  location: yup
+    .string()
+    .matches(
+      /^https:\/\/maps\.app\.goo\.gl\/.+/,
+      "Lokacija mora biti validan Google Maps link (https://maps.app.goo.gl/...)"
+    )
+    .required("Lokacija mora da ima link"),
 });
+
+export type LocationSchemaType = yup.InferType<typeof locationSchema>;
