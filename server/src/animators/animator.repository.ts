@@ -28,4 +28,12 @@ export class AnimatorRepository {
       return checkForErrors(err);
     }
   }
+
+  async getAnimatorById(id: string): Promise<IAnimatorDocument | null> {
+    try {
+      return this.animatorModel.findById(id);
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }

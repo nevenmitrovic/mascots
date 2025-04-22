@@ -107,4 +107,45 @@ describe("Animators Repository", () => {
       expect(mockGetAnimators).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe("GET /animators/:id", () => {
+    it("should get animator by id", async () => {
+      const mockGetAnimatorById = jest
+        .spyOn(animatorRepository, "getAnimatorById")
+        .mockResolvedValue(newAnimatorDocument);
+
+      const res = await animatorRepository.getAnimatorById(validId);
+      expect(res).toEqual(newAnimatorDocument);
+      expect(mockGetAnimatorById).toHaveBeenCalledTimes(1);
+      expect(mockGetAnimatorById).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to get animator by id: MongooseError"
+      );
+      const mockGetAnimatorById = jest
+        .spyOn(animatorRepository, "getAnimatorById")
+        .mockRejectedValue(dbError);
+
+      await expect(animatorRepository.getAnimatorById(validId)).rejects.toThrow(
+        dbError
+      );
+      expect(mockGetAnimatorById).toHaveBeenCalledTimes(1);
+      expect(mockGetAnimatorById).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockGetAnimatorById = jest
+        .spyOn(animatorRepository, "getAnimatorById")
+        .mockRejectedValue(mockError);
+
+      await expect(animatorRepository.getAnimatorById(validId)).rejects.toThrow(
+        mockError
+      );
+      expect(mockGetAnimatorById).toHaveBeenCalledTimes(1);
+      expect(mockGetAnimatorById).toHaveBeenCalledWith(validId);
+    });
+  });
 });
