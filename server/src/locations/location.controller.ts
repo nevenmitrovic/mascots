@@ -3,16 +3,12 @@ import { NextFunction, Request, Response } from "express";
 import { BadRequestError } from "errors/bad-request.error";
 import { Controller } from "interfaces/controller.interface";
 import { LocationService } from "locations/location.service";
-import {
-  locationSchema,
-  locationUpdateSchema,
-} from "locations/location.validate";
+import { locationSchema } from "locations/location.validate";
 import { validationMiddleware } from "middlewares/validate.middleware";
 
 export class LocationController extends Controller {
   private readonly locationService = new LocationService();
   private schema = locationSchema;
-  private updateSchema = locationUpdateSchema;
 
   constructor() {
     super("/locations");
@@ -41,7 +37,7 @@ export class LocationController extends Controller {
 
     this.router.put(
       `${this.path}/:id`,
-      validationMiddleware(this.updateSchema),
+      validationMiddleware(this.schema),
       (req: Request, res: Response, next: NextFunction) =>
         this.updateLocation(req, res, next)
     );

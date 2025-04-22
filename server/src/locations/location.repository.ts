@@ -39,7 +39,7 @@ export class LocationRepository {
 
   async updateLocation(
     id: string,
-    data: Partial<ILocation>
+    data: ILocation
   ): Promise<ILocationDocument | null> {
     try {
       return await this.locationModel.findByIdAndUpdate(id, data, {

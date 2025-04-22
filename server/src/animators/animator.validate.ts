@@ -24,14 +24,4 @@ export const animatorSchema = yup.object({
     .matches(PHONE_REGEX, "phone is not valid")
     .required("phone is required"),
   paycheck: yup.number().required("paycheck is required"),
-  moneyCollected: yup
-    .array()
-    .of(
-      yup.object({
-        payed: yup.boolean().required("payed is required"),
-        collected: yup.number().required("collected is required"),
-      })
-    )
-    .min(12, "moneyCollected must have 12 elements")
-    .max(12, "moneyCollected must have 12 elements"),
 });

@@ -1,25 +1,5 @@
 import { model, Schema } from "mongoose";
 
-interface IMoneyCollected {
-  payed: boolean;
-  collected: number;
-}
-
-export enum Months {
-  January = 0,
-  February = 1,
-  March = 2,
-  April = 3,
-  May = 4,
-  June = 5,
-  July = 6,
-  August = 7,
-  September = 8,
-  October = 9,
-  November = 10,
-  December = 11,
-}
-
 export interface IAnimator {
   fullName: string;
   username: string;
@@ -27,25 +7,10 @@ export interface IAnimator {
   email: string;
   phone: string;
   paycheck: number;
-  moneyCollected?: [
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected,
-    IMoneyCollected
-  ];
 }
 
 export interface IAnimatorDocument extends IAnimator {
   _id: string;
-  createdAt?: Date;
 }
 
 export interface IAnimatorMessageResponse {
@@ -82,29 +47,8 @@ const animatorSchema = new Schema<IAnimator>(
       required: true,
       default: 0,
     },
-    moneyCollected: {
-      type: [{ _id: false, payed: Boolean, collected: Number }],
-      default: [
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-        { payed: false, collected: 0 },
-      ],
-    },
   },
   {
-    timestamps: {
-      createdAt: true,
-      updatedAt: false,
-    },
     versionKey: false,
   }
 );

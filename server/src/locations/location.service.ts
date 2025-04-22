@@ -57,7 +57,7 @@ export class LocationService {
 
   async updateLocation(
     id: string,
-    data: Partial<ILocation>
+    data: ILocation
   ): Promise<ILocationMessageResponse> {
     try {
       if (!data) {

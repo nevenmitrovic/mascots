@@ -4,7 +4,6 @@ import { LocationRepository } from "../../locations/location.repository";
 import {
   mockLocations,
   mockLocation,
-  updateData,
   uniqueData,
   newLocation,
   mockDeleteMessageResponse,
@@ -137,10 +136,7 @@ describe("Location Service with error-handler.service", () => {
 
       expect(result).toEqual({
         message: "location created successfully",
-        data: {
-          ...mockLocation,
-          createdAt: expect.any(Date),
-        },
+        data: mockLocation,
       });
       expect(mockLocationRepository.createLocation).toHaveBeenCalledWith(
         mockLocation
@@ -191,25 +187,22 @@ describe("Location Service with error-handler.service", () => {
 
       const result = await locationService.updateLocation(
         "67f5237dcaf56ff295efd4a9",
-        updateData
+        mockLocation
       );
 
       expect(result).toEqual({
         message: "location updated successfully",
-        data: {
-          ...mockLocation,
-          createdAt: expect.any(Date),
-        },
+        data: mockLocation,
       });
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        updateData
+        mockLocation
       );
     });
 
     it("should throw BadRequestError for invalid id", async () => {
       await expect(
-        locationService.updateLocation("invalid-id", updateData)
+        locationService.updateLocation("invalid-id", mockLocation)
       ).rejects.toThrow(HttpError);
       expect(mockLocationRepository.updateLocation).not.toHaveBeenCalled();
     });
@@ -218,7 +211,7 @@ describe("Location Service with error-handler.service", () => {
       mockLocationRepository.updateLocation.mockResolvedValue(null);
 
       await expect(
-        locationService.updateLocation("67f5237dcaf56ff295efd4a9", updateData)
+        locationService.updateLocation("67f5237dcaf56ff295efd4a9", mockLocation)
       ).rejects.toThrow(HttpError);
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -228,11 +221,11 @@ describe("Location Service with error-handler.service", () => {
       mockLocationRepository.updateLocation.mockRejectedValue(mockError);
 
       await expect(
-        locationService.updateLocation("67f5237dcaf56ff295efd4a9", uniqueData)
+        locationService.updateLocation("67f5237dcaf56ff295efd4a9", mockLocation)
       ).rejects.toThrow(HttpError);
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        uniqueData
+        mockLocation
       );
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -244,7 +237,7 @@ describe("Location Service with error-handler.service", () => {
       mockLocationRepository.updateLocation.mockRejectedValue(mockError);
 
       await expect(
-        locationService.updateLocation("67f5237dcaf56ff295efd4a9", updateData)
+        locationService.updateLocation("67f5237dcaf56ff295efd4a9", mockLocation)
       ).rejects.toThrow(HttpError);
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -255,7 +248,7 @@ describe("Location Service with error-handler.service", () => {
       mockLocationRepository.updateLocation.mockRejectedValue(handledError);
 
       await expect(
-        locationService.updateLocation("67f5237dcaf56ff295efd4a9", updateData)
+        locationService.updateLocation("67f5237dcaf56ff295efd4a9", mockLocation)
       ).rejects.toThrow(HttpError);
       expect(mockLocationRepository.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -271,10 +264,7 @@ describe("Location Service with error-handler.service", () => {
 
       expect(result).toEqual({
         message: "location deleted successfully",
-        data: {
-          ...mockDeleteMessageResponse.data,
-          createdAt: expect.any(Date),
-        },
+        data: mockDeleteMessageResponse.data,
       });
       expect(mockLocationRepository.deleteLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9"
