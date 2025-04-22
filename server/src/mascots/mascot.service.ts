@@ -45,7 +45,7 @@ export class MascotService {
         throw new BadRequestError("invalid id");
       }
 
-      const updatedMascot = await this.mascotRepository.updateMascot(data);
+      const updatedMascot = await this.mascotRepository.updateMascot(id, data);
       if (!updatedMascot) {
         throw new NotFoundError("mascota not found");
       }

@@ -24,9 +24,12 @@ export class MascotRepository {
     }
   }
 
-  async updateMascot(data: MascotDocument): Promise<MascotDocument | null> {
+  async updateMascot(
+    id: string,
+    data: MascotDocument
+  ): Promise<MascotDocument | null> {
     try {
-      return await this.mascotModel.findByIdAndUpdate(data._id, data, {
+      return await this.mascotModel.findByIdAndUpdate(id, data, {
         new: true,
       });
     } catch (error) {
