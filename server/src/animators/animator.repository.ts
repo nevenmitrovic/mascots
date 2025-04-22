@@ -36,4 +36,26 @@ export class AnimatorRepository {
       return checkForErrors(err);
     }
   }
+
+  async updateAnimator(
+    id: string,
+    data: IAnimator
+  ): Promise<IAnimatorDocument | null> {
+    try {
+      return this.animatorModel.findByIdAndUpdate(id, data, {
+        new: true,
+        timestamps: false,
+      });
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
+
+  async deleteAnimator(id: string): Promise<IAnimatorDocument | null> {
+    try {
+      return this.animatorModel.findByIdAndDelete(id);
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }

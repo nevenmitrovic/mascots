@@ -148,4 +148,101 @@ describe("Animators Repository", () => {
       expect(mockGetAnimatorById).toHaveBeenCalledWith(validId);
     });
   });
+
+  describe("PUT /animators/:id", () => {
+    it("should update animator by id", async () => {
+      const mockUpdateAnimator = jest
+        .spyOn(animatorRepository, "updateAnimator")
+        .mockResolvedValue(newAnimatorDocument);
+
+      const res = await animatorRepository.updateAnimator(validId, newAnimator);
+      expect(res).toEqual(newAnimatorDocument);
+      expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to update animator: MongooseError"
+      );
+      const mockUpdateAnimator = jest
+        .spyOn(animatorRepository, "updateAnimator")
+        .mockRejectedValue(dbError);
+
+      await expect(
+        animatorRepository.updateAnimator(validId, newAnimator)
+      ).rejects.toThrow(dbError);
+      expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockUpdateAnimator = jest
+        .spyOn(animatorRepository, "updateAnimator")
+        .mockRejectedValue(mockError);
+
+      await expect(
+        animatorRepository.updateAnimator(validId, newAnimator)
+      ).rejects.toThrow(mockError);
+      expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+    });
+
+    it("should handle unique constraint error", async () => {
+      const uniqueConstraintError = new UniqueConstraintError(
+        "email",
+        "nevenmitrovic4@gmail.com"
+      );
+      const mockUpdateAnimator = jest
+        .spyOn(animatorRepository, "updateAnimator")
+        .mockRejectedValue(uniqueConstraintError);
+      await expect(
+        animatorRepository.updateAnimator(validId, newAnimator)
+      ).rejects.toThrow(uniqueConstraintError);
+      expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+    });
+  });
+
+  describe("DELETE /animators/:id", () => {
+    it("should delete animator by id", async () => {
+      const mockDeleteAnimator = jest
+        .spyOn(animatorRepository, "deleteAnimator")
+        .mockResolvedValue(newAnimatorDocument);
+
+      const res = await animatorRepository.deleteAnimator(validId);
+      expect(res).toEqual(newAnimatorDocument);
+      expect(mockDeleteAnimator).toHaveBeenCalledTimes(1);
+      expect(mockDeleteAnimator).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to delete animator: MongooseError"
+      );
+      const mockDeleteAnimator = jest
+        .spyOn(animatorRepository, "deleteAnimator")
+        .mockRejectedValue(dbError);
+
+      await expect(animatorRepository.deleteAnimator(validId)).rejects.toThrow(
+        dbError
+      );
+      expect(mockDeleteAnimator).toHaveBeenCalledTimes(1);
+      expect(mockDeleteAnimator).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockDeleteAnimator = jest
+        .spyOn(animatorRepository, "deleteAnimator")
+        .mockRejectedValue(mockError);
+
+      await expect(animatorRepository.deleteAnimator(validId)).rejects.toThrow(
+        mockError
+      );
+      expect(mockDeleteAnimator).toHaveBeenCalledTimes(1);
+      expect(mockDeleteAnimator).toHaveBeenCalledWith(validId);
+    });
+  });
 });
