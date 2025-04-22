@@ -14,8 +14,8 @@ import {
 } from "animators/animator.model";
 
 export class AnimatorService {
-  private readonly animatorRepository = new AnimatorRepository();
-  private readonly errorHandler = new ErrorHandlerService();
+  private animatorRepository = new AnimatorRepository();
+  private errorHandler = new ErrorHandlerService();
 
   async createAnimator(data: IAnimator): Promise<IAnimatorMessageResponse> {
     try {

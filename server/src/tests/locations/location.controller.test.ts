@@ -1,6 +1,8 @@
 import request from "supertest";
 import { NextFunction, Request, Response } from "express";
 import express from "express";
+import mongoose from "mongoose";
+
 import { LocationController } from "../../locations/location.controller";
 import { LocationService } from "../../locations/location.service";
 import { ErrorHandlerService } from "../../services/error-handler.service";
@@ -55,6 +57,10 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
     jest.clearAllMocks();
   });
 
+  afterAll(async () => {
+    jest.resetAllMocks();
+  });
+
   describe("GET /locations", () => {
     it("should return all locations with status 200", async () => {
       mockLocationService.getLocations.mockResolvedValue(mockLocations);
@@ -84,7 +90,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       expect(mockLocationService.getLocations).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle error when an database throw error ", async () => {
+    it("should handle error when an database throw error", async () => {
       const mockError = new DatabaseError(
         "failed to get locations: MongooseError"
       );
