@@ -7,7 +7,19 @@ export interface IAnimator {
   email: string;
   phone: string;
   paycheck: number;
-  moneyCollected: number[];
+  moneyCollected: [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number
+  ];
 }
 
 export interface IAnimatorDocument extends IAnimator {
@@ -52,7 +64,7 @@ const animatorSchema = new Schema<IAnimator>(
     moneyCollected: {
       type: [Number],
       required: true,
-      default: [0],
+      default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
   },
   {
