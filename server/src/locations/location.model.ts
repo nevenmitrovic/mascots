@@ -9,7 +9,6 @@ export interface ILocation {
 
 export interface ILocationDocument extends ILocation {
   _id: string;
-  createdAt?: Date;
 }
 
 export interface ILocationMessageResponse {
@@ -38,10 +37,6 @@ const locationSchema = new Schema<ILocation>(
     },
   },
   {
-    timestamps: {
-      createdAt: true,
-      updatedAt: false,
-    },
     versionKey: false,
   }
 );

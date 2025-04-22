@@ -6,8 +6,8 @@ import {
   Mascot,
   MascotDocument,
   MascotMessageResponse,
-} from "./mascot.model";
-import { MascotRepository } from "./mascot.repository";
+} from "mascots/mascot.model";
+import { MascotRepository } from "mascots/mascot.repository";
 
 export class MascotService {
   private mascotRepository = new MascotRepository();

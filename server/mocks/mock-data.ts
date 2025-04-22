@@ -1,10 +1,10 @@
+import { IAnimator, IAnimatorDocument } from "animators/animator.model";
 import {
   ILocation,
   ILocationDocument,
   ILocationMessageResponse,
 } from "../src/locations/location.model";
 
-const mockDate = new Date();
 export const mockLocations: ILocationDocument[] = [
   {
     _id: "67f5237dcaf56ff295efd4a9",
@@ -12,7 +12,6 @@ export const mockLocations: ILocationDocument[] = [
     name: "Mock1",
     phone: "+381656196083",
     address: "Kralja Petra 41",
-    createdAt: mockDate,
   },
   {
     _id: "67f53c68bf7547741b0e2eef",
@@ -20,7 +19,6 @@ export const mockLocations: ILocationDocument[] = [
     name: "Mock2",
     phone: "+381656196083",
     address: "Kralja Petra 41",
-    createdAt: mockDate,
   },
   {
     _id: "67f55bcc755956e39523251a",
@@ -28,7 +26,6 @@ export const mockLocations: ILocationDocument[] = [
     name: "Mock3",
     phone: "+381656196083",
     address: "Kralja Petra 41",
-    createdAt: mockDate,
   },
   {
     _id: "67f5639fa26f52b544484236",
@@ -36,7 +33,6 @@ export const mockLocations: ILocationDocument[] = [
     name: "Mock4",
     phone: "+381656196083",
     address: "Kralja Petra 41",
-    createdAt: mockDate,
   },
 ];
 export const mockLocation: ILocationDocument = {
@@ -45,7 +41,6 @@ export const mockLocation: ILocationDocument = {
   name: "Mock1",
   phone: "+381656196083",
   address: "Kralja Petra 41",
-  createdAt: mockDate,
 };
 export const mockDeleteMessageResponse: ILocationMessageResponse = {
   message: "location deleted successfully",
@@ -55,12 +50,7 @@ export const mockDeleteMessageResponse: ILocationMessageResponse = {
     name: "Mock1",
     phone: "+381656196083",
     address: "Kralja Petra 41",
-    createdAt: mockDate,
   },
-};
-export const updateData: Partial<ILocation> = {
-  name: "Updated Location",
-  address: "Updated Address",
 };
 export const uniqueData = {
   location: "https://maps.app.goo.gl/RNH27NG3xDQipTFy6",
@@ -73,7 +63,6 @@ export const updatedLocation: ILocationMessageResponse = {
     name: "Updated Location",
     phone: "+381656196083",
     address: "Updated Address",
-    createdAt: mockDate,
   },
 };
 export const newLocation: ILocation = {
@@ -88,7 +77,6 @@ export const createdLocation: ILocationMessageResponse = {
   data: {
     ...newLocation,
     _id: "67f5999dcaf56ff295efd4a9",
-    createdAt: mockDate,
   },
 };
 
@@ -103,4 +91,32 @@ export const newLocationBadRequestName: Omit<ILocation, "name"> = {
   location: "https://maps.app.goo.gl/new",
   phone: "+381656196000",
   address: "New Address 123",
+};
+
+export const newAnimator: IAnimator = {
+  fullName: "John Doe",
+  username: "johndoe",
+  password: "password123",
+  email: "john.doe@gmail.com",
+  phone: "+381656196000",
+  paycheck: 1000,
+};
+
+export const newAnimatorDocument: IAnimatorDocument = {
+  _id: "67f5999dcaf56ff295efd4a9",
+  fullName: "John Doe",
+  username: "johndoe",
+  password: "password123",
+  email: "john.doe@gmail.com",
+  phone: "+381656196000",
+  paycheck: 1000,
+};
+
+export const newAnimatorBadRequest: IAnimator = {
+  fullName: "John Doe",
+  username: "jo",
+  password: "password123",
+  email: "john.doe@gmail.com",
+  phone: "+381656196000",
+  paycheck: 1000,
 };

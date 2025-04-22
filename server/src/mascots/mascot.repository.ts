@@ -1,5 +1,5 @@
-import { checkForErrors } from "../utils/globalUtils";
-import { Mascot, MascotDocument, MascotModel } from "./mascot.model";
+import { checkForErrors } from "utils/globalUtils";
+import { Mascot, MascotDocument, MascotModel } from "mascots/mascot.model";
 
 export class MascotRepository {
   private mascotModel = MascotModel;

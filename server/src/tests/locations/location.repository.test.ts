@@ -1,28 +1,15 @@
-import { LocationService } from "../../locations/location.service";
-import { ErrorHandlerService } from "../../services/error-handler.service";
 import { LocationRepository } from "../../locations/location.repository";
 import {
   mockLocations,
   mockLocation,
-  mockDeleteMessageResponse,
-  updateData,
-  uniqueData,
-  updatedLocation,
   newLocation,
-  createdLocation,
-  newLocationBadRequest,
-  newLocationBadRequestName,
 } from "../../../mocks/mock-data";
-import { HttpError } from "../../errors/http.error";
-import { NotFoundError } from "../../errors/not-found.error";
-import { BadRequestError } from "../../errors/bad-request.error";
 import { DatabaseError } from "../../errors/database.error";
 import { UniqueConstraintError } from "../../errors/unique-constraint.error";
 
 describe("Location Repository", () => {
   let locationRepository: LocationRepository;
   let validId = "67f5237dcaf56ff295efd4a9";
-  let invalidId = "invalid-id";
 
   beforeAll(() => {
     locationRepository = new LocationRepository();
@@ -172,11 +159,11 @@ describe("Location Repository", () => {
 
       const result = await locationRepository.updateLocation(
         validId,
-        updateData
+        mockLocation
       );
 
       expect(result).toEqual(mockLocation);
-      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, updateData);
+      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, mockLocation);
       expect(mockUpdateLocation).toHaveBeenCalledTimes(1);
     });
 
@@ -189,9 +176,9 @@ describe("Location Repository", () => {
         .mockRejectedValue(dbError);
 
       await expect(
-        locationRepository.updateLocation(validId, updateData)
+        locationRepository.updateLocation(validId, mockLocation)
       ).rejects.toThrow(DatabaseError);
-      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, updateData);
+      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, mockLocation);
       expect(mockUpdateLocation).toHaveBeenCalledTimes(1);
     });
 
@@ -202,9 +189,9 @@ describe("Location Repository", () => {
         .mockRejectedValue(uniqueError);
 
       await expect(
-        locationRepository.updateLocation(validId, updateData)
+        locationRepository.updateLocation(validId, mockLocation)
       ).rejects.toThrow(UniqueConstraintError);
-      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, updateData);
+      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, mockLocation);
       expect(mockUpdateLocation).toHaveBeenCalledTimes(1);
     });
 
@@ -215,9 +202,9 @@ describe("Location Repository", () => {
         .mockRejectedValue(mockError);
 
       await expect(
-        locationRepository.updateLocation(validId, updateData)
+        locationRepository.updateLocation(validId, mockLocation)
       ).rejects.toThrow(Error);
-      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, updateData);
+      expect(mockUpdateLocation).toHaveBeenCalledWith(validId, mockLocation);
       expect(mockUpdateLocation).toHaveBeenCalledTimes(1);
     });
   });

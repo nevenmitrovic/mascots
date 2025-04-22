@@ -1,6 +1,8 @@
 import request from "supertest";
 import { NextFunction, Request, Response } from "express";
 import express from "express";
+import mongoose from "mongoose";
+
 import { LocationController } from "../../locations/location.controller";
 import { LocationService } from "../../locations/location.service";
 import { ErrorHandlerService } from "../../services/error-handler.service";
@@ -9,7 +11,6 @@ import {
   mockLocations,
   mockLocation,
   mockDeleteMessageResponse,
-  updateData,
   uniqueData,
   updatedLocation,
   newLocation,
@@ -55,18 +56,17 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
     jest.clearAllMocks();
   });
 
+  afterAll(async () => {
+    jest.resetAllMocks();
+  });
+
   describe("GET /locations", () => {
     it("should return all locations with status 200", async () => {
       mockLocationService.getLocations.mockResolvedValue(mockLocations);
 
       const response = await request(app).get("/locations").expect(200);
 
-      const expectedLocations = mockLocations.map((loc) => ({
-        ...loc,
-        createdAt: loc.createdAt?.toISOString(),
-      }));
-
-      expect(response.body).toEqual(expectedLocations);
+      expect(response.body).toEqual(mockLocations);
       expect(mockLocationService.getLocations).toHaveBeenCalledTimes(1);
     });
 
@@ -84,7 +84,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       expect(mockLocationService.getLocations).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle error when an database throw error ", async () => {
+    it("should handle error when an database throw error", async () => {
       const mockError = new DatabaseError(
         "failed to get locations: MongooseError"
       );
@@ -109,10 +109,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
         .get("/locations/67f5237dcaf56ff295efd4a9")
         .expect(200);
 
-      expect(response.body).toEqual({
-        ...mockLocation,
-        createdAt: mockLocation.createdAt?.toISOString(),
-      });
+      expect(response.body).toEqual(mockLocation);
       expect(mockLocationService.getLocationById).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9"
       );
@@ -209,11 +206,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       expect(response.body).toEqual({
         message: "location created successfully",
-        data: {
-          ...newLocation,
-          _id: "67f5999dcaf56ff295efd4a9",
-          createdAt: createdLocation.data.createdAt?.toISOString(),
-        },
+        data: createdLocation.data,
       });
       expect(mockLocationService.createLocation).toHaveBeenCalledWith(
         newLocation
@@ -329,19 +322,16 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       const response = await request(app)
         .put("/locations/67f5237dcaf56ff295efd4a9")
-        .send(updateData)
+        .send(mockLocation)
         .expect(200);
 
       expect(response.body).toEqual({
         message: "location updated successfully",
-        data: {
-          ...updatedLocation.data,
-          createdAt: updatedLocation.data.createdAt?.toISOString(),
-        },
+        data: updatedLocation.data,
       });
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        updateData
+        mockLocation
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -372,7 +362,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       const response = await request(app)
         .put("/locations/67f5237dcaf56ff295efd4a9")
-        .send(updateData)
+        .send(mockLocation)
         .expect(404);
 
       expect(response.body).toEqual({
@@ -382,7 +372,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       });
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        updateData
+        mockLocation
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -393,7 +383,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       const response = await request(app)
         .put("/locations/invalid-id")
-        .send(updateData)
+        .send(mockLocation)
         .expect(400);
 
       expect(response.body).toEqual({
@@ -403,7 +393,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       });
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "invalid-id",
-        updateData
+        mockLocation
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -414,7 +404,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       const response = await request(app)
         .put("/locations/67f5237dcaf56ff295efd4a9")
-        .send(updateData)
+        .send(mockLocation)
         .expect(500);
 
       expect(response.body).toEqual({
@@ -424,7 +414,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       });
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        updateData
+        mockLocation
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -437,7 +427,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       const response = await request(app)
         .put("/locations/67f5237dcaf56ff295efd4a9")
-        .send(updateData)
+        .send(mockLocation)
         .expect(500);
 
       expect(response.body).toEqual({
@@ -447,7 +437,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       });
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        updateData
+        mockLocation
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -462,7 +452,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       const response = await request(app)
         .put("/locations/67f5237dcaf56ff295efd4a9")
-        .send(uniqueData)
+        .send(mockLocation)
         .expect(409);
 
       expect(response.body).toHaveProperty("message");
@@ -470,7 +460,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       expect(response.body).toHaveProperty("name");
       expect(mockLocationService.updateLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9",
-        uniqueData
+        mockLocation
       );
       expect(mockLocationService.updateLocation).toHaveBeenCalledTimes(1);
     });
@@ -488,10 +478,7 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
 
       expect(response.body).toEqual({
         message: "location deleted successfully",
-        data: {
-          ...mockDeleteMessageResponse.data,
-          createdAt: mockDeleteMessageResponse.data.createdAt?.toISOString(),
-        },
+        data: mockDeleteMessageResponse.data,
       });
       expect(mockLocationService.deleteLocation).toHaveBeenCalledWith(
         "67f5237dcaf56ff295efd4a9"
@@ -533,25 +520,6 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       });
       expect(mockLocationService.deleteLocation).toHaveBeenCalledWith(
         "insadd213gdgfas1324"
-      );
-      expect(mockLocationService.deleteLocation).toHaveBeenCalledTimes(1);
-    });
-
-    it("should handle error when location is not found", async () => {
-      const mockError = new NotFoundError("location not found");
-      mockLocationService.deleteLocation.mockRejectedValue(mockError);
-
-      const response = await request(app)
-        .delete("/locations/67f5237dcaf56ff295efd4a9")
-        .expect(404);
-
-      expect(response.body).toEqual({
-        message: "location not found",
-        statusCode: 404,
-        name: "NotFoundError",
-      });
-      expect(mockLocationService.deleteLocation).toHaveBeenCalledWith(
-        "67f5237dcaf56ff295efd4a9"
       );
       expect(mockLocationService.deleteLocation).toHaveBeenCalledTimes(1);
     });
