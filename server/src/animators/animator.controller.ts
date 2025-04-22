@@ -3,7 +3,6 @@ import { NextFunction, Request, Response } from "express";
 import { BadRequestError } from "errors/bad-request.error";
 import { Controller } from "interfaces/controller.interface";
 
-import { AnimatorRepository } from "animators/animator.repository";
 import { AnimatorService } from "animators/animator.service";
 
 import { animatorSchema } from "animators/animator.validate";

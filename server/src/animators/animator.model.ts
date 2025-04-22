@@ -83,7 +83,7 @@ const animatorSchema = new Schema<IAnimator>(
       default: 0,
     },
     moneyCollected: {
-      type: [{ payed: Boolean, collected: Number }],
+      type: [{ _id: false, payed: Boolean, collected: Number }],
       default: [
         { payed: false, collected: 0 },
         { payed: false, collected: 0 },
