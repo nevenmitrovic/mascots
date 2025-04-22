@@ -27,7 +27,7 @@ export interface IAnimator {
   email: string;
   phone: string;
   paycheck: number;
-  moneyCollected: [
+  moneyCollected?: [
     IMoneyCollected,
     IMoneyCollected,
     IMoneyCollected,

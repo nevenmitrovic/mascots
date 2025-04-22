@@ -1,3 +1,4 @@
+import { IAnimator, IAnimatorDocument } from "animators/animator.model";
 import {
   ILocation,
   ILocationDocument,
@@ -103,4 +104,37 @@ export const newLocationBadRequestName: Omit<ILocation, "name"> = {
   location: "https://maps.app.goo.gl/new",
   phone: "+381656196000",
   address: "New Address 123",
+};
+
+export const newAnimator: IAnimator = {
+  fullName: "John Doe",
+  username: "johndoe",
+  password: "password123",
+  email: "john.doe@gmail.com",
+  phone: "+381656196000",
+  paycheck: 1000,
+};
+
+export const newAnimatorDocument: IAnimatorDocument = {
+  _id: "67f5999dcaf56ff295efd4a9",
+  fullName: "John Doe",
+  username: "johndoe",
+  password: "password123",
+  email: "john.doe@gmail.com",
+  phone: "+381656196000",
+  paycheck: 1000,
+  moneyCollected: [
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+    { payed: false, collected: 0 },
+  ],
 };
