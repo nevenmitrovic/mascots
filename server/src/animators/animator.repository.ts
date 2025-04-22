@@ -20,4 +20,12 @@ export class AnimatorRepository {
       return checkForErrors(err);
     }
   }
+
+  async getAnimators(): Promise<IAnimatorDocument[]> {
+    try {
+      return this.animatorModel.find({});
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }

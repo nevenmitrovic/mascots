@@ -1,7 +1,8 @@
 import { AnimatorRepository } from "../../animators/animator.repository";
 
 import { newAnimator, newAnimatorDocument } from "../../../mocks/mock-data";
-import { UniqueConstraintError } from "errors/unique-constraint.error";
+import { UniqueConstraintError } from "../../errors/unique-constraint.error";
+import { DatabaseError } from "../../errors/database.error";
 
 describe("Animators Repository", () => {
   let animatorRepository: AnimatorRepository;
@@ -28,7 +29,9 @@ describe("Animators Repository", () => {
     });
 
     it("should handle database error", async () => {
-      const dbError = new Error("failed to create animator: MongooseError");
+      const dbError = new DatabaseError(
+        "failed to create animator: MongooseError"
+      );
       const mockCreateAnimator = jest
         .spyOn(animatorRepository, "createAnimator")
         .mockRejectedValue(dbError);
@@ -66,6 +69,42 @@ describe("Animators Repository", () => {
       ).rejects.toThrow(uniqueConstraintError);
       expect(mockCreateAnimator).toHaveBeenCalledTimes(1);
       expect(mockCreateAnimator).toHaveBeenCalledWith(newAnimator);
+    });
+  });
+
+  describe("GET /animators", () => {
+    it("should get all animators", async () => {
+      const mockGetAnimators = jest
+        .spyOn(animatorRepository, "getAnimators")
+        .mockResolvedValue([newAnimatorDocument]);
+
+      const res = await animatorRepository.getAnimators();
+      expect(res).toEqual([newAnimatorDocument]);
+      expect(mockGetAnimators).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to get animators: MongooseError"
+      );
+      const mockGetAnimators = jest
+        .spyOn(animatorRepository, "getAnimators")
+        .mockRejectedValue(dbError);
+
+      await expect(animatorRepository.getAnimators()).rejects.toThrow(dbError);
+      expect(mockGetAnimators).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockGetAnimators = jest
+        .spyOn(animatorRepository, "getAnimators")
+        .mockRejectedValue(mockError);
+
+      await expect(animatorRepository.getAnimators()).rejects.toThrow(
+        mockError
+      );
+      expect(mockGetAnimators).toHaveBeenCalledTimes(1);
     });
   });
 });
