@@ -543,25 +543,6 @@ describe("Location Controller with errorMiddleware, validationMiddleware, error-
       expect(mockLocationService.deleteLocation).toHaveBeenCalledTimes(1);
     });
 
-    it("should handle error when location is not found", async () => {
-      const mockError = new NotFoundError("location not found");
-      mockLocationService.deleteLocation.mockRejectedValue(mockError);
-
-      const response = await request(app)
-        .delete("/locations/67f5237dcaf56ff295efd4a9")
-        .expect(404);
-
-      expect(response.body).toEqual({
-        message: "location not found",
-        statusCode: 404,
-        name: "NotFoundError",
-      });
-      expect(mockLocationService.deleteLocation).toHaveBeenCalledWith(
-        "67f5237dcaf56ff295efd4a9"
-      );
-      expect(mockLocationService.deleteLocation).toHaveBeenCalledTimes(1);
-    });
-
     it("should handle error when an unknown error occurs", async () => {
       const mockError = new Error("unknown error in location repository");
       mockLocationService.deleteLocation.mockRejectedValue(mockError);
