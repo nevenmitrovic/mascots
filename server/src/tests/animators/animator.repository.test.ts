@@ -1,6 +1,7 @@
 import { AnimatorRepository } from "../../animators/animator.repository";
 
 import { newAnimator, newAnimatorDocument } from "../../../mocks/mock-data";
+import { UniqueConstraintError } from "errors/unique-constraint.error";
 
 describe("Animators Repository", () => {
   let animatorRepository: AnimatorRepository;
@@ -22,6 +23,47 @@ describe("Animators Repository", () => {
 
       const res = await animatorRepository.createAnimator(newAnimator);
       expect(res).toEqual(newAnimatorDocument);
+      expect(mockCreateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockCreateAnimator).toHaveBeenCalledWith(newAnimator);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new Error("failed to create animator: MongooseError");
+      const mockCreateAnimator = jest
+        .spyOn(animatorRepository, "createAnimator")
+        .mockRejectedValue(dbError);
+
+      await expect(
+        animatorRepository.createAnimator(newAnimator)
+      ).rejects.toThrow(dbError);
+      expect(mockCreateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockCreateAnimator).toHaveBeenCalledWith(newAnimator);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockCreateAnimator = jest
+        .spyOn(animatorRepository, "createAnimator")
+        .mockRejectedValue(mockError);
+
+      await expect(
+        animatorRepository.createAnimator(newAnimator)
+      ).rejects.toThrow(mockError);
+      expect(mockCreateAnimator).toHaveBeenCalledTimes(1);
+      expect(mockCreateAnimator).toHaveBeenCalledWith(newAnimator);
+    });
+
+    it("should handle unique constraint error", async () => {
+      const uniqueConstraintError = new UniqueConstraintError(
+        "email",
+        "nevenmitrovic4@gmail.com"
+      );
+      const mockCreateAnimator = jest
+        .spyOn(animatorRepository, "createAnimator")
+        .mockRejectedValue(uniqueConstraintError);
+      await expect(
+        animatorRepository.createAnimator(newAnimator)
+      ).rejects.toThrow(uniqueConstraintError);
       expect(mockCreateAnimator).toHaveBeenCalledTimes(1);
       expect(mockCreateAnimator).toHaveBeenCalledWith(newAnimator);
     });

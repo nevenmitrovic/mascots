@@ -138,3 +138,12 @@ export const newAnimatorDocument: IAnimatorDocument = {
     { payed: false, collected: 0 },
   ],
 };
+
+export const newAnimatorBadRequest: IAnimator = {
+  fullName: "John Doe",
+  username: "jo",
+  password: "password123",
+  email: "john.doe@gmail.com",
+  phone: "+381656196000",
+  paycheck: 1000,
+};
