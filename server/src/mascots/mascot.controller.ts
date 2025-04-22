@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { NextFunction } from "express-serve-static-core";
 import { Controller } from "interfaces/controller.interface";
 import { validationMiddleware } from "middlewares/validate.middleware";
-import { MascotService } from "./mascot.service";
-import { mascotSchema } from "./mascot.validate";
+import { MascotService } from "mascots/mascot.service";
+import { mascotSchema } from "mascots/mascot.validate";
 
 export class MascotController extends Controller {
   private mascotService = new MascotService();
