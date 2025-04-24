@@ -6,17 +6,19 @@ export interface EventCardProps {
   id: string | null;
 }
 
+export type confirmedType = "pending" | "confirmed" | "rejected";
+
 export interface IEvent {
   _id?: string;
   date: string;
   time: string;
   location: Omit<Location, "_id" | "name" | "phone">[];
-  maskotas: string[];
+  mascots: string[];
   animators: string[];
   price: string;
   title: string;
   collector: string;
-  confirmed: string;
+  confirmed: confirmedType;
 }
 
 // MOCK DATA

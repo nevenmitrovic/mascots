@@ -16,10 +16,10 @@ export function mapEventsToCalendar(events: IEvent[]) {
   return events.map((event) => {
     let color = "";
     switch (event.confirmed) {
-      case "y":
+      case "confirmed":
         color = "green";
         break;
-      case "n":
+      case "rejected":
         color = "red";
         break;
       case "pending":

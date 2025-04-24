@@ -11,6 +11,8 @@ import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
 
 import { mapEventsToCalendar } from "../../utils/helperFunctions";
 
+import { IEvent } from "../../types/eventTypes";
+
 export const Calendar = () => {
   const { toggleDialog } = useContext(CalendarFormDialogContext);
   const { setFormData } = useContext(FormDataContext);
@@ -54,7 +56,7 @@ export const Calendar = () => {
   };
 
   // Mock data for events from API
-  const mockEventsData = [
+  const mockEventsData: IEvent[] = [
     {
       _id: "652f3c8e9f1b2a001c8e4d1a",
       title: "Birthday Party - Marko",
@@ -66,10 +68,10 @@ export const Calendar = () => {
           location: "https://goo.gl/maps/exampleLink2",
         },
       ],
-      maskotas: ["Mickey Mouse", "SpongeBob"],
+      mascots: ["Mickey Mouse", "SpongeBob"],
       animators: ["Ana", "Milan"],
       price: "150",
-      confirmed: "y",
+      confirmed: "confirmed",
       collector: "Milan",
     },
     {
@@ -83,7 +85,7 @@ export const Calendar = () => {
           location: "https://goo.gl/maps/exampleLink3",
         },
       ],
-      maskotas: ["Minion", "Elsa"],
+      mascots: ["Minion", "Elsa"],
       animators: ["Nikola", "Tamara"],
       price: "200",
       confirmed: "pending",
@@ -100,10 +102,10 @@ export const Calendar = () => {
           location: "https://goo.gl/maps/exampleLink4",
         },
       ],
-      maskotas: ["Batman", "Spider-Man", "Wonder Woman"],
+      mascots: ["Batman", "Spider-Man", "Wonder Woman"],
       animators: ["Jovana", "Petar", "Milica"],
       price: "350",
-      confirmed: "y",
+      confirmed: "rejected",
       collector: "Dragan",
     },
   ];
