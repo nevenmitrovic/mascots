@@ -55,4 +55,36 @@ describe("Events Repository", () => {
       expect(mockCreateEvent).toHaveBeenCalledWith(newEvent);
     });
   });
+
+  describe("GET /events", () => {
+    it("should get all events", async () => {
+      const mockGetEvents = jest
+        .spyOn(eventRepository, "getEvents")
+        .mockResolvedValue(newEventDocs);
+
+      const res = await eventRepository.getEvents();
+      expect(res).toEqual(newEventDocs);
+      expect(mockGetEvents).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError("failed to get events: MongooseError");
+      const mockGetEvents = jest
+        .spyOn(eventRepository, "getEvents")
+        .mockRejectedValue(dbError);
+
+      await expect(eventRepository.getEvents()).rejects.toThrow(dbError);
+      expect(mockGetEvents).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockGetEvents = jest
+        .spyOn(eventRepository, "getEvents")
+        .mockRejectedValue(mockError);
+
+      await expect(eventRepository.getEvents()).rejects.toThrow(mockError);
+      expect(mockGetEvents).toHaveBeenCalledTimes(1);
+    });
+  });
 });

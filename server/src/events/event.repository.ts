@@ -18,4 +18,12 @@ export class EventRepository {
       return checkForErrors(err);
     }
   }
+
+  async getEvents(): Promise<IEventDocument[]> {
+    try {
+      return this.eventModel.find({});
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }
