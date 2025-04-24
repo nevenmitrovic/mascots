@@ -22,6 +22,7 @@ export default {
     "^utils/(.*)$": "<rootDir>/src/utils/$1",
     "^animators/(.*)$": "<rootDir>/src/animators/$1",
     "^mascots/(.*)$": "<rootDir>/src/mascots/$1",
+    "^events/(.*)$": "<rootDir>/src/events/$1",
   },
   extensionsToTreatAsEsm: [".ts", ".tsx"],
   moduleFileExtensions: ["js", "ts", "json", "node"],

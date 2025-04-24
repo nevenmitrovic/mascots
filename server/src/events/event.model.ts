@@ -18,10 +18,10 @@ export interface IEvent {
   location: ILocationProp;
   price: number;
   organizer: IOrganizer;
-  mascots: Schema.Types.ObjectId[];
-  animators: Schema.Types.ObjectId[];
+  mascots: string[];
+  animators: string[];
   confirmed: confirmedType;
-  collector: Schema.Types.ObjectId;
+  collector: string[];
 }
 
 export interface IEventDocument extends IEvent {
@@ -80,10 +80,12 @@ const eventSchema = new Schema<IEventDocument>(
       enum: ["pending", "confirmed", "rejected"],
       default: "pending",
     },
-    collector: {
-      type: Schema.Types.ObjectId,
-      ref: "Animator",
-    },
+    collector: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Animator",
+      },
+    ],
   },
   {
     versionKey: false,

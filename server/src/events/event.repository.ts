@@ -1,0 +1,21 @@
+import dayjs from "dayjs";
+
+import { checkForErrors } from "utils/globalUtils";
+
+import { EventModel, IEvent, IEventDocument } from "events/event.model";
+
+export class EventRepository {
+  private readonly eventModel = EventModel;
+
+  async createEvent(data: IEvent): Promise<IEventDocument> {
+    try {
+      const res = await this.eventModel.create(data);
+      return {
+        ...res.toObject(),
+        _id: res._id.toString(),
+      } as IEventDocument;
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
+}
