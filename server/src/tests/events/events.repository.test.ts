@@ -128,4 +128,86 @@ describe("Events Repository", () => {
       expect(mockGetEventById).toHaveBeenCalledWith(validId);
     });
   });
+
+  describe("PUT /events/:id", () => {
+    it("should update event by id", async () => {
+      const mockUpdateEvent = jest
+        .spyOn(eventRepository, "updateEvent")
+        .mockResolvedValue(newEventDocs[0]);
+
+      const res = await eventRepository.updateEvent(validId, newEvent);
+      expect(res).toEqual(newEventDocs[0]);
+      expect(mockUpdateEvent).toHaveBeenCalledTimes(1);
+      expect(mockUpdateEvent).toHaveBeenCalledWith(validId, newEvent);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to update event: MongooseError"
+      );
+      const mockUpdateEvent = jest
+        .spyOn(eventRepository, "updateEvent")
+        .mockRejectedValue(dbError);
+
+      await expect(
+        eventRepository.updateEvent(validId, newEvent)
+      ).rejects.toThrow(dbError);
+      expect(mockUpdateEvent).toHaveBeenCalledTimes(1);
+      expect(mockUpdateEvent).toHaveBeenCalledWith(validId, newEvent);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockUpdateEvent = jest
+        .spyOn(eventRepository, "updateEvent")
+        .mockRejectedValue(mockError);
+
+      await expect(
+        eventRepository.updateEvent(validId, newEvent)
+      ).rejects.toThrow(mockError);
+      expect(mockUpdateEvent).toHaveBeenCalledTimes(1);
+      expect(mockUpdateEvent).toHaveBeenCalledWith(validId, newEvent);
+    });
+  });
+
+  describe("DELETE /events/:id", () => {
+    it("should delete event by id", async () => {
+      const mockDeleteEvent = jest
+        .spyOn(eventRepository, "deleteEvent")
+        .mockResolvedValue(newEventDocs[0]);
+
+      const res = await eventRepository.deleteEvent(validId);
+      expect(res).toEqual(newEventDocs[0]);
+      expect(mockDeleteEvent).toHaveBeenCalledTimes(1);
+      expect(mockDeleteEvent).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to delete event: MongooseError"
+      );
+      const mockDeleteEvent = jest
+        .spyOn(eventRepository, "deleteEvent")
+        .mockRejectedValue(dbError);
+
+      await expect(eventRepository.deleteEvent(validId)).rejects.toThrow(
+        dbError
+      );
+      expect(mockDeleteEvent).toHaveBeenCalledTimes(1);
+      expect(mockDeleteEvent).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockDeleteEvent = jest
+        .spyOn(eventRepository, "deleteEvent")
+        .mockRejectedValue(mockError);
+
+      await expect(eventRepository.deleteEvent(validId)).rejects.toThrow(
+        mockError
+      );
+      expect(mockDeleteEvent).toHaveBeenCalledTimes(1);
+      expect(mockDeleteEvent).toHaveBeenCalledWith(validId);
+    });
+  });
 });

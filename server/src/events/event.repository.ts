@@ -34,4 +34,22 @@ export class EventRepository {
       return checkForErrors(err);
     }
   }
+
+  async updateEvent(id: string, data: IEvent): Promise<IEventDocument | null> {
+    try {
+      return this.eventModel.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
+
+  async deleteEvent(id: string): Promise<IEventDocument | null> {
+    try {
+      return this.eventModel.findByIdAndDelete(id);
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }

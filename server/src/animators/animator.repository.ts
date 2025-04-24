@@ -44,7 +44,6 @@ export class AnimatorRepository {
     try {
       return this.animatorModel.findByIdAndUpdate(id, data, {
         new: true,
-        timestamps: false,
       });
     } catch (err) {
       return checkForErrors(err);
