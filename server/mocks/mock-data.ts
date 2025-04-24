@@ -140,7 +140,7 @@ export const newEvent: IEvent = {
   collector: ["6e7f8a92c65875312d620000"],
 };
 
-export const newEventDoc: IEventDocument[] = [
+export const newEventDocs: IEventDocument[] = [
   {
     _id: "67f12345caf56ff295efd111",
     date: new Date("2025-05-15T14:00:00"),
