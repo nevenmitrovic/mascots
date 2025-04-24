@@ -18,8 +18,76 @@ export interface IEvent {
   location: ILocationProp;
   price: number;
   organizer: IOrganizer;
-  mascots: string[];
-  animators: string[];
+  mascots: Schema.Types.ObjectId[];
+  animators: Schema.Types.ObjectId[];
   confirmed: confirmedType;
-  collector: string;
+  collector: Schema.Types.ObjectId;
 }
+
+export interface IEventDocument extends IEvent {
+  _id: string;
+}
+
+const eventSchema = new Schema<IEventDocument>(
+  {
+    date: {
+      type: Date,
+      required: true,
+    },
+    location: {
+      link: {
+        type: String,
+        required: false,
+      },
+      address: {
+        type: String,
+        required: true,
+      },
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    organizer: {
+      name: {
+        type: String,
+        required: true,
+      },
+      phone: {
+        type: String,
+        required: true,
+      },
+      social: {
+        type: String,
+        enum: ["facebook", "instagram", "viber", "whatsapp"],
+        required: true,
+      },
+    },
+    mascots: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Mascot",
+      },
+    ],
+    animators: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Animator",
+      },
+    ],
+    confirmed: {
+      type: String,
+      enum: ["pending", "confirmed", "rejected"],
+      default: "pending",
+    },
+    collector: {
+      type: Schema.Types.ObjectId,
+      ref: "Animator",
+    },
+  },
+  {
+    versionKey: false,
+  }
+);
+
+export const EventModel = model<IEventDocument>("Event", eventSchema);
