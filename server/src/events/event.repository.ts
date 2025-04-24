@@ -26,4 +26,12 @@ export class EventRepository {
       return checkForErrors(err);
     }
   }
+
+  async getEventById(id: string): Promise<IEventDocument | null> {
+    try {
+      return this.eventModel.findById(id);
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }

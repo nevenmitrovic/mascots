@@ -87,4 +87,45 @@ describe("Events Repository", () => {
       expect(mockGetEvents).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe("GET /events/:id", () => {
+    it("should get event by id", async () => {
+      const mockGetEventById = jest
+        .spyOn(eventRepository, "getEventById")
+        .mockResolvedValue(newEventDocs[0]);
+
+      const res = await eventRepository.getEventById(validId);
+      expect(res).toEqual(newEventDocs[0]);
+      expect(mockGetEventById).toHaveBeenCalledTimes(1);
+      expect(mockGetEventById).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle database error", async () => {
+      const dbError = new DatabaseError(
+        "failed to get event by id: MongooseError"
+      );
+      const mockGetEventById = jest
+        .spyOn(eventRepository, "getEventById")
+        .mockRejectedValue(dbError);
+
+      await expect(eventRepository.getEventById(validId)).rejects.toThrow(
+        dbError
+      );
+      expect(mockGetEventById).toHaveBeenCalledTimes(1);
+      expect(mockGetEventById).toHaveBeenCalledWith(validId);
+    });
+
+    it("should handle unknown error", async () => {
+      const mockError = new Error("unknown error");
+      const mockGetEventById = jest
+        .spyOn(eventRepository, "getEventById")
+        .mockRejectedValue(mockError);
+
+      await expect(eventRepository.getEventById(validId)).rejects.toThrow(
+        mockError
+      );
+      expect(mockGetEventById).toHaveBeenCalledTimes(1);
+      expect(mockGetEventById).toHaveBeenCalledWith(validId);
+    });
+  });
 });
