@@ -25,3 +25,21 @@ export const animatorSchema = yup.object({
     .required("phone is required"),
   paycheck: yup.number().required("paycheck is required"),
 });
+
+export const animatorUpdateSchema = yup.object({
+  fullName: yup.string().required("fullName is required"),
+  username: yup
+    .string()
+    .min(3, "username must contain at least 3 characters")
+    .required("username is required"),
+  email: yup
+    .string()
+    .email("email must be a valid email")
+    .matches(EMAIL_REGEX, "email must be a valid email")
+    .required("email is required"),
+  phone: yup
+    .string()
+    .matches(PHONE_REGEX, "phone is not valid")
+    .required("phone is required"),
+  paycheck: yup.number().required("paycheck is required"),
+});

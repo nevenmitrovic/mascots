@@ -5,13 +5,17 @@ import { Controller } from "interfaces/controller.interface";
 
 import { AnimatorService } from "animators/animator.service";
 
-import { animatorSchema } from "animators/animator.validate";
+import {
+  animatorSchema,
+  animatorUpdateSchema,
+} from "animators/animator.validate";
 
 import { validationMiddleware } from "middlewares/validate.middleware";
 
 export class AnimatorController extends Controller {
   private readonly animatorService = new AnimatorService();
   private schema = animatorSchema;
+  private updateSchema = animatorUpdateSchema;
 
   constructor() {
     super("/animators");
@@ -40,7 +44,7 @@ export class AnimatorController extends Controller {
 
     this.router.put(
       `${this.path}/:id`,
-      validationMiddleware(this.schema),
+      validationMiddleware(this.updateSchema),
       (req: Request, res: Response, next: NextFunction) =>
         this.updateAnimator(req, res, next)
     );
