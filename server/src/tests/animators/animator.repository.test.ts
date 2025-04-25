@@ -155,10 +155,16 @@ describe("Animators Repository", () => {
         .spyOn(animatorRepository, "updateAnimator")
         .mockResolvedValue(newAnimatorDocument);
 
-      const res = await animatorRepository.updateAnimator(validId, newAnimator);
+      const res = await animatorRepository.updateAnimator(
+        validId,
+        newAnimatorDocument
+      );
       expect(res).toEqual(newAnimatorDocument);
       expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
-      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(
+        validId,
+        newAnimatorDocument
+      );
     });
 
     it("should handle database error", async () => {
@@ -170,10 +176,13 @@ describe("Animators Repository", () => {
         .mockRejectedValue(dbError);
 
       await expect(
-        animatorRepository.updateAnimator(validId, newAnimator)
+        animatorRepository.updateAnimator(validId, newAnimatorDocument)
       ).rejects.toThrow(dbError);
       expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
-      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(
+        validId,
+        newAnimatorDocument
+      );
     });
 
     it("should handle unknown error", async () => {
@@ -183,10 +192,13 @@ describe("Animators Repository", () => {
         .mockRejectedValue(mockError);
 
       await expect(
-        animatorRepository.updateAnimator(validId, newAnimator)
+        animatorRepository.updateAnimator(validId, newAnimatorDocument)
       ).rejects.toThrow(mockError);
       expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
-      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(
+        validId,
+        newAnimatorDocument
+      );
     });
 
     it("should handle unique constraint error", async () => {
@@ -198,10 +210,13 @@ describe("Animators Repository", () => {
         .spyOn(animatorRepository, "updateAnimator")
         .mockRejectedValue(uniqueConstraintError);
       await expect(
-        animatorRepository.updateAnimator(validId, newAnimator)
+        animatorRepository.updateAnimator(validId, newAnimatorDocument)
       ).rejects.toThrow(uniqueConstraintError);
       expect(mockUpdateAnimator).toHaveBeenCalledTimes(1);
-      expect(mockUpdateAnimator).toHaveBeenCalledWith(validId, newAnimator);
+      expect(mockUpdateAnimator).toHaveBeenCalledWith(
+        validId,
+        newAnimatorDocument
+      );
     });
   });
 

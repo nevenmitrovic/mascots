@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import bcrypt from "bcryptjs";
 
 import { AnimatorRepository } from "animators/animator.repository";
 
 import { ErrorHandlerService } from "services/error-handler.service";
+import { hashPassword } from "utils/globalUtils";
 
 import { BadRequestError } from "errors/bad-request.error";
 import { NotFoundError } from "errors/not-found.error";
@@ -21,8 +21,7 @@ export class AnimatorService {
   async createAnimator(data: IAnimator): Promise<IAnimatorMessageResponse> {
     try {
       const { password, ...rest } = data;
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const hashedPassword = await hashPassword(password);
 
       const res = await this.animatorRepository.createAnimator({
         ...rest,
@@ -65,7 +64,7 @@ export class AnimatorService {
 
   async updateAnimator(
     id: string,
-    data: IAnimator
+    data: Partial<IAnimator>
   ): Promise<IAnimatorMessageResponse> {
     try {
       if (!data) {

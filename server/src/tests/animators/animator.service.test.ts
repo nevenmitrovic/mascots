@@ -1,6 +1,7 @@
 import { AnimatorRepository } from "../../animators/animator.repository";
 import { AnimatorService } from "../../animators/animator.service";
 import { ErrorHandlerService } from "../../services/error-handler.service";
+import { hashPassword } from "../../utils/globalUtils";
 
 import { newAnimator, newAnimatorDocument } from "../../../mocks/mock-data";
 import { UniqueConstraintError } from "../../errors/unique-constraint.error";
@@ -9,6 +10,7 @@ import { HttpError } from "../../errors/http.error";
 import { BadRequestError } from "../../errors/bad-request.error";
 
 jest.mock("../../animators/animator.repository");
+jest.mock("../../utils/globalUtils");
 
 describe("Animators Service With Error Handler Service", () => {
   let animatorService: AnimatorService;
@@ -23,6 +25,11 @@ describe("Animators Service With Error Handler Service", () => {
       new AnimatorRepository() as jest.Mocked<AnimatorRepository>;
     (AnimatorRepository as jest.Mock).mockImplementation(
       () => mockAnimatorRepository
+    );
+
+    // Mock hashPassword function
+    (hashPassword as jest.Mock).mockImplementation((password: string) =>
+      Promise.resolve("password")
     );
 
     errorHandlerService = new ErrorHandlerService();
@@ -45,9 +52,10 @@ describe("Animators Service With Error Handler Service", () => {
         message: "Animator created successfully",
         data: newAnimatorDocument,
       });
-      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith(
-        newAnimator
-      );
+      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith({
+        ...newAnimator,
+        password: "password",
+      });
       expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledTimes(1);
     });
 
@@ -59,9 +67,10 @@ describe("Animators Service With Error Handler Service", () => {
         HttpError
       );
       expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledTimes(1);
-      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith(
-        newAnimator
-      );
+      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith({
+        ...newAnimator,
+        password: "password",
+      });
     });
 
     it("should handle database error", async () => {
@@ -72,9 +81,10 @@ describe("Animators Service With Error Handler Service", () => {
         HttpError
       );
       expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledTimes(1);
-      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith(
-        newAnimator
-      );
+      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith({
+        ...newAnimator,
+        password: "password",
+      });
     });
 
     it("should handle unknown error", async () => {
@@ -85,9 +95,10 @@ describe("Animators Service With Error Handler Service", () => {
         HttpError
       );
       expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledTimes(1);
-      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith(
-        newAnimator
-      );
+      expect(mockAnimatorRepository.createAnimator).toHaveBeenCalledWith({
+        ...newAnimator,
+        password: "password",
+      });
     });
   });
 
@@ -186,7 +197,10 @@ describe("Animators Service With Error Handler Service", () => {
         newAnimatorDocument
       );
 
-      const result = await animatorService.updateAnimator(validId, newAnimator);
+      const result = await animatorService.updateAnimator(
+        validId,
+        newAnimatorDocument
+      );
 
       expect(result).toEqual({
         message: "animator updated successfully",
@@ -194,7 +208,7 @@ describe("Animators Service With Error Handler Service", () => {
       });
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimator
+        newAnimatorDocument
       );
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledTimes(1);
     });
@@ -204,11 +218,11 @@ describe("Animators Service With Error Handler Service", () => {
       mockAnimatorRepository.updateAnimator.mockRejectedValue(error);
 
       await expect(
-        animatorService.updateAnimator(validId, newAnimator)
+        animatorService.updateAnimator(validId, newAnimatorDocument)
       ).rejects.toThrow(HttpError);
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimator
+        newAnimatorDocument
       );
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledTimes(1);
     });
@@ -218,18 +232,18 @@ describe("Animators Service With Error Handler Service", () => {
       mockAnimatorRepository.updateAnimator.mockRejectedValue(error);
 
       await expect(
-        animatorService.updateAnimator(validId, newAnimator)
+        animatorService.updateAnimator(validId, newAnimatorDocument)
       ).rejects.toThrow(HttpError);
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimator
+        newAnimatorDocument
       );
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledTimes(1);
     });
 
     it("should handle invalid id", async () => {
       await expect(
-        animatorService.updateAnimator(invalidId, newAnimator)
+        animatorService.updateAnimator(invalidId, newAnimatorDocument)
       ).rejects.toThrow(HttpError);
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledTimes(0);
     });
@@ -237,11 +251,11 @@ describe("Animators Service With Error Handler Service", () => {
     it("should handle not found error", async () => {
       mockAnimatorRepository.updateAnimator.mockResolvedValue(null);
       await expect(
-        animatorService.updateAnimator(validId, newAnimator)
+        animatorService.updateAnimator(validId, newAnimatorDocument)
       ).rejects.toThrow(HttpError);
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimator
+        newAnimatorDocument
       );
       expect(mockAnimatorRepository.updateAnimator).toHaveBeenCalledTimes(1);
     });

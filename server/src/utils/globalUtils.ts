@@ -1,6 +1,9 @@
 import { DatabaseError } from "errors/database.error";
 import { UniqueConstraintError } from "errors/unique-constraint.error";
+import { BaseError } from "errors/base.error";
+
 import { MongoServerError } from "mongodb";
+import bcrypt from "bcryptjs";
 
 export const checkForErrors = (error: unknown) => {
   if (error instanceof MongoServerError && error.code === 11000) {
@@ -14,3 +17,19 @@ export const checkForErrors = (error: unknown) => {
 
   throw new Error("unknown error in repository");
 };
+
+export async function hashPassword(password: string): Promise<string> {
+  const SALT = 10;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, SALT);
+    return hashedPassword;
+  } catch (error) {
+    throw new BaseError(
+      "failed to hash password",
+      "CriptographyError",
+      500,
+      true
+    );
+  }
+}

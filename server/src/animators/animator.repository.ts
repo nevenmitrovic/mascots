@@ -42,7 +42,7 @@ export class AnimatorRepository {
 
   async updateAnimator(
     id: string,
-    data: IAnimator
+    data: Partial<IAnimator>
   ): Promise<Partial<IAnimatorDocument> | null> {
     try {
       const res = await this.animatorModel

@@ -189,7 +189,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .post("/animators")
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(201);
 
       expect(response.body).toEqual({
@@ -197,7 +197,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
         data: newAnimatorDocument,
       });
       expect(mockAnimatorService.createAnimator).toHaveBeenCalledWith(
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -207,7 +207,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .post("/animators")
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(500);
 
       expect(response.body).toEqual({
@@ -216,7 +216,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
         name: "Error",
       });
       expect(mockAnimatorService.createAnimator).toHaveBeenCalledWith(
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -228,7 +228,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .post("/animators")
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(500);
 
       expect(response.body).toEqual({
@@ -237,7 +237,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
         name: "DatabaseError",
       });
       expect(mockAnimatorService.createAnimator).toHaveBeenCalledWith(
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -270,14 +270,14 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .post("/animators")
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(409);
 
       expect(response.body).toHaveProperty("message");
       expect(response.body).toHaveProperty("statusCode");
       expect(response.body).toHaveProperty("name");
       expect(mockAnimatorService.createAnimator).toHaveBeenCalledWith(
-        newAnimatorDocument
+        newAnimator
       );
       expect(mockAnimatorService.createAnimator).toHaveBeenCalledTimes(1);
     });
@@ -292,7 +292,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .put(`/animators/${validId}`)
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(200);
 
       expect(response.body).toEqual({
@@ -301,7 +301,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
       });
       expect(mockAnimatorService.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -311,7 +311,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .put(`/animators/${validId}`)
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(500);
 
       expect(response.body).toEqual({
@@ -321,7 +321,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
       });
       expect(mockAnimatorService.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -333,7 +333,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .put(`/animators/${validId}`)
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(500);
 
       expect(response.body).toEqual({
@@ -343,7 +343,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
       });
       expect(mockAnimatorService.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -353,7 +353,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .put(`/animators/${invalidId}`)
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(400);
 
       expect(response.body).toEqual({
@@ -369,7 +369,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .put(`/animators/${validId}`)
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(404);
 
       expect(response.body).toEqual({
@@ -379,7 +379,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
       });
       expect(mockAnimatorService.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimatorDocument
+        newAnimator
       );
     });
 
@@ -412,7 +412,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
 
       const response = await request(app)
         .put(`/animators/${validId}`)
-        .send(newAnimatorDocument)
+        .send(newAnimator)
         .expect(409);
 
       expect(response.body).toHaveProperty("message");
@@ -420,7 +420,7 @@ describe("Animator Controller with errorMiddleware and validationMiddleware", ()
       expect(response.body).toHaveProperty("name");
       expect(mockAnimatorService.updateAnimator).toHaveBeenCalledWith(
         validId,
-        newAnimatorDocument
+        newAnimator
       );
       expect(mockAnimatorService.updateAnimator).toHaveBeenCalledTimes(1);
     });
