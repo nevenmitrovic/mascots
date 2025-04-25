@@ -5,6 +5,7 @@ import Locations from "../pages/Locations";
 import NotFound from "../pages/NotFound";
 import SignIn from "../pages/SignIn";
 import Layout from "./Layout";
+import Mascots from "../pages/Mascots";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/mascotas",
+        element: <Mascots />,
       },
       {
         path: "/finance",

@@ -15,16 +15,21 @@ export interface MascotMessageResponse {
   data: MascotDocument;
 }
 
-const mascotSchema = new Schema<Mascot>({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
+const mascotSchema = new Schema<Mascot>(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
   },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-});
+  {
+    versionKey: false,
+  }
+);
 
 export const MascotModel = model("Mascot", mascotSchema);

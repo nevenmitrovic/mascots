@@ -11,35 +11,36 @@ import {
 import TContainer from "../components/table/TContainer";
 import { useToggle } from "../hooks/useToggle";
 import { queryKeys } from "../reactQuery/constants";
-import { Animator, animatorInputs } from "../types/animatorsTypes";
+import { Mascot, mascotInputs } from "../types/mascotTypes";
+import { mascotSchema } from "../validations/mascotSchema";
 
-const Animators = () => {
+const Mascots = () => {
   //form data for edit or creating new location
-  const [editItem, setEditItem] = useState<Animator | undefined>(undefined);
+  const [editItem, setEditItem] = useState<Mascot | undefined>(undefined);
 
   //toggle dialog to open or close form dialog
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const { fullData, selectedData } = useGetItems<Animator>([queryKeys.Animators]);
+  const { fullData, selectedData } = useGetItems<Mascot>([queryKeys.mascots]);
   console.log(selectedData);
 
   //useQuery for CRUD
-  const createAnimator = useCreateItem<Animator>([queryKeys.Animators]);
-  const editAnimator = useEditItem<Animator>([queryKeys.Animators]);
-  const deleteAnimator = useDeleteItem([queryKeys.Animators]);
+  const createMascot = useCreateItem<Mascot>([queryKeys.mascots]);
+  const editMascot = useEditItem<Mascot>([queryKeys.mascots]);
+  const deleteMascot = useDeleteItem([queryKeys.mascots]);
 
-  const handleAnimatorSubmit = (data: Partial<Animator> | Animator) => {
-    editItem === undefined ? createAnimator(data) : editAnimator(data as Animator);
+  const handleMascotSubmit = (data: Partial<Mascot> | Mascot) => {
+    editItem === undefined ? createMascot(data) : editMascot(data as Mascot);
     toggleDialog();
   };
   Location;
 
   const handleDelete = (id: string) => {
-    deleteAnimator(id);
+    deleteMascot(id);
   };
 
-  const handleEditDialog = (item: Animator) => {
+  const handleEditDialog = (item: Mascot) => {
     setEditItem(item);
     toggleDialog();
   };
@@ -50,23 +51,23 @@ const Animators = () => {
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <PageHeader onAdd={toggleDialog} headline="Animatori" />
+      <PageHeader onAdd={toggleDialog} headline="Maskote" />
       <Divider />
       {fullData && (
-        <TContainer<Animator>
+        <TContainer<Mascot>
           data={fullData}
-          headers={animatorInputs}
+          headers={mascotInputs}
           onEdit={handleEditDialog}
           onDelete={handleDelete}
         />
       )}
 
       <Dialog open={dialog} onClose={handleDialogClose}>
-        <FormComponent<Partial<Animator>>
-          header="Unesite podatke o animatoru"
-          formInputs={animatorInputs}
-          handleFormSubmitt={handleAnimatorSubmit}
-          schema={AnimatorSchema}
+        <FormComponent<Partial<Mascot>>
+          header="Unesite podatke o maskoti"
+          formInputs={mascotInputs}
+          handleFormSubmitt={handleMascotSubmit}
+          schema={mascotSchema}
           item={editItem}
         />
       </Dialog>
@@ -74,4 +75,4 @@ const Animators = () => {
   );
 };
 
-export default Animators;
+export default Mascots;

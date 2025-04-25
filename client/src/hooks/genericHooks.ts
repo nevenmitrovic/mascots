@@ -53,10 +53,10 @@ export const useEditItem = <T extends { _id: string }>(queryKey: string[]) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
-      showToast("Lokacija je uspešno ažurirana!", "success");
+      showToast("Item je uspešno ažuriran!", "success");
     },
     onError: (error: any) => {
-      showToast(`Lokacija nije ažurirana: ${error.message}`, "error");
+      showToast(`Item nije ažurirana: ${error.message}`, "error");
     },
   });
   return mutate;
