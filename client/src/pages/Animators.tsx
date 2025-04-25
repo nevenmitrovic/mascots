@@ -1,80 +1,75 @@
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Dialog, Divider } from "@mui/material";
+import { useState } from "react";
+import FormComponent from "../components/form/FormComponent";
+import PageHeader from "../components/global/PageHeader";
+import {
+  useCreateItem,
+  useDeleteItem,
+  useEditItem,
+  useGetItems,
+} from "../hooks/genericHooks";
+import TContainer from "../components/table/TContainer";
 import { useToggle } from "../hooks/useToggle";
-import { FormInputConfig } from "../types/formTypes";
-
-const animatorInputs: FormInputConfig<Animator>[] = [
-  { name: "name", label: "Name", type: "text", sx: { mb: "2rem" } },
-  { name: "phone", label: "Phone", type: "text", sx: { mb: "2rem" } },
-  { name: "email", label: "Email", type: "text", sx: { mb: "2rem" } },
-];
-
-type Animator = {
-  name: string;
-  phone: string;
-  email: string;
-  id?: string;
-};
-
-const testAnimator = {
-  name: "Neven",
-  phone: "Neki tamo broj",
-  email: "neven.mitrovic4@gmail.com",
-  id: "1",
-};
+import { queryKeys } from "../reactQuery/constants";
+import { Animator, animatorInputs } from "../types/animatorsTypes";
 
 const Animators = () => {
+  //form data for edit or creating new location
+  const [editItem, setEditItem] = useState<Animator | undefined>(undefined);
+
+  //toggle dialog to open or close form dialog
   const [dialog, toggleDialog] = useToggle(false);
 
-  const handleLocationSubmit = (data: Animator) => {
-    console.log(data);
+  //fetching locations data
+  const { fullData, selectedData } = useGetItems<Animator>([queryKeys.Animators]);
+  console.log(selectedData);
+
+  //useQuery for CRUD
+  const createAnimator = useCreateItem<Animator>([queryKeys.Animators]);
+  const editAnimator = useEditItem<Animator>([queryKeys.Animators]);
+  const deleteAnimator = useDeleteItem([queryKeys.Animators]);
+
+  const handleAnimatorSubmit = (data: Partial<Animator> | Animator) => {
+    editItem === undefined ? createAnimator(data) : editAnimator(data as Animator);
     toggleDialog();
+  };
+  Location;
+
+  const handleDelete = (id: string) => {
+    deleteAnimator(id);
+  };
+
+  const handleEditDialog = (item: Animator) => {
+    setEditItem(item);
+    toggleDialog();
+  };
+  const handleDialogClose = () => {
+    toggleDialog();
+    setEditItem(undefined);
   };
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          margin: "1rem",
-          height: "100%",
-        }}
-      >
-        <Box>
-          <Typography variant="h3">Lokacije</Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "flex-end",
-            height: "100%",
-            cursor: "pointer",
-          }}
-          onClick={() => toggleDialog()}
-        >
-          <Typography
-            component="p"
-            sx={{ display: "flex", alignItems: "flex-end" }}
-          >
-            Dodaj animatora
-            <AddCircleIcon
-              sx={{ ml: "0.5rem", color: "var(--color-primary)" }}
-            />
-          </Typography>
-        </Box>
-      </Box>
+      <PageHeader onAdd={toggleDialog} headline="Animatori" />
       <Divider />
-      {/* <TContainer /> */}
-      {/* <Dialog open={dialog} onClose={() => toggleDialog()}>
-        <FormComponent<Animator>
-          formInputs={animatorInputs}
-          handleFormSubmitt={handleLocationSubmit}
-          // schema={animatorSchema}
-          item={testAnimator}
+      {fullData && (
+        <TContainer<Animator>
+          data={fullData}
+          headers={animatorInputs}
+          onEdit={handleEditDialog}
+          onDelete={handleDelete}
         />
-      </Dialog> */}
+      )}
+
+      <Dialog open={dialog} onClose={handleDialogClose}>
+        <FormComponent<Partial<Animator>>
+          header="Unesite podatke o animatoru"
+          formInputs={animatorInputs}
+          handleFormSubmitt={handleAnimatorSubmit}
+          schema={AnimatorSchema}
+          item={editItem}
+        />
+      </Dialog>
     </Box>
   );
 };

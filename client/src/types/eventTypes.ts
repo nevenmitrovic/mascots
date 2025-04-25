@@ -48,15 +48,15 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     sx: { mb: "2rem" },
     options: [
       {
-        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL9",
+        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL91",
         label: "Igraonica Test3",
       },
       {
-        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL9",
+        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL92",
         label: "Igraonica Test2",
       },
       {
-        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL9",
+        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL93",
         label: "Igraonica Test",
       },
       { value: "none", label: "Lokacija nije u ponudi" },
