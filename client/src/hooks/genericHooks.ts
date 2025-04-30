@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { createItem, deleteItem, editItem, fetchAll } from "../api/crudActions";
+import { createItem, deleteItem, editItem, fetchAll } from "../api/apiService";
 import { useToast } from "../contexts/ToastContext";
 import { queryClient } from "../reactQuery/queryClient";
 
@@ -9,19 +8,12 @@ export const useGetItems = <T extends { name: string; _id: string }>(
 ) => {
   const fallback: T[] = [];
 
-  const { data: fullData = fallback } = useQuery<T[]>({
+  const { data = fallback } = useQuery<T[]>({
     queryKey,
     queryFn: () => fetchAll(queryKey[0]),
   });
 
-  const selectedData = useMemo(() => {
-    return fullData?.map((item: T) => ({
-      title: item.name,
-      value: item._id,
-    }));
-  }, [fullData]);
-
-  return { fullData, selectedData };
+  return data;
 };
 
 export const useCreateItem = <T>(queryKey: string[]) => {
