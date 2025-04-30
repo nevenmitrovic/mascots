@@ -3,9 +3,12 @@ import { NextFunction, Request, Response } from "express";
 import { Controller } from "interfaces/controller.interface";
 
 import { EventService } from "events/event.service";
+import { eventSchema } from "events/event.validate";
+import { validationMiddleware } from "middlewares/validate.middleware";
 
 export class EventController extends Controller {
   private eventService = new EventService();
+  private schema = eventSchema;
 
   constructor() {
     super("/events");
@@ -15,6 +18,7 @@ export class EventController extends Controller {
   protected initializeRoutes(): void {
     this.router.post(
       `${this.path}`,
+      validationMiddleware(this.schema),
       (req: Request, res: Response, next: NextFunction) =>
         this.createEvent(req, res, next)
     );

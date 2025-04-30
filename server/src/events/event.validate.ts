@@ -12,9 +12,19 @@ export const eventSchema = yup.object({
     .matches(/^\d{2}:\d{2}$/, "time format HH:MM (19:00)"),
 
   location: yup
-    .array()
-    .of(yup.string().required("location is required"))
-    .min(1, "location is required")
+    .object({
+      location: yup
+        .string()
+        .optional()
+        .matches(
+          /^https:\/\/maps\.app\.goo\.gl\/.+/,
+          "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
+        ),
+      address: yup
+        .string()
+        .required("address is required")
+        .min(3, "address must be at least 3 characters"),
+    })
     .required("location is required"),
 
   mascots: yup
@@ -29,29 +39,26 @@ export const eventSchema = yup.object({
     .min(1, "animator is required")
     .required("animator is required"),
 
-  price: yup
-    .string()
-    .required("price is required")
-    .matches(/^\d+$/, "price must be a number"),
+  price: yup.number().required("price is required"),
 
   title: yup
     .string()
     .required("title is required")
     .min(3, "title must be at least 3 characters"),
 
-  orginazer: yup
+  organizer: yup
     .object({
       name: yup
         .string()
-        .required("name is required")
+        .required("organizer's name is required")
         .min(3, "name must be at least 3 characters"),
       phone: yup
         .string()
-        .required("phone is required")
+        .required("organizer's phone is required")
         .matches(/^\d+$/, "phone must be a number"),
       social: yup
         .string()
-        .required("social is required")
+        .required("organizer's social is required")
         .oneOf(
           ["facebook", "instagram", "viber", "whatsapp"],
           "social must be 'facebook', 'instagram', 'viber', or 'whatsapp'"
@@ -59,7 +66,7 @@ export const eventSchema = yup.object({
     })
     .required("orginazer is required"),
 
-  collector: yup.string().optional(),
+  collector: yup.array().of(yup.string()),
 
   confirmed: yup
     .string()

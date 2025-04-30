@@ -17,6 +17,7 @@ export interface ICreateEvent {
   date: Date;
   location: ILocationProp;
   price: number;
+  title: string;
   organizer: IOrganizer;
   mascots: string[];
   animators: string[];
@@ -26,10 +27,15 @@ export interface ICreateEvent {
 export interface ICreatedEvent extends ICreateEvent {
   _id: string;
 }
+export interface ICreateEventClient extends Omit<ICreateEvent, "date"> {
+  date: string;
+  time: string;
+}
 
 export interface IEvent {
   date: Date;
   location: ILocationProp;
+  title: string;
   price: number;
   organizer: IOrganizer;
   mascots: { name: string }[];
@@ -58,6 +64,10 @@ const eventSchema = new Schema<IEvent>(
         type: String,
         required: true,
       },
+    },
+    title: {
+      type: String,
+      required: true,
     },
     price: {
       type: Number,
