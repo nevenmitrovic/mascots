@@ -13,7 +13,7 @@ export interface IOrganizer {
 
 export type confirmedType = "pending" | "confirmed" | "rejected";
 
-export interface IEvent {
+export interface ICreateEvent {
   date: Date;
   location: ILocationProp;
   price: number;
@@ -23,16 +23,31 @@ export interface IEvent {
   confirmed: confirmedType;
   collector: string[];
 }
+export interface ICreatedEvent extends ICreateEvent {
+  _id: string;
+}
+
+export interface IEvent {
+  date: Date;
+  location: ILocationProp;
+  price: number;
+  organizer: IOrganizer;
+  mascots: { name: string }[];
+  animators: { username: string }[];
+  confirmed: confirmedType;
+  collector: { username: string }[];
+}
 
 export interface IEventDocument extends IEvent {
   _id: string;
 }
 
-const eventSchema = new Schema<IEventDocument>(
+const eventSchema = new Schema<IEvent>(
   {
     date: {
       type: Date,
       required: true,
+      index: true,
     },
     location: {
       link: {
@@ -92,4 +107,4 @@ const eventSchema = new Schema<IEventDocument>(
   }
 );
 
-export const EventModel = model<IEventDocument>("Event", eventSchema);
+export const EventModel = model<IEvent>("Event", eventSchema);
