@@ -10,8 +10,15 @@ import {
 import { locationSchema } from "../validations/locationSchema";
 import useItemToEdit from "../hooks/useItemToEdit";
 import useLocationActions from "../hooks/useLocationActions";
+import DeleteConfirmationDialog from "../components/global/DeleteConfirmationDialog";
+
+import useItemToDelete from "../hooks/useItemToDelete";
 
 const Locations = () => {
+  //actions related to location
+  const { data, createLocation, editLocation, deleteLocation } =
+    useLocationActions();
+
   //form data for edit or creating new location
   const {
     itemToEdit,
@@ -21,10 +28,7 @@ const Locations = () => {
     handleEditDialogClose,
   } = useItemToEdit<LocationDocument>();
 
-  //fetching locations data
-  const { data, createLocation, editLocation, deleteLocation } =
-    useLocationActions();
-
+  //submit control when create/edit new locations
   const handleLocationSubmit = (data: Location) => {
     if (itemToEdit) {
       editLocation({ data, id: itemToEdit.id });
@@ -34,8 +38,14 @@ const Locations = () => {
     handleEditDialogClose();
   };
 
-  const handleDelete = (id: string) => {
-    deleteLocation(id);
+  //delete dialog hook
+  const { deleteId, setDelete, deleteDialog, handleDeleteDialogClose } =
+    useItemToDelete();
+
+  //handle confirmed delete
+  const handleConfirmDelete = () => {
+    deleteLocation(deleteId);
+    handleDeleteDialogClose();
   };
 
   return (
@@ -45,7 +55,7 @@ const Locations = () => {
       {!data ||
         (data.length == 0 && (
           <Typography component="h2" sx={{ padding: "1rem" }}>
-            No data to display
+            Nema lokacija u bazi
           </Typography>
         ))}
       {data.length > 0 && (
@@ -53,7 +63,7 @@ const Locations = () => {
           data={data}
           headers={locationInputs}
           onEdit={(item) => setItemEdit(item)}
-          onDelete={handleDelete}
+          onDelete={(id) => setDelete(id)}
         />
       )}
 
@@ -66,6 +76,12 @@ const Locations = () => {
           item={itemToEdit?.item}
         />
       </Dialog>
+      <DeleteConfirmationDialog
+        message="Da li ste sigurni da želite da obrišete ovu lokaciju?"
+        open={deleteDialog}
+        onClose={handleDeleteDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
     </Box>
   );
 };

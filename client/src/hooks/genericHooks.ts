@@ -25,6 +25,7 @@ export const useCreateItem = <T>(queryKey: string[]) => {
     mutationFn: (data: T) => createItem<T>(URLextension, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
+      showToast(`Item je uspešno kreiran!`, "success");
     },
     onError: (error: any) => {
       showToast(`Item nije kreiran: ${error.message}`, "error");
@@ -61,6 +62,7 @@ export const useDeleteItem = (queryKey: string[]) => {
     mutationFn: (id: string) => deleteItem(URLextension, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
+      showToast(`Item je uspešno obrisan!`, "success");
     },
     onError: (error: any) => {
       showToast(`Item nije obrisan: ${error.message}`, "error");
