@@ -35,7 +35,6 @@ export const useCreateItem = <T>(queryKey: string[]) => {
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (error: any) => {
-      console.log(error);
       showToast(`Item nije kreiran: ${error.message}`, "error");
     },
   });
