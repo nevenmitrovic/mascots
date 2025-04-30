@@ -11,7 +11,11 @@ import {
 import TContainer from "../components/table/TContainer";
 import { useToggle } from "../hooks/useToggle";
 import { queryKeys } from "../reactQuery/constants";
-import { Location, locationInputs } from "../types/locationTypes";
+import {
+  Location,
+  LocationDocument,
+  locationInputs,
+} from "../types/locationTypes";
 import { locationSchema } from "../validations/locationSchema";
 
 const Locations = () => {
@@ -22,7 +26,7 @@ const Locations = () => {
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const { fullData, selectedData } = useGetItems<Location>([
+  const { fullData, selectedData } = useGetItems<LocationDocument>([
     queryKeys.locations,
   ]);
   console.log(selectedData);
@@ -32,10 +36,10 @@ const Locations = () => {
   const editLocation = useEditItem([queryKeys.locations]);
   const deleteLocation = useDeleteItem([queryKeys.locations]);
 
-  const handleLocationSubmit = (data: Partial<Location> | Location) => {
+  const handleLocationSubmit = (data: Location | LocationDocument) => {
     editItem === undefined
       ? createLocation(data)
-      : editLocation(data as Location);
+      : editLocation(data as LocationDocument);
     toggleDialog();
   };
 
@@ -57,7 +61,7 @@ const Locations = () => {
       <PageHeader onAdd={toggleDialog} headline="Lokacije" />
       <Divider />
       {fullData && (
-        <TContainer<Location>
+        <TContainer<LocationDocument>
           data={fullData}
           headers={locationInputs}
           onEdit={handleEditDialog}
@@ -66,7 +70,7 @@ const Locations = () => {
       )}
 
       <Dialog open={dialog} onClose={handleDialogClose}>
-        <FormComponent<Partial<Location>>
+        <FormComponent<Location>
           header="Unesite podatke o lokaciji"
           formInputs={locationInputs}
           handleFormSubmitt={handleLocationSubmit}

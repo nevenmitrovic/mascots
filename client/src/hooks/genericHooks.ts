@@ -1,11 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
-import {
-  createItem,
-  deleteItem,
-  editItem,
-  fetchAll,
-} from "../api/crudActions";
+import { createItem, deleteItem, editItem, fetchAll } from "../api/crudActions";
 import { useToast } from "../contexts/ToastContext";
 import { queryClient } from "../reactQuery/queryClient";
 
@@ -30,12 +25,18 @@ export const useGetItems = <T extends { name: string; _id: string }>(
 };
 
 export const useCreateItem = <T>(queryKey: string[]) => {
+  const { showToast } = useToast();
+
   const URLextension = queryKey[0];
 
   const { mutate } = useMutation({
-    mutationFn: (data: Partial<T>) => createItem<T>(URLextension, data),
+    mutationFn: (data: T) => createItem<T>(URLextension, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
+    },
+    onError: (error: any) => {
+      console.log(error);
+      showToast(`Item nije kreiran: ${error.message}`, "error");
     },
   });
   return mutate;
@@ -64,11 +65,15 @@ export const useEditItem = <T extends { _id: string }>(queryKey: string[]) => {
 
 export const useDeleteItem = (queryKey: string[]) => {
   const URLextension = queryKey[0];
+  const { showToast } = useToast();
 
   const { mutate } = useMutation({
     mutationFn: (id: string) => deleteItem(URLextension, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
+    },
+    onError: (error: any) => {
+      showToast(`Item nije obrisan: ${error.message}`, "error");
     },
   });
 
