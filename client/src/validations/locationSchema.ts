@@ -1,7 +1,6 @@
 import * as yup from "yup";
 
 export const locationSchema = yup.object({
-  _id: yup.string().optional(),
   name: yup.string().required("Lokacija mora da sadrzi ime."),
   phone: yup
     .string()

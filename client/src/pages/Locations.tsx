@@ -1,5 +1,4 @@
 import { Box, Dialog, Divider } from "@mui/material";
-import { useState } from "react";
 import FormComponent from "../components/form/FormComponent";
 import PageHeader from "../components/global/PageHeader";
 import {
@@ -17,29 +16,31 @@ import {
   locationInputs,
 } from "../types/locationTypes";
 import { locationSchema } from "../validations/locationSchema";
+import useItemToEdit from "../hooks/useItemToEdit";
 
 const Locations = () => {
   //form data for edit or creating new location
-  const [editItem, setEditItem] = useState<Location | undefined>(undefined);
+  const { itemToEdit, setItem } = useItemToEdit<LocationDocument>();
 
   //toggle dialog to open or close form dialog
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const { fullData, selectedData } = useGetItems<LocationDocument>([
+  const { fullData } = useGetItems<LocationDocument>([
     queryKeys.locations,
   ]);
-  console.log(selectedData);
 
   //useQuery for CRUD
   const createLocation = useCreateItem([queryKeys.locations]);
   const editLocation = useEditItem([queryKeys.locations]);
   const deleteLocation = useDeleteItem([queryKeys.locations]);
 
-  const handleLocationSubmit = (data: Location | LocationDocument) => {
-    editItem === undefined
-      ? createLocation(data)
-      : editLocation(data as LocationDocument);
+  const handleLocationSubmit = (data: Location) => {
+    if (itemToEdit) {
+      editLocation({ data, id: itemToEdit.id });
+    } else {
+      createLocation(data);
+    }
     toggleDialog();
   };
 
@@ -47,13 +48,13 @@ const Locations = () => {
     deleteLocation(id);
   };
 
-  const handleEditDialog = (item: Location) => {
-    setEditItem(item);
+  const handleEditDialog = (item: LocationDocument) => {
+    setItem(item);
     toggleDialog();
   };
   const handleDialogClose = () => {
     toggleDialog();
-    setEditItem(undefined);
+    setItem(null);
   };
 
   return (
@@ -75,7 +76,7 @@ const Locations = () => {
           formInputs={locationInputs}
           handleFormSubmitt={handleLocationSubmit}
           schema={locationSchema}
-          item={editItem}
+          item={itemToEdit?.item}
         />
       </Dialog>
     </Box>

@@ -42,15 +42,14 @@ export const useCreateItem = <T>(queryKey: string[]) => {
   return mutate;
 };
 
-export const useEditItem = <T extends { _id: string }>(queryKey: string[]) => {
+export const useEditItem = <T>(queryKey: string[]) => {
   const { showToast } = useToast();
 
   const URLextension = queryKey[0];
 
   const { mutate } = useMutation({
-    mutationFn: (data: T) => {
-      const { _id, ...restOfData } = data;
-      return editItem(URLextension, _id, restOfData as Partial<T>);
+    mutationFn: ({ data, id }: { data: T; id: string }) => {
+      return editItem<T>(URLextension, id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
