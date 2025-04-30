@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToggle } from "./useToggle";
 
 type ItemToEdit<T> = {
   id: string;
@@ -7,18 +8,24 @@ type ItemToEdit<T> = {
 
 const useItemToEdit = <T extends { _id: string }>() => {
   const [itemToEdit, setItemToEdit] = useState<ItemToEdit<T> | null>();
+  const [editDialog, toggleEditDialog] = useToggle(false);
 
-  const setItem = (data: T | null) => {
+  const setItemEdit = (data: T | null) => {
     if (data) {
       const { _id, ...rest } = data;
       setItemToEdit({ id: _id, item: rest });
+      toggleEditDialog();
     } else {
       setItemToEdit(null);
     }
   };
 
-  console.log(itemToEdit);
-  return { itemToEdit, setItem };
+  const handleEditDialogClose = ()=>{
+    toggleEditDialog();
+    setItemEdit(null);
+  }
+
+  return { itemToEdit, setItemEdit, editDialog, toggleEditDialog, handleEditDialogClose };
 };
 
 export default useItemToEdit;

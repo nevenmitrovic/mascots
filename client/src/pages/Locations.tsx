@@ -1,8 +1,7 @@
-import { Box, Dialog, Divider } from "@mui/material";
+import { Box, Dialog, Divider, Typography } from "@mui/material";
 import FormComponent from "../components/form/FormComponent";
 import PageHeader from "../components/global/PageHeader";
 import TContainer from "../components/table/TContainer";
-import { useToggle } from "../hooks/useToggle";
 import {
   Location,
   LocationDocument,
@@ -14,10 +13,13 @@ import useLocationActions from "../hooks/useLocationActions";
 
 const Locations = () => {
   //form data for edit or creating new location
-  const { itemToEdit, setItem } = useItemToEdit<LocationDocument>();
-
-  //toggle dialog to open or close form dialog
-  const [dialog, toggleDialog] = useToggle(false);
+  const {
+    itemToEdit,
+    setItemEdit,
+    editDialog,
+    toggleEditDialog,
+    handleEditDialogClose,
+  } = useItemToEdit<LocationDocument>();
 
   //fetching locations data
   const { data, createLocation, editLocation, deleteLocation } =
@@ -29,36 +31,33 @@ const Locations = () => {
     } else {
       createLocation(data);
     }
-    toggleDialog();
+    handleEditDialogClose();
   };
 
   const handleDelete = (id: string) => {
     deleteLocation(id);
   };
 
-  const handleEditDialog = (item: LocationDocument) => {
-    setItem(item);
-    toggleDialog();
-  };
-  const handleDialogClose = () => {
-    toggleDialog();
-    setItem(null);
-  };
-
   return (
     <Box sx={{ padding: "1rem" }}>
-      <PageHeader onAdd={toggleDialog} headline="Lokacije" />
+      <PageHeader onAdd={toggleEditDialog} headline="Lokacije" />
       <Divider />
-      {data && (
+      {!data ||
+        (data.length == 0 && (
+          <Typography component="h2" sx={{ padding: "1rem" }}>
+            No data to display
+          </Typography>
+        ))}
+      {data.length > 0 && (
         <TContainer<LocationDocument>
           data={data}
           headers={locationInputs}
-          onEdit={handleEditDialog}
+          onEdit={(item) => setItemEdit(item)}
           onDelete={handleDelete}
         />
       )}
 
-      <Dialog open={dialog} onClose={handleDialogClose}>
+      <Dialog open={editDialog} onClose={handleEditDialogClose}>
         <FormComponent<Location>
           header="Unesite podatke o lokaciji"
           formInputs={locationInputs}
