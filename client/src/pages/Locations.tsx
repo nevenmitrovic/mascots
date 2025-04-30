@@ -1,15 +1,8 @@
 import { Box, Dialog, Divider } from "@mui/material";
 import FormComponent from "../components/form/FormComponent";
 import PageHeader from "../components/global/PageHeader";
-import {
-  useCreateItem,
-  useDeleteItem,
-  useEditItem,
-  useGetItems,
-} from "../hooks/genericHooks";
 import TContainer from "../components/table/TContainer";
 import { useToggle } from "../hooks/useToggle";
-import { queryKeys } from "../reactQuery/constants";
 import {
   Location,
   LocationDocument,
@@ -17,6 +10,7 @@ import {
 } from "../types/locationTypes";
 import { locationSchema } from "../validations/locationSchema";
 import useItemToEdit from "../hooks/useItemToEdit";
+import useLocationActions from "../hooks/useLocationActions";
 
 const Locations = () => {
   //form data for edit or creating new location
@@ -26,14 +20,8 @@ const Locations = () => {
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const { fullData } = useGetItems<LocationDocument>([
-    queryKeys.locations,
-  ]);
-
-  //useQuery for CRUD
-  const createLocation = useCreateItem([queryKeys.locations]);
-  const editLocation = useEditItem([queryKeys.locations]);
-  const deleteLocation = useDeleteItem([queryKeys.locations]);
+  const { data, createLocation, editLocation, deleteLocation } =
+    useLocationActions();
 
   const handleLocationSubmit = (data: Location) => {
     if (itemToEdit) {
@@ -61,9 +49,9 @@ const Locations = () => {
     <Box sx={{ padding: "1rem" }}>
       <PageHeader onAdd={toggleDialog} headline="Lokacije" />
       <Divider />
-      {fullData && (
+      {data && (
         <TContainer<LocationDocument>
-          data={fullData}
+          data={data}
           headers={locationInputs}
           onEdit={handleEditDialog}
           onDelete={handleDelete}
