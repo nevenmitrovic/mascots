@@ -1,4 +1,4 @@
-import { checkForErrors } from "utils/globalUtils";
+import { checkForErrors, getRangeForDates } from "utils/globalUtils";
 
 import {
   EventModel,
@@ -25,10 +25,17 @@ export class EventRepository {
     }
   }
 
-  async getEvents(): Promise<IEventDocument[]> {
+  async getEvents(year: number, month: number): Promise<IEventDocument[]> {
     try {
+      const { from, to } = getRangeForDates(year, month);
+
       const events = await this.eventModel
-        .find({})
+        .find({
+          date: {
+            $gte: from,
+            $lt: to,
+          },
+        })
         .populate([
           { path: "collector", select: "-_id username" },
           { path: "animators", select: "-_id username" },

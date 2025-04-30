@@ -22,9 +22,10 @@ export class EventService {
     }
   }
 
-  async getEvents(): Promise<IEventDocument[]> {
+  async getEvents(year: number, month: number): Promise<IEventDocument[]> {
     try {
-      const res = await this.eventRepository.getEvents();
+      const res = await this.eventRepository.getEvents(year, month);
+
       return res;
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
