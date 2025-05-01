@@ -8,11 +8,11 @@ import {
   locationInputs,
 } from "../types/locationTypes";
 import { locationSchema } from "../validations/locationSchema";
-import useItemToEdit from "../hooks/useItemToEdit";
+import useItemToEdit from "../hooks/global/useItemToEdit";
 import useLocationActions from "../hooks/useLocationActions";
 import DeleteConfirmationDialog from "../components/global/DeleteConfirmationDialog";
 
-import useItemToDelete from "../hooks/useItemToDelete";
+import useItemToDelete from "../hooks/global/useItemToDelete";
 
 const Locations = () => {
   //actions related to location

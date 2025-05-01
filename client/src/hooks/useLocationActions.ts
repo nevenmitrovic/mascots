@@ -3,7 +3,7 @@ import {
   useDeleteItem,
   useEditItem,
   useGetItems,
-} from "../hooks/genericHooks";
+} from "./global/genericHooks";
 import { queryKeys } from "../reactQuery/constants";
 import { Location, LocationDocument } from "../types/locationTypes";
 

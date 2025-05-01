@@ -20,12 +20,18 @@ const useItemToEdit = <T extends { _id: string }>() => {
     }
   };
 
-  const handleEditDialogClose = ()=>{
+  const handleEditDialogClose = () => {
     toggleEditDialog();
     setItemEdit(null);
-  }
+  };
 
-  return { itemToEdit, setItemEdit, editDialog, toggleEditDialog, handleEditDialogClose };
+  return {
+    itemToEdit,
+    setItemEdit,
+    editDialog,
+    toggleEditDialog,
+    handleEditDialogClose,
+  };
 };
 
 export default useItemToEdit;
