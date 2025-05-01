@@ -1,18 +1,24 @@
 import { Box, Dialog, Divider } from "@mui/material";
+
 import { useState } from "react";
-import FormComponent from "../components/form/FormComponent";
-import PageHeader from "../components/global/PageHeader";
+
+import FormComponent from "components/form/FormComponent";
+import PageHeader from "components/global/PageHeader";
+import TContainer from "components/table/TContainer";
+
 import {
   useCreateItem,
   useDeleteItem,
   useEditItem,
   useGetItems,
-} from "../hooks/genericHooks";
-import TContainer from "../components/table/TContainer";
-import { useToggle } from "../hooks/useToggle";
-import { queryKeys } from "../reactQuery/constants";
-import { Mascot, mascotInputs } from "../types/mascotTypes";
-import { mascotSchema } from "../validations/mascotSchema";
+} from "hooks/global/genericHooks";
+import { useToggle } from "hooks/global/useToggle";
+
+import { queryKeys } from "reactQuery/constants";
+
+import { type Mascot, mascotInputs } from "types/mascotTypes";
+
+import { mascotSchema } from "validations/mascotSchema";
 
 const Mascots = () => {
   //form data for edit or creating new location
@@ -22,7 +28,7 @@ const Mascots = () => {
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const { fullData, selectedData } = useGetItems<Mascot>([queryKeys.mascots]);
+  const data = useGetItems<Mascot>([queryKeys.mascots]);
   console.log(selectedData);
 
   //useQuery for CRUD

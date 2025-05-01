@@ -1,17 +1,17 @@
 import { Box, Dialog } from "@mui/material";
 import { useContext } from "react";
 
-import Calendar from "../../components/calendar/Calendar";
-import FormComponent from "../../components/form/FormComponent";
-import EventCard from "../../components/calendar/EventCard";
+import Calendar from "components/calendar/Calendar";
+import FormComponent from "components/form/FormComponent";
+import EventCard from "components/calendar/EventCard";
 
-import { FormDataContext } from "../../contexts/FormDataContext";
-import { CalendarFormDialogContext } from "../../contexts/CalendarFormDialogContext";
-import { useToast } from "../../contexts/ToastContext";
-import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
+import { FormDataContext } from "contexts/FormDataContext";
+import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
+import { useToast } from "contexts/ToastContext";
+import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
-import { eventFormInputs } from "../../types/eventTypes";
-import { eventSchema, EventSchemaType } from "../../validations/eventSchema";
+import { type eventFormInputs } from "types/eventTypes";
+import { eventSchema, EventSchemaType } from "validations/eventSchema";
 
 const CalendarContainer = () => {
   const { open, toggleDialog } = useContext(CalendarFormDialogContext);

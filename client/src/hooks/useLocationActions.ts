@@ -4,8 +4,10 @@ import {
   useEditItem,
   useGetItems,
 } from "./global/genericHooks";
-import { queryKeys } from "../reactQuery/constants";
-import { Location, LocationDocument } from "../types/locationTypes";
+
+import { queryKeys } from "reactQuery/constants";
+
+import { type Location, type LocationDocument } from "types/locationTypes";
 
 const useLocationActions = () => {
   const data = useGetItems<LocationDocument>([queryKeys.locations]);

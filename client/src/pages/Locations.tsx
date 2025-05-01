@@ -1,18 +1,21 @@
 import { Box, Dialog, Divider, Typography } from "@mui/material";
-import FormComponent from "../components/form/FormComponent";
-import PageHeader from "../components/global/PageHeader";
-import TContainer from "../components/table/TContainer";
-import {
-  Location,
-  LocationDocument,
-  locationInputs,
-} from "../types/locationTypes";
-import { locationSchema } from "../validations/locationSchema";
-import useItemToEdit from "../hooks/global/useItemToEdit";
-import useLocationActions from "../hooks/useLocationActions";
-import DeleteConfirmationDialog from "../components/global/DeleteConfirmationDialog";
 
-import useItemToDelete from "../hooks/global/useItemToDelete";
+import FormComponent from "components/form/FormComponent";
+import PageHeader from "components/global/PageHeader";
+import TContainer from "components/table/TContainer";
+import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
+
+import {
+  type Location,
+  type LocationDocument,
+  locationInputs,
+} from "types/locationTypes";
+
+import { locationSchema } from "validations/locationSchema";
+
+import useItemToEdit from "hooks/global/useItemToEdit";
+import useLocationActions from "hooks/useLocationActions";
+import useItemToDelete from "hooks/global/useItemToDelete";
 
 const Locations = () => {
   //actions related to location

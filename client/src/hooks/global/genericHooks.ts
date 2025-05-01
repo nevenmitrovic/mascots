@@ -1,12 +1,14 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "reactQuery/queryClient";
+
 import {
   createItem,
   deleteItem,
   editItem,
   fetchAll,
-} from "../../api/apiService";
-import { useToast } from "../../contexts/ToastContext";
-import { queryClient } from "../../reactQuery/queryClient";
+} from "api/apiService";
+
+import { useToast } from "contexts/ToastContext";
 
 export const useGetItems = <T extends { name: string; _id: string }>(
   queryKey: string[]

@@ -8,8 +8,7 @@ import {
   Box,
 } from "@mui/material";
 
-import { IEvent } from "../../types/eventTypes";
-import { EventCardProps } from "../../types/eventTypes";
+import {type EventCardProps, type IEvent } from "types/eventTypes";
 
 import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
 

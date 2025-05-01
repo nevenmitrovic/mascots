@@ -1,6 +1,10 @@
+import { ObjectSchema } from "yup";
+
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import { Button, Paper, Typography } from "@mui/material";
+
 import {
   DefaultValues,
   FieldValues,
@@ -9,9 +13,11 @@ import {
   Path,
   useForm,
 } from "react-hook-form";
-import { ObjectSchema } from "yup";
-import { FormProps } from "../../types/formTypes";
-import { defaultValues } from "../../utils/helperFunctions";
+
+import { type FormProps } from "types/formTypes";
+
+import { defaultValues } from "utils/helperFunctions";
+
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
 

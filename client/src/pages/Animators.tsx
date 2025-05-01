@@ -1,17 +1,22 @@
 import { Box, Dialog, Divider } from "@mui/material";
+
 import { useState } from "react";
-import FormComponent from "../components/form/FormComponent";
-import PageHeader from "../components/global/PageHeader";
+
+import FormComponent from "components/form/FormComponent";
+import PageHeader from "components/global/PageHeader";
+import TContainer from "components/table/TContainer";
+
 import {
   useCreateItem,
   useDeleteItem,
   useEditItem,
   useGetItems,
-} from "../hooks/genericHooks";
-import TContainer from "../components/table/TContainer";
-import { useToggle } from "../hooks/useToggle";
-import { queryKeys } from "../reactQuery/constants";
-import { Animator, animatorInputs } from "../types/animatorsTypes";
+} from "hooks/global/genericHooks";
+import { useToggle } from "hooks/global/useToggle";
+
+import { queryKeys } from "reactQuery/constants";
+
+import { type Animator, animatorInputs } from "types/animatorsTypes";
 
 const Animators = () => {
   //form data for edit or creating new location
@@ -21,7 +26,9 @@ const Animators = () => {
   const [dialog, toggleDialog] = useToggle(false);
 
   //fetching locations data
-  const { fullData, selectedData } = useGetItems<Animator>([queryKeys.Animators]);
+  const { fullData, selectedData } = useGetItems<Animator>([
+    queryKeys.Animators,
+  ]);
   console.log(selectedData);
 
   //useQuery for CRUD
@@ -30,7 +37,9 @@ const Animators = () => {
   const deleteAnimator = useDeleteItem([queryKeys.Animators]);
 
   const handleAnimatorSubmit = (data: Partial<Animator> | Animator) => {
-    editItem === undefined ? createAnimator(data) : editAnimator(data as Animator);
+    editItem === undefined
+      ? createAnimator(data)
+      : editAnimator(data as Animator);
     toggleDialog();
   };
   Location;

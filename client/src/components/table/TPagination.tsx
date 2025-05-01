@@ -1,5 +1,5 @@
 import { Pagination, Stack } from "@mui/material";
-import { TablePaginationComponentProps } from "../../types/tableTypes";
+import { TablePaginationComponentProps } from "types/tableTypes";
 
 const TPagination = ({
   currentPage,

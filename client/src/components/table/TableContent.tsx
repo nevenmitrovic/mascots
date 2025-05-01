@@ -1,7 +1,7 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { IconButton, TableBody, TableCell, TableRow } from "@mui/material";
-import { TableContentProps } from "../../types/tableTypes";
+import { TableContentProps } from "types/tableTypes";
 
 const TableContent = <T extends { _id: string }>({
   data,

@@ -3,8 +3,10 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import Autocomplete from "@mui/material/Autocomplete";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
+
 import { Controller, FieldValues } from "react-hook-form";
-import { FormInputProps } from "../../types/formTypes";
+
+import {type  FormInputProps } from "types/formTypes";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;

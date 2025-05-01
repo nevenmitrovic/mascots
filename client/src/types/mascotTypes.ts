@@ -1,4 +1,4 @@
-import { FormInputConfig } from "./formTypes";
+import { type FormInputConfig } from "./formTypes";
 
 export type Mascot = {
   _id: string;

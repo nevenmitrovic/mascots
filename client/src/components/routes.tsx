@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router";
-import Animators from "../pages/Animators";
-import Calendar from "../pages/Calendar";
-import Locations from "../pages/Locations";
-import NotFound from "../pages/NotFound";
-import SignIn from "../pages/SignIn";
+
+import Animators from "pages/Animators";
+import Calendar from "pages/Calendar";
+import Locations from "pages/Locations";
+import NotFound from "pages/NotFound";
+import SignIn from "pages/SignIn";
+import Mascots from "pages/Mascots";
+
 import Layout from "./Layout";
-import Mascots from "../pages/Mascots";
 
 export const router = createBrowserRouter([
   {

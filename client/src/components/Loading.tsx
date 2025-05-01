@@ -1,4 +1,5 @@
 import { Box, CircularProgress } from "@mui/material";
+
 import { useIsFetching } from "@tanstack/react-query";
 
 const Loading = () => {

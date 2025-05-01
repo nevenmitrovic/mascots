@@ -1,7 +1,9 @@
 import Box from "@mui/material/Box";
+
+import { useToggle } from "hooks/global/useToggle";
+
 import AppHeader from "./AppHeader";
 import SideDrawer from "./SideDrawer";
-import { useToggle } from "../../hooks/global/useToggle";
 
 interface ResponsiveDrawerProps {
   window?: () => Window;

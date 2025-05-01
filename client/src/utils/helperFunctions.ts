@@ -1,4 +1,4 @@
-import { IEvent } from "../types/eventTypes";
+import { type IEvent } from "../types/eventTypes";
 
 export const defaultValues = <T>(inputs: T[]) => {
   const obj: Record<string, string | string[]> = {};

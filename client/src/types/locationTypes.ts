@@ -1,4 +1,5 @@
-import { FormInputConfig } from "./formTypes";
+import { type FormInputConfig } from "./formTypes";
+
 //location type for creating or editing
 export type Location = {
   name: string;
