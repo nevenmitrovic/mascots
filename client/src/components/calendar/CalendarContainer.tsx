@@ -10,7 +10,7 @@ import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
 import { useToast } from "contexts/ToastContext";
 import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
-import { type eventFormInputs } from "types/eventTypes";
+import { eventFormInputs } from "types/eventTypes";
 import { eventSchema, EventSchemaType } from "validations/eventSchema";
 
 const CalendarContainer = () => {

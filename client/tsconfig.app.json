@@ -13,7 +13,8 @@
       "contexts/": ["contexts/"],
       "validations/": ["validations/"],
       "api/": ["api/"],
-      "types/": ["types/"]
+      "types/": ["types/"],
+      "reactQuery/": ["reactQuery/"]
     },
     "resolveJsonModule": true,
 
