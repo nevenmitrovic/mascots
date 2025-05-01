@@ -5,12 +5,16 @@ import { createItem, deleteItem, editItem, fetchAll } from "api/apiService";
 
 import { useToast } from "contexts/ToastContext";
 
+import { createPath } from "utils/helperFunctions";
+
 export const useGetItems = <T>(queryKey: string[]) => {
   const fallback: T[] = [];
 
+  const URLpath = createPath(queryKey)
+  
   const { data = fallback } = useQuery<T[]>({
     queryKey,
-    queryFn: () => fetchAll(queryKey[0]),
+    queryFn: () => fetchAll(URLpath),
   });
 
   return data;

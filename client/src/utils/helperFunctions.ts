@@ -3,12 +3,14 @@ import { type LocationDocument } from "types/locationTypes";
 import { type MascotDocument } from "types/mascotTypes";
 import { type AnimatorDocument } from "types/animatorsTypes";
 
+import dayjs from "dayjs";
+
 type AnimatorSelectProps =
   | LocationDocument[]
   | MascotDocument[]
   | AnimatorDocument[];
 
-//function to map data to display select input for create/edit event form 
+//function to map data to display select input for create/edit event form
 export const mapSelectedData = (data: AnimatorSelectProps) => {
   return data.map((item) => ({
     title: "name" in item ? item.name : item.username,
@@ -56,3 +58,17 @@ export function mapEventsToCalendar(events: IEvent[]) {
   });
 }
 
+//getting current date
+export const getMonthYearDetails = (initialDate: dayjs.Dayjs) => {
+  const month = initialDate.format("MM");
+  const year = initialDate.format("YYYY");
+  return { month, year };
+};
+
+//make path for fetching
+export const createPath = (data: string[]) => {
+  console.log(data);
+  const params = data.join("/");
+  console.log(params);
+  return params;
+};
