@@ -1,5 +1,6 @@
+import { FormInputConfig } from "./formTypes";
+
 export type Animator = {
-  _id: string;
   fullName: string;
   username: string;
   password: string;
@@ -8,7 +9,13 @@ export type Animator = {
   paycheck: number;
 };
 
-export const animatorInputs = [
+export type AnimatorTable = Omit<AnimatorDocument, "password">;
+
+export type AnimatorDocument = Animator & {
+  _id: string;
+};
+
+export const animatorInputs: FormInputConfig<AnimatorTable>[] = [
   { name: "fullName", label: "Puno Ime", type: "text", sx: { mb: "2rem" } },
   { name: "username", label: "Username", type: "text", sx: { mb: "2rem" } },
   { name: "email", label: "E-mail", type: "text", sx: { mb: "2rem" } },

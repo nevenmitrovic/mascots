@@ -16,30 +16,25 @@ import { useToggle } from "hooks/global/useToggle";
 
 import { queryKeys } from "reactQuery/constants";
 
-import { type Animator, animatorInputs } from "types/animatorsTypes";
+import { type Animator, AnimatorDocument, animatorInputs, AnimatorTable } from "types/animatorsTypes";
+import useAnimatorActions from "hooks/useAnimatorActions";
 
 const Animators = () => {
+
+  //actions related to Animator
+  const { data, createAnimator, editAnimator, deleteAnimator } =
+    useAnimatorActions();
+
   //form data for edit or creating new location
   const [editItem, setEditItem] = useState<Animator | undefined>(undefined);
 
   //toggle dialog to open or close form dialog
   const [dialog, toggleDialog] = useToggle(false);
 
-  //fetching locations data
-  const { fullData, selectedData } = useGetItems<Animator>([
-    queryKeys.Animators,
-  ]);
-  console.log(selectedData);
-
-  //useQuery for CRUD
-  const createAnimator = useCreateItem<Animator>([queryKeys.Animators]);
-  const editAnimator = useEditItem<Animator>([queryKeys.Animators]);
-  const deleteAnimator = useDeleteItem([queryKeys.Animators]);
-
-  const handleAnimatorSubmit = (data: Partial<Animator> | Animator) => {
+  const handleAnimatorSubmit = (data: Animator) => {
     editItem === undefined
       ? createAnimator(data)
-      : editAnimator(data as Animator);
+      : editAnimator(data);
     toggleDialog();
   };
   Location;
@@ -48,7 +43,7 @@ const Animators = () => {
     deleteAnimator(id);
   };
 
-  const handleEditDialog = (item: Animator) => {
+  const handleEditDialog = (item: AnimatorTable) => {
     setEditItem(item);
     toggleDialog();
   };
@@ -61,24 +56,24 @@ const Animators = () => {
     <Box sx={{ padding: "1rem" }}>
       <PageHeader onAdd={toggleDialog} headline="Animatori" />
       <Divider />
-      {fullData && (
-        <TContainer<Animator>
-          data={fullData}
+      {data && (
+        <TContainer<AnimatorTable>
+          data={data}
           headers={animatorInputs}
           onEdit={handleEditDialog}
           onDelete={handleDelete}
         />
       )}
 
-      <Dialog open={dialog} onClose={handleDialogClose}>
-        <FormComponent<Partial<Animator>>
+      {/* <Dialog open={dialog} onClose={handleDialogClose}>
+        <FormComponent<Animator>
           header="Unesite podatke o animatoru"
           formInputs={animatorInputs}
           handleFormSubmitt={handleAnimatorSubmit}
           schema={AnimatorSchema}
           item={editItem}
         />
-      </Dialog>
+      </Dialog> */}
     </Box>
   );
 };

@@ -1,18 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "reactQuery/queryClient";
 
-import {
-  createItem,
-  deleteItem,
-  editItem,
-  fetchAll,
-} from "api/apiService";
+import { createItem, deleteItem, editItem, fetchAll } from "api/apiService";
 
 import { useToast } from "contexts/ToastContext";
 
-export const useGetItems = <T extends { name: string; _id: string }>(
-  queryKey: string[]
-) => {
+export const useGetItems = <T>(queryKey: string[]) => {
   const fallback: T[] = [];
 
   const { data = fallback } = useQuery<T[]>({
