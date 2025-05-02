@@ -2,6 +2,8 @@ import { EventDropArg, EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
+import { useState, useRef } from "react";
+import dayjs from "dayjs";
 
 import { useContext } from "react";
 
@@ -18,6 +20,33 @@ export const Calendar = () => {
   const { setFormData } = useContext(FormDataContext);
   const { toggleEventCardTuple } = useContext(EventCardDialogContext);
 
+  const [date, setDate] = useState<{ year: string; month: string } | null>(
+    null
+  );
+
+  const calendarRef = useRef<FullCalendar | null>(null);
+
+  const next = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.next();
+      setDate({
+        year: dayjs(calendarApi.getDate()).format("YYYY"),
+        month: dayjs(calendarApi.getDate()).format("MM"),
+      });
+    }
+  };
+  const prev = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.prev();
+      setDate({
+        year: dayjs(calendarApi.getDate()).format("YYYY"),
+        month: dayjs(calendarApi.getDate()).format("MM"),
+      });
+    }
+  };
+
   const addNewEvent = () => {
     toggleDialog();
   };
@@ -26,7 +55,6 @@ export const Calendar = () => {
     const data = {
       title: "",
       date: info.dateStr,
-
       time: "",
       location: [],
       maskotas: [],
@@ -115,16 +143,25 @@ export const Calendar = () => {
   return (
     <>
       <FullCalendar
+        ref={calendarRef}
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         customButtons={{
           addEvent: {
-            text: "Dodaj dogadjaj",
+            text: "+ dodaj",
             click: addNewEvent,
+          },
+          nextButton: {
+            text: ">>",
+            click: next,
+          },
+          prevButton: {
+            text: "<<",
+            click: prev,
           },
         }}
         headerToolbar={{
-          right: "prev,next",
+          right: "prevButton,nextButton",
           left: "title",
           center: "addEvent",
         }}
