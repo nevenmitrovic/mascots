@@ -47,7 +47,8 @@ const FormComponent = <T extends FieldValues>({
     console.log(typeof pathname);
     return pathname.includes("animators");
   };
-
+  //when making new event, if user choose to put location outside of the database
+  //in case that value=none, display 2 new inputs to make custom location
   const locationValue = watch("location" as Path<T>);
 
   const onSubmit: SubmitHandler<T> = async (data) => {
