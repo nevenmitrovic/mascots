@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { useGetItems } from "./global/genericHooks";
+import { useGetItems } from "./global/genericCRUDHooks";
 
 import { getMonthYearDetails } from "utils/helperFunctions";
 

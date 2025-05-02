@@ -20,6 +20,7 @@ import { defaultValues } from "utils/helperFunctions";
 
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
+import { useLocation } from "react-router";
 
 const FormComponent = <T extends FieldValues>({
   formInputs,
@@ -38,6 +39,14 @@ const FormComponent = <T extends FieldValues>({
     resolver: yupResolver(schema as ObjectSchema<T>) as Resolver<T>,
     defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
+
+  //if check to see if we are in animator form and item is not present
+  //in that case we display password field, otherwise we dont display it
+  const isAnimatorForm = () => {
+    const { pathname } = useLocation();
+    console.log(typeof pathname);
+    return pathname.includes("animators");
+  };
 
   const locationValue = watch("location" as Path<T>);
 
@@ -69,10 +78,25 @@ const FormComponent = <T extends FieldValues>({
               display: locationValue.includes("none") ? "block" : "none",
             };
           }
+          //display password input when creating new animator
+          if (input.name === "password" && isAnimatorForm()) {
+            if (!item) {
+              return (
+                <FormInputText<T>
+                  key={String(input.name)}
+                  {...input}
+                  control={control}
+                  sx={fieldStyle}
+                />
+              );
+            }
+            return;
+          }
 
           return input.type === "text" ||
             input.type === "password" ||
-            input.type === "email" ? (
+            input.type === "email" ||
+            input.type === "number" ? (
             <FormInputText<T>
               key={String(input.name)}
               {...input}

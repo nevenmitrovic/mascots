@@ -3,7 +3,7 @@ import {
   useDeleteItem,
   useEditItem,
   useGetItems,
-} from "./global/genericHooks";
+} from "./global/genericCRUDHooks";
 
 import { queryKeys } from "reactQuery/constants";
 
