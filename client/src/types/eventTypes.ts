@@ -1,6 +1,6 @@
-import { FormInputConfig } from "./formTypes";
+import { type FormInputConfig } from "./formTypes";
 
-import { Location } from "./locationTypes";
+import { type Location } from "./locationTypes";
 
 export interface EventCardProps {
   id: string | null;

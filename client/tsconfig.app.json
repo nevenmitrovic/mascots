@@ -6,6 +6,17 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "baseUrl": "./src",
+    "paths": {
+      "pages/": ["pages/"],
+      "components/": ["components/"],
+      "contexts/": ["contexts/"],
+      "validations/": ["validations/"],
+      "api/": ["api/"],
+      "types/": ["types/"],
+      "reactQuery/": ["reactQuery/"]
+    },
+    "resolveJsonModule": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

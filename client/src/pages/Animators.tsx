@@ -1,75 +1,91 @@
 import { Box, Dialog, Divider } from "@mui/material";
-import { useState } from "react";
-import FormComponent from "../components/form/FormComponent";
-import PageHeader from "../components/global/PageHeader";
+
+import FormComponent from "components/form/FormComponent";
+import PageHeader from "components/global/PageHeader";
+import TContainer from "components/table/TContainer";
+import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
+
 import {
-  useCreateItem,
-  useDeleteItem,
-  useEditItem,
-  useGetItems,
-} from "../hooks/genericHooks";
-import TContainer from "../components/table/TContainer";
-import { useToggle } from "../hooks/useToggle";
-import { queryKeys } from "../reactQuery/constants";
-import { Animator, animatorInputs } from "../types/animatorsTypes";
+  type Animator,
+  type AnimatorDocument,
+  type AnimatorTable,
+  animatorInputs,
+  animatorTable,
+} from "types/animatorsTypes";
+
+import {
+  type UpdatedAnimator,
+  type NewAnimator,
+  newAnimatorSchema,
+  updatedAnimatorSchema,
+} from "validations/animatorSchema";
+
+import useAnimatorActions from "hooks/useAnimatorActions";
+import useItemToEdit from "hooks/global/useItemToEdit";
+import useItemToDelete from "hooks/global/useItemToDelete";
 
 const Animators = () => {
-  //form data for edit or creating new location
-  const [editItem, setEditItem] = useState<Animator | undefined>(undefined);
+  //actions related to Animator
+  const { data, createAnimator, editAnimator, deleteAnimator } =
+    useAnimatorActions();
 
-  //toggle dialog to open or close form dialog
-  const [dialog, toggleDialog] = useToggle(false);
+  //form data for edit or creating new animator
+  const {
+    itemToEdit,
+    setItemEdit,
+    editDialog,
+    toggleEditDialog,
+    handleEditDialogClose,
+  } = useItemToEdit<AnimatorDocument>();
 
-  //fetching locations data
-  const { fullData, selectedData } = useGetItems<Animator>([queryKeys.Animators]);
-  console.log(selectedData);
-
-  //useQuery for CRUD
-  const createAnimator = useCreateItem<Animator>([queryKeys.Animators]);
-  const editAnimator = useEditItem<Animator>([queryKeys.Animators]);
-  const deleteAnimator = useDeleteItem([queryKeys.Animators]);
-
-  const handleAnimatorSubmit = (data: Partial<Animator> | Animator) => {
-    editItem === undefined ? createAnimator(data) : editAnimator(data as Animator);
-    toggleDialog();
-  };
-  Location;
-
-  const handleDelete = (id: string) => {
-    deleteAnimator(id);
+  //submit control when create/edit new animator
+  const handleAnimatorSubmit = (data: Animator) => {
+    if (itemToEdit) {
+      editAnimator({ data, id: itemToEdit.id });
+    } else {
+      createAnimator(data);
+    }
+    handleEditDialogClose();
   };
 
-  const handleEditDialog = (item: Animator) => {
-    setEditItem(item);
-    toggleDialog();
-  };
-  const handleDialogClose = () => {
-    toggleDialog();
-    setEditItem(undefined);
+  //delete dialog hook
+  const { deleteId, setDelete, deleteDialog, handleDeleteDialogClose } =
+    useItemToDelete();
+
+  //handle confirmed delete
+  const handleConfirmDelete = () => {
+    deleteAnimator(deleteId);
+    handleDeleteDialogClose();
   };
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <PageHeader onAdd={toggleDialog} headline="Animatori" />
+      <PageHeader onAdd={toggleEditDialog} headline="Animatori" />
       <Divider />
-      {fullData && (
-        <TContainer<Animator>
-          data={fullData}
-          headers={animatorInputs}
-          onEdit={handleEditDialog}
-          onDelete={handleDelete}
+      {data && (
+        <TContainer<AnimatorTable>
+          data={data}
+          headers={animatorTable}
+          onEdit={(item) => setItemEdit(item)}
+          onDelete={(id) => setDelete(id)}
         />
       )}
 
-      <Dialog open={dialog} onClose={handleDialogClose}>
-        <FormComponent<Partial<Animator>>
+      <Dialog open={editDialog} onClose={handleEditDialogClose}>
+        <FormComponent<NewAnimator | UpdatedAnimator>
           header="Unesite podatke o animatoru"
           formInputs={animatorInputs}
           handleFormSubmitt={handleAnimatorSubmit}
-          schema={AnimatorSchema}
-          item={editItem}
+          schema={itemToEdit?.item ? updatedAnimatorSchema : newAnimatorSchema}
+          item={itemToEdit?.item}
         />
       </Dialog>
+      <DeleteConfirmationDialog
+        message="Da li ste sigurni da želite da obrišete animatora?"
+        open={deleteDialog}
+        onClose={handleDeleteDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
     </Box>
   );
 };

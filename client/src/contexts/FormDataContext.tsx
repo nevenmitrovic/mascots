@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 
-import { EventSchemaType } from "../validations/eventSchema";
+import { EventSchemaType } from "validations/eventSchema";
 
 type FormDataContextType = {
   formData: EventSchemaType | undefined;

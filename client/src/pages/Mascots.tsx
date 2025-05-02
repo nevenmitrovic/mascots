@@ -1,76 +1,88 @@
-import { Box, Dialog, Divider } from "@mui/material";
-import { useState } from "react";
-import FormComponent from "../components/form/FormComponent";
-import PageHeader from "../components/global/PageHeader";
+import { Box, Dialog, Divider, Typography } from "@mui/material";
+
+import FormComponent from "components/form/FormComponent";
+import PageHeader from "components/global/PageHeader";
+import TContainer from "components/table/TContainer";
+
 import {
-  useCreateItem,
-  useDeleteItem,
-  useEditItem,
-  useGetItems,
-} from "../hooks/genericHooks";
-import TContainer from "../components/table/TContainer";
-import { useToggle } from "../hooks/useToggle";
-import { queryKeys } from "../reactQuery/constants";
-import { Mascot, mascotInputs } from "../types/mascotTypes";
-import { mascotSchema } from "../validations/mascotSchema";
+  type Mascot,
+  type MascotDocument,
+  mascotInputs,
+} from "types/mascotTypes";
+
+import { mascotSchema } from "validations/mascotSchema";
+import useMascotActions from "hooks/useMascotActions";
+import useItemToEdit from "hooks/global/useItemToEdit";
+import useItemToDelete from "hooks/global/useItemToDelete";
+import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
 
 const Mascots = () => {
-  //form data for edit or creating new location
-  const [editItem, setEditItem] = useState<Mascot | undefined>(undefined);
+  //actions related to mascots
+  const { data, createMascot, editMascot, deleteMascot } = useMascotActions();
 
-  //toggle dialog to open or close form dialog
-  const [dialog, toggleDialog] = useToggle(false);
+  //form data for edit or creating new mascots
+  const {
+    itemToEdit,
+    setItemEdit,
+    editDialog,
+    toggleEditDialog,
+    handleEditDialogClose,
+  } = useItemToEdit<MascotDocument>();
 
-  //fetching locations data
-  const { fullData, selectedData } = useGetItems<Mascot>([queryKeys.mascots]);
-  console.log(selectedData);
-
-  //useQuery for CRUD
-  const createMascot = useCreateItem<Mascot>([queryKeys.mascots]);
-  const editMascot = useEditItem<Mascot>([queryKeys.mascots]);
-  const deleteMascot = useDeleteItem([queryKeys.mascots]);
-
-  const handleMascotSubmit = (data: Partial<Mascot> | Mascot) => {
-    editItem === undefined ? createMascot(data) : editMascot(data as Mascot);
-    toggleDialog();
-  };
-  Location;
-
-  const handleDelete = (id: string) => {
-    deleteMascot(id);
+  //submit control when create/edit new mascots
+  const handleMascotSubmit = (data: Mascot) => {
+    if (itemToEdit) {
+      editMascot({ data, id: itemToEdit.id });
+    } else {
+      createMascot(data);
+    }
+    handleEditDialogClose();
   };
 
-  const handleEditDialog = (item: Mascot) => {
-    setEditItem(item);
-    toggleDialog();
-  };
-  const handleDialogClose = () => {
-    toggleDialog();
-    setEditItem(undefined);
+  //delete dialog hook
+  const { deleteId, setDelete, deleteDialog, handleDeleteDialogClose } =
+    useItemToDelete();
+
+  //handle confirmed delete
+  const handleConfirmDelete = () => {
+    deleteMascot(deleteId);
+    handleDeleteDialogClose();
   };
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <PageHeader onAdd={toggleDialog} headline="Maskote" />
+      <PageHeader onAdd={toggleEditDialog} headline="Maskote" />
       <Divider />
-      {fullData && (
-        <TContainer<Mascot>
-          data={fullData}
+      {!data ||
+        (data.length == 0 && (
+          <Typography component="h2" sx={{ padding: "1rem" }}>
+            Nema lokacija u bazi
+          </Typography>
+        ))}
+      {data.length > 0 && (
+        <TContainer<MascotDocument>
+          data={data}
           headers={mascotInputs}
-          onEdit={handleEditDialog}
-          onDelete={handleDelete}
+          onEdit={(item) => setItemEdit(item)}
+          onDelete={(id) => setDelete(id)}
         />
       )}
 
-      <Dialog open={dialog} onClose={handleDialogClose}>
-        <FormComponent<Partial<Mascot>>
+      <Dialog open={editDialog} onClose={handleEditDialogClose}>
+        <FormComponent<Mascot>
           header="Unesite podatke o maskoti"
           formInputs={mascotInputs}
           handleFormSubmitt={handleMascotSubmit}
           schema={mascotSchema}
-          item={editItem}
+          item={itemToEdit?.item}
         />
       </Dialog>
+      <DeleteConfirmationDialog
+        message="Da li ste sigurni da želite da obrišete ovu maskotu?"
+        open={deleteDialog}
+        onClose={handleDeleteDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
     </Box>
   );
 };

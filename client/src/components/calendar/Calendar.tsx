@@ -7,13 +7,13 @@ import dayjs from "dayjs";
 
 import { useContext } from "react";
 
-import { FormDataContext } from "../../contexts/FormDataContext";
-import { CalendarFormDialogContext } from "../../contexts/CalendarFormDialogContext";
-import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
+import { FormDataContext } from "contexts/FormDataContext";
+import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
+import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
-import { mapEventsToCalendar } from "../../utils/helperFunctions";
+import { mapEventsToCalendar } from "utils/helperFunctions";
 
-import { IEvent } from "../../types/eventTypes";
+import { type IEvent } from "types/eventTypes";
 
 export const Calendar = () => {
   const { toggleDialog } = useContext(CalendarFormDialogContext);

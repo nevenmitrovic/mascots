@@ -3,9 +3,11 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { NavLink, useLocation } from "react-router";
-import { NavData } from "./NavData";
 import { Box } from "@mui/material";
+
+import { NavLink, useLocation } from "react-router";
+
+import { NavData } from "./NavData";
 
 interface DrawerListProps {
   handleDrawerToggle: () => void;

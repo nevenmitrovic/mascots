@@ -1,79 +1,90 @@
-import { Box, Dialog, Divider } from "@mui/material";
-import { useState } from "react";
-import FormComponent from "../components/form/FormComponent";
-import PageHeader from "../components/global/PageHeader";
+import { Box, Dialog, Divider, Typography } from "@mui/material";
+
+import FormComponent from "components/form/FormComponent";
+import PageHeader from "components/global/PageHeader";
+import TContainer from "components/table/TContainer";
+import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
+
 import {
-  useCreateItem,
-  useDeleteItem,
-  useEditItem,
-  useGetItems,
-} from "../hooks/genericHooks";
-import TContainer from "../components/table/TContainer";
-import { useToggle } from "../hooks/useToggle";
-import { queryKeys } from "../reactQuery/constants";
-import { Location, locationInputs } from "../types/locationTypes";
-import { locationSchema } from "../validations/locationSchema";
+  type Location,
+  type LocationDocument,
+  locationInputs,
+} from "types/locationTypes";
+
+import { locationSchema } from "validations/locationSchema";
+
+import useItemToEdit from "hooks/global/useItemToEdit";
+import useLocationActions from "hooks/useLocationActions";
+import useItemToDelete from "hooks/global/useItemToDelete";
 
 const Locations = () => {
+  //actions related to location
+  const { data, createLocation, editLocation, deleteLocation } =
+    useLocationActions();
+
   //form data for edit or creating new location
-  const [editItem, setEditItem] = useState<Location | undefined>(undefined);
+  const {
+    itemToEdit,
+    setItemEdit,
+    editDialog,
+    toggleEditDialog,
+    handleEditDialogClose,
+  } = useItemToEdit<LocationDocument>();
 
-  //toggle dialog to open or close form dialog
-  const [dialog, toggleDialog] = useToggle(false);
-
-  //fetching locations data
-  const { fullData, selectedData } = useGetItems<Location>([
-    queryKeys.locations,
-  ]);
-  console.log(selectedData);
-
-  //useQuery for CRUD
-  const createLocation = useCreateItem([queryKeys.locations]);
-  const editLocation = useEditItem([queryKeys.locations]);
-  const deleteLocation = useDeleteItem([queryKeys.locations]);
-
-  const handleLocationSubmit = (data: Partial<Location> | Location) => {
-    editItem === undefined
-      ? createLocation(data)
-      : editLocation(data as Location);
-    toggleDialog();
+  //submit control when create/edit new locations
+  const handleLocationSubmit = (data: Location) => {
+    if (itemToEdit) {
+      editLocation({ data, id: itemToEdit.id });
+    } else {
+      createLocation(data);
+    }
+    handleEditDialogClose();
   };
 
-  const handleDelete = (id: string) => {
-    deleteLocation(id);
-  };
+  //delete dialog hook
+  const { deleteId, setDelete, deleteDialog, handleDeleteDialogClose } =
+    useItemToDelete();
 
-  const handleEditDialog = (item: Location) => {
-    setEditItem(item);
-    toggleDialog();
-  };
-  const handleDialogClose = () => {
-    toggleDialog();
-    setEditItem(undefined);
+  //handle confirmed delete
+  const handleConfirmDelete = () => {
+    deleteLocation(deleteId);
+    handleDeleteDialogClose();
   };
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <PageHeader onAdd={toggleDialog} headline="Lokacije" />
+      <PageHeader onAdd={toggleEditDialog} headline="Lokacije" />
       <Divider />
-      {fullData && (
-        <TContainer<Location>
-          data={fullData}
+      {!data ||
+        (data.length == 0 && (
+          <Typography component="h2" sx={{ padding: "1rem" }}>
+            Nema lokacija u bazi
+          </Typography>
+        ))}
+      {data.length > 0 && (
+        <TContainer<LocationDocument>
+          data={data}
           headers={locationInputs}
-          onEdit={handleEditDialog}
-          onDelete={handleDelete}
+          onEdit={(item) => setItemEdit(item)}
+          onDelete={(id) => setDelete(id)}
         />
       )}
 
-      <Dialog open={dialog} onClose={handleDialogClose}>
-        <FormComponent<Partial<Location>>
+      <Dialog open={editDialog} onClose={handleEditDialogClose}>
+        <FormComponent<Location>
           header="Unesite podatke o lokaciji"
           formInputs={locationInputs}
           handleFormSubmitt={handleLocationSubmit}
           schema={locationSchema}
-          item={editItem}
+          item={itemToEdit?.item}
         />
       </Dialog>
+      <DeleteConfirmationDialog
+        message="Da li ste sigurni da želite da obrišete ovu lokaciju?"
+        open={deleteDialog}
+        onClose={handleDeleteDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
     </Box>
   );
 };
