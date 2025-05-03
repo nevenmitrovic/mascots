@@ -1,6 +1,6 @@
 import { EventRepository } from "../../events/event.repository";
 
-import { newEvent, newEventDocs } from "../../../mocks/mock-data";
+import { newEvent, newEventDocs, createdEvent } from "../../../mocks/mock-data";
 
 import { DatabaseError } from "../../errors/database.error";
 
@@ -19,10 +19,10 @@ describe("Events Repository", () => {
     it("should create a new event", async () => {
       const mockCreateEvent = jest
         .spyOn(eventRepository, "createEvent")
-        .mockResolvedValue(newEventDocs[0]);
+        .mockResolvedValue(createdEvent);
 
       const res = await eventRepository.createEvent(newEvent);
-      expect(res).toEqual(newEventDocs[0]);
+      expect(res).toEqual(createdEvent);
       expect(mockCreateEvent).toHaveBeenCalledTimes(1);
       expect(mockCreateEvent).toHaveBeenCalledWith(newEvent);
     });
@@ -62,8 +62,9 @@ describe("Events Repository", () => {
         .spyOn(eventRepository, "getEvents")
         .mockResolvedValue(newEventDocs);
 
-      const res = await eventRepository.getEvents();
+      const res = await eventRepository.getEvents(2025, 5);
       expect(res).toEqual(newEventDocs);
+      expect(mockGetEvents).toHaveBeenCalledWith(2025, 5);
       expect(mockGetEvents).toHaveBeenCalledTimes(1);
     });
 
@@ -73,7 +74,7 @@ describe("Events Repository", () => {
         .spyOn(eventRepository, "getEvents")
         .mockRejectedValue(dbError);
 
-      await expect(eventRepository.getEvents()).rejects.toThrow(dbError);
+      await expect(eventRepository.getEvents(2025, 5)).rejects.toThrow(dbError);
       expect(mockGetEvents).toHaveBeenCalledTimes(1);
     });
 
@@ -83,7 +84,9 @@ describe("Events Repository", () => {
         .spyOn(eventRepository, "getEvents")
         .mockRejectedValue(mockError);
 
-      await expect(eventRepository.getEvents()).rejects.toThrow(mockError);
+      await expect(eventRepository.getEvents(2025, 5)).rejects.toThrow(
+        mockError
+      );
       expect(mockGetEvents).toHaveBeenCalledTimes(1);
     });
   });

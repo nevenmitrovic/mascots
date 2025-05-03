@@ -4,7 +4,12 @@ import {
   ILocationDocument,
   ILocationMessageResponse,
 } from "../src/locations/location.model";
-import { IEvent, IEventDocument } from "events/event.model";
+import {
+  IEvent,
+  IEventDocument,
+  ICreateEvent,
+  ICreatedEvent,
+} from "events/event.model";
 
 export const mockLocations: ILocationDocument[] = [
   {
@@ -122,12 +127,32 @@ export const newAnimatorBadRequest: IAnimator = {
   paycheck: 1000,
 };
 
-export const newEvent: IEvent = {
+export const newEvent: ICreateEvent = {
   date: new Date("2025-05-15T14:00:00"),
   location: {
     address: "123 Main Street, Cityville",
     link: "https://maps.app.goo.gl/new",
   },
+  title: "Birthday Party",
+  price: 150,
+  organizer: {
+    name: "Sarah Johnson",
+    phone: "+1234567890",
+    social: "instagram",
+  },
+  mascots: ["5f8d0d55b54764421b710000", "5f8d0d55b54764421b710001"],
+  animators: ["6e7f8a92c65875312d620000", "6e7f8a92c65875312d620001"],
+  confirmed: "confirmed",
+  collector: ["6e7f8a92c65875312d620000"],
+};
+export const createdEvent: ICreatedEvent = {
+  _id: "67f5999dcaf56ff295efd4a9",
+  date: new Date("2025-05-15T14:00:00"),
+  location: {
+    address: "123 Main Street, Cityville",
+    link: "https://maps.app.goo.gl/new",
+  },
+  title: "Birthday Party",
   price: 150,
   organizer: {
     name: "Sarah Johnson",
@@ -149,49 +174,34 @@ export const newEventDocs: IEventDocument[] = [
       link: "https://maps.app.goo.gl/new",
     },
     price: 150,
+    title: "Birthday Party",
     organizer: {
       name: "Sarah Johnson",
       phone: "+1234567890",
       social: "instagram",
     },
-    mascots: ["5f8d0d55b54764421b710000", "5f8d0d55b54764421b710001"],
-    animators: ["6e7f8a92c65875312d620000", "6e7f8a92c65875312d620001"],
+    mascots: [{ name: "Neven" }, { name: "Igor" }],
+    animators: [{ username: "Neven" }, { username: "Igor" }],
     confirmed: "confirmed",
-    collector: ["6e7f8a92c65875312d620000"],
+    collector: [{ username: "Neven" }],
   },
   {
     _id: "67f12346caf56ff295efd222",
-    date: new Date("2025-06-20T10:30:00"),
+    date: new Date("2025-05-20T10:30:00"),
     location: {
       address: "456 Park Avenue, Downtown",
       link: "https://maps.app.goo.gl/new",
     },
     price: 200,
+    title: "Corporate Event",
     organizer: {
       name: "Michael Brown",
       phone: "+1987654321",
       social: "whatsapp",
     },
-    mascots: ["5f8d0d55b54764421b710002"],
-    animators: ["6e7f8a92c65875312d620002", "6e7f8a92c65875312d620003"],
+    mascots: [{ name: "Neven2" }, { name: "Igor2" }],
+    animators: [{ username: "Neven2" }, { username: "Igor2" }],
     confirmed: "pending",
-    collector: ["6e7f8a92c65875312d620002"],
-  },
-  {
-    _id: "67f12347caf56ff295efd333",
-    date: new Date("2025-05-30T16:00:00"),
-    location: {
-      address: "789 Beach Road, Seaside",
-    },
-    price: 175,
-    organizer: {
-      name: "Emma Wilson",
-      phone: "+1122334455",
-      social: "facebook",
-    },
-    mascots: ["5f8d0d55b54764421b710003", "5f8d0d55b54764421b710004"],
-    animators: ["6e7f8a92c65875312d620004"],
-    confirmed: "rejected",
-    collector: ["6e7f8a92c65875312d620004"],
+    collector: [{ username: "Neven2" }],
   },
 ];
