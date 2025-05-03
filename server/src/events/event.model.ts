@@ -27,6 +27,10 @@ export interface ICreateEvent {
 export interface ICreatedEvent extends ICreateEvent {
   _id: string;
 }
+export interface ICreateEventResponse {
+  message: string;
+  data: ICreatedEvent;
+}
 export interface ICreateEventClient extends Omit<ICreateEvent, "date"> {
   date: string;
   time: string;

@@ -5,8 +5,8 @@ import { ErrorHandlerService } from "services/error-handler.service";
 import {
   IEventDocument,
   ICreateEvent,
-  ICreatedEvent,
   ICreateEventClient,
+  ICreateEventResponse,
 } from "events/event.model";
 
 import dayjs from "dayjs";
@@ -20,13 +20,18 @@ export class EventService {
   private eventRepository = new EventRepository();
   private errorHandler = new ErrorHandlerService();
 
-  async createEvent(data: ICreateEventClient): Promise<ICreatedEvent> {
+  async createEvent(data: ICreateEventClient): Promise<ICreateEventResponse> {
     try {
       const { date, time, ...rest } = data;
       const utcDate = dayjs.utc(`${date} ${time}`).toDate();
       const repositoryData: ICreateEvent = { ...rest, date: utcDate };
 
-      return await this.eventRepository.createEvent(repositoryData);
+      const res = await this.eventRepository.createEvent(repositoryData);
+
+      return {
+        message: "event created successfully",
+        data: res,
+      };
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
       throw error;
