@@ -36,6 +36,7 @@ export interface IUpdateEventResponse {
   message: string;
   data: IEventDocument;
 }
+export interface IDeleteEventResponse extends IUpdateEventResponse {}
 export interface ICreateEventClient extends Omit<ICreateEvent, "date"> {
   date: string;
   time: string;

@@ -76,7 +76,17 @@ export class EventRepository {
 
   async deleteEvent(id: string): Promise<IEventDocument | null> {
     try {
-      return this.eventModel.findByIdAndDelete(id);
+      const event = this.eventModel
+        .findByIdAndDelete(id)
+        .populate([
+          { path: "collector", select: "-_id username" },
+          { path: "animators", select: "-_id username" },
+          { path: "mascots", select: "-_id name" },
+        ])
+        .lean<IEventDocument>()
+        .exec();
+
+      return event;
     } catch (err) {
       return checkForErrors(err);
     }

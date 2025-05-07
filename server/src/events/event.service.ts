@@ -13,6 +13,7 @@ import {
   ICreateEventResponse,
   IUpdateEventResponse,
   IUpdateEventClient,
+  IDeleteEventResponse,
 } from "events/event.model";
 
 import { getDateFromData } from "utils/globalUtils";
@@ -78,6 +79,27 @@ export class EventService {
       return {
         message: "event updated successfully",
         data: updatedEvent,
+      };
+    } catch (err) {
+      const error = this.errorHandler.handleError(err as Error);
+      throw error;
+    }
+  }
+
+  async deleteEvent(id: string): Promise<IDeleteEventResponse> {
+    try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid id");
+      }
+
+      const deletedEvent = await this.eventRepository.deleteEvent(id);
+      if (!deletedEvent) {
+        throw new NotFoundError("event not found");
+      }
+
+      return {
+        message: "event deleted successfully",
+        data: deletedEvent,
       };
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);

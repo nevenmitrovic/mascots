@@ -33,6 +33,11 @@ export class EventController extends Controller {
       (req: Request, res: Response, next: NextFunction) =>
         this.updateEvent(req, res, next)
     );
+    this.router.delete(
+      `${this.path}/:id`,
+      (req: Request, res: Response, next: NextFunction) =>
+        this.deleteEvent(req, res, next)
+    );
   }
 
   async createEvent(req: Request, res: Response, next: NextFunction) {
@@ -63,6 +68,17 @@ export class EventController extends Controller {
     try {
       const { id } = req.params;
       const event = await this.eventService.updateEvent(id, req.body);
+
+      return res.status(200).json(event);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteEvent(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const event = await this.eventService.deleteEvent(id);
 
       return res.status(200).json(event);
     } catch (err) {
