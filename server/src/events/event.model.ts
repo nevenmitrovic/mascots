@@ -24,6 +24,7 @@ export interface ICreateEvent {
   confirmed: confirmedType;
   collector: string[];
 }
+export interface IUpdateEvent extends ICreateEvent {}
 export interface ICreatedEvent extends ICreateEvent {
   _id: string;
 }
@@ -31,10 +32,16 @@ export interface ICreateEventResponse {
   message: string;
   data: ICreatedEvent;
 }
+export interface IUpdateEventResponse {
+  message: string;
+  data: IEventDocument;
+}
 export interface ICreateEventClient extends Omit<ICreateEvent, "date"> {
   date: string;
   time: string;
 }
+
+export interface IUpdateEventClient extends ICreateEventClient {}
 
 export interface IEvent {
   date: Date;

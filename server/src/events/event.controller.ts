@@ -27,6 +27,12 @@ export class EventController extends Controller {
       (req: Request, res: Response, next: NextFunction) =>
         this.getEvents(req, res, next)
     );
+    this.router.put(
+      `${this.path}/:id`,
+      validationMiddleware(this.schema),
+      (req: Request, res: Response, next: NextFunction) =>
+        this.updateEvent(req, res, next)
+    );
   }
 
   async createEvent(req: Request, res: Response, next: NextFunction) {
@@ -48,6 +54,17 @@ export class EventController extends Controller {
       );
 
       return res.status(200).json(events);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async updateEvent(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const event = await this.eventService.updateEvent(id, req.body);
+
+      return res.status(200).json(event);
     } catch (err) {
       next(err);
     }

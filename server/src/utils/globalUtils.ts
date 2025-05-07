@@ -1,6 +1,13 @@
 import { DatabaseError } from "errors/database.error";
 import { UniqueConstraintError } from "errors/unique-constraint.error";
 
+import {
+  ICreateEvent,
+  ICreateEventClient,
+  IUpdateEvent,
+  IUpdateEventClient,
+} from "events/event.model";
+
 import { MongoServerError } from "mongodb";
 import dayjs from "dayjs";
 
@@ -22,4 +29,15 @@ export function getRangeForDates(year: number, month: number) {
   const to = dayjs(from).add(1, "month");
 
   return { from, to };
+}
+
+export function getDateFromData(data: ICreateEventClient | IUpdateEventClient) {
+  const { date, time, ...rest } = data;
+  const utcDate = dayjs.utc(`${date} ${time}`).toDate();
+  const repositoryData: ICreateEvent | IUpdateEvent = {
+    ...rest,
+    date: utcDate,
+  };
+
+  return repositoryData;
 }

@@ -5,6 +5,7 @@ import {
   ICreateEvent,
   IEventDocument,
   ICreatedEvent,
+  IUpdateEvent,
 } from "events/event.model";
 
 export class EventRepository {
@@ -50,22 +51,24 @@ export class EventRepository {
     }
   }
 
-  async getEventById(id: string): Promise<IEventDocument | null> {
-    try {
-      return this.eventModel.findById(id);
-    } catch (err) {
-      return checkForErrors(err);
-    }
-  }
-
   async updateEvent(
     id: string,
-    data: ICreateEvent
+    data: IUpdateEvent
   ): Promise<IEventDocument | null> {
     try {
-      return this.eventModel.findByIdAndUpdate(id, data, {
-        new: true,
-      });
+      const event = await this.eventModel
+        .findByIdAndUpdate(id, data, {
+          new: true,
+        })
+        .populate([
+          { path: "collector", select: "-_id username" },
+          { path: "animators", select: "-_id username" },
+          { path: "mascots", select: "-_id name" },
+        ])
+        .lean<IEventDocument>()
+        .exec();
+
+      return event;
     } catch (err) {
       return checkForErrors(err);
     }
