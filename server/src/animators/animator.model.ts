@@ -15,7 +15,7 @@ export interface IAnimatorDocument extends IAnimator {
 
 export interface IAnimatorMessageResponse {
   message: string;
-  data: IAnimatorDocument;
+  data: Partial<IAnimatorDocument>;
 }
 
 const animatorSchema = new Schema<IAnimator>(

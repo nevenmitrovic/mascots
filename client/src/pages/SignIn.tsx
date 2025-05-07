@@ -1,7 +1,7 @@
 import { Container, useMediaQuery } from "@mui/material";
-import FormComponent from "../components/form/FormComponent";
+import FormComponent from "components/form/FormComponent";
 
-import signInSchema from "../validations/signInSchema";
+import signInSchema from "validations/signInSchema";
 
 const SignIn = () => {
   const isMobile = useMediaQuery("(max-width:600px)");

@@ -1,5 +1,6 @@
 import { DatabaseError } from "errors/database.error";
 import { UniqueConstraintError } from "errors/unique-constraint.error";
+import { BaseError } from "errors/base.error";
 
 import {
   ICreateEvent,
@@ -10,6 +11,7 @@ import {
 
 import { MongoServerError } from "mongodb";
 import dayjs from "dayjs";
+import bcrypt from "bcryptjs";
 
 export const checkForErrors = (error: unknown) => {
   if (error instanceof MongoServerError && error.code === 11000) {
@@ -40,4 +42,20 @@ export function getDateFromData(data: ICreateEventClient | IUpdateEventClient) {
   };
 
   return repositoryData;
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  const SALT = 10;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, SALT);
+    return hashedPassword;
+  } catch (error) {
+    throw new BaseError(
+      "failed to hash password",
+      "CriptographyError",
+      500,
+      true
+    );
+  }
 }

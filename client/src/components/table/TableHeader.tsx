@@ -1,5 +1,5 @@
 import { TableCell, TableHead, TableRow } from "@mui/material";
-import { HeaderProps } from "../../types/tableTypes";
+import { HeaderProps } from "types/tableTypes";
 
 const TableHeader = ({ data }: HeaderProps) => {
   return (

@@ -3,40 +3,38 @@ import { Box, Dialog, Divider, Typography } from "@mui/material";
 import FormComponent from "components/form/FormComponent";
 import PageHeader from "components/global/PageHeader";
 import TContainer from "components/table/TContainer";
-import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
 
 import {
-  type Location,
-  type LocationDocument,
-  locationInputs,
-} from "types/locationTypes";
+  type Mascot,
+  type MascotDocument,
+  mascotInputs,
+} from "types/mascotTypes";
 
-import { locationSchema } from "validations/locationSchema";
-
+import { mascotSchema } from "validations/mascotSchema";
+import useMascotActions from "hooks/useMascotActions";
 import useItemToEdit from "hooks/global/useItemToEdit";
-import useLocationActions from "hooks/useLocationActions";
 import useItemToDelete from "hooks/global/useItemToDelete";
+import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
 
-const Locations = () => {
-  //actions related to location
-  const { data, createLocation, editLocation, deleteLocation } =
-    useLocationActions();
+const Mascots = () => {
+  //actions related to mascots
+  const { data, createMascot, editMascot, deleteMascot } = useMascotActions();
 
-  //form data for edit or creating new location
+  //form data for edit or creating new mascots
   const {
     itemToEdit,
     setItemEdit,
     editDialog,
     toggleEditDialog,
     handleEditDialogClose,
-  } = useItemToEdit<LocationDocument>();
+  } = useItemToEdit<MascotDocument>();
 
-  //submit control when create/edit new locations
-  const handleLocationSubmit = (data: Location) => {
+  //submit control when create/edit new mascots
+  const handleMascotSubmit = (data: Mascot) => {
     if (itemToEdit) {
-      editLocation({ data, id: itemToEdit.id });
+      editMascot({ data, id: itemToEdit.id });
     } else {
-      createLocation(data);
+      createMascot(data);
     }
     handleEditDialogClose();
   };
@@ -47,13 +45,13 @@ const Locations = () => {
 
   //handle confirmed delete
   const handleConfirmDelete = () => {
-    deleteLocation(deleteId);
+    deleteMascot(deleteId);
     handleDeleteDialogClose();
   };
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <PageHeader onAdd={toggleEditDialog} headline="Lokacije" />
+      <PageHeader onAdd={toggleEditDialog} headline="Maskote" />
       <Divider />
       {!data ||
         (data.length == 0 && (
@@ -62,25 +60,25 @@ const Locations = () => {
           </Typography>
         ))}
       {data.length > 0 && (
-        <TContainer<LocationDocument>
+        <TContainer<MascotDocument>
           data={data}
-          headers={locationInputs}
+          headers={mascotInputs}
           onEdit={(item) => setItemEdit(item)}
           onDelete={(id) => setDelete(id)}
         />
       )}
 
       <Dialog open={editDialog} onClose={handleEditDialogClose}>
-        <FormComponent<Location>
-          header="Unesite podatke o lokaciji"
-          formInputs={locationInputs}
-          handleFormSubmitt={handleLocationSubmit}
-          schema={locationSchema}
+        <FormComponent<Mascot>
+          header="Unesite podatke o maskoti"
+          formInputs={mascotInputs}
+          handleFormSubmitt={handleMascotSubmit}
+          schema={mascotSchema}
           item={itemToEdit?.item}
         />
       </Dialog>
       <DeleteConfirmationDialog
-        message="Da li ste sigurni da želite da obrišete ovu lokaciju?"
+        message="Da li ste sigurni da želite da obrišete ovu maskotu?"
         open={deleteDialog}
         onClose={handleDeleteDialogClose}
         onConfirm={handleConfirmDelete}
@@ -89,4 +87,4 @@ const Locations = () => {
   );
 };
 
-export default Locations;
+export default Mascots;

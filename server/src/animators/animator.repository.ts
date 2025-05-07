@@ -9,29 +9,32 @@ import {
 export class AnimatorRepository {
   private readonly animatorModel = AnimatorModel;
 
-  async createAnimator(data: IAnimator): Promise<IAnimatorDocument> {
+  async createAnimator(data: IAnimator): Promise<Partial<IAnimatorDocument>> {
     try {
       const res = await this.animatorModel.create(data);
+      const { _id, password, ...rest } = res.toObject();
       return {
-        ...res.toObject(),
-        _id: res._id.toString(),
-      } as IAnimatorDocument;
+        ...rest,
+        _id: _id.toString(),
+      };
     } catch (err) {
       return checkForErrors(err);
     }
   }
 
-  async getAnimators(): Promise<IAnimatorDocument[]> {
+  async getAnimators(): Promise<Partial<IAnimatorDocument>[]> {
     try {
-      return this.animatorModel.find({});
+      return this.animatorModel.find({}, { password: 0 });
     } catch (err) {
       return checkForErrors(err);
     }
   }
 
-  async getAnimatorById(id: string): Promise<IAnimatorDocument | null> {
+  async getAnimatorById(
+    id: string
+  ): Promise<Partial<IAnimatorDocument> | null> {
     try {
-      return this.animatorModel.findById(id);
+      return this.animatorModel.findById(id, { password: 0 });
     } catch (err) {
       return checkForErrors(err);
     }
@@ -39,20 +42,43 @@ export class AnimatorRepository {
 
   async updateAnimator(
     id: string,
-    data: IAnimator
-  ): Promise<IAnimatorDocument | null> {
+    data: Partial<IAnimator>
+  ): Promise<Partial<IAnimatorDocument> | null> {
     try {
-      return this.animatorModel.findByIdAndUpdate(id, data, {
-        new: true,
-      });
+      const res = await this.animatorModel
+        .findByIdAndUpdate(id, data, {
+          new: true,
+          timestamps: false,
+        })
+        .lean();
+
+      if (res) {
+        const { password, _id, ...rest } = res;
+        return {
+          ...rest,
+          _id: _id.toString(),
+        };
+      }
+
+      return res;
     } catch (err) {
       return checkForErrors(err);
     }
   }
 
-  async deleteAnimator(id: string): Promise<IAnimatorDocument | null> {
+  async deleteAnimator(id: string): Promise<Partial<IAnimatorDocument> | null> {
     try {
-      return this.animatorModel.findByIdAndDelete(id);
+      const res = await this.animatorModel.findByIdAndDelete(id).lean();
+
+      if (res) {
+        const { password, _id, ...rest } = res;
+        return {
+          ...rest,
+          _id: _id.toString(),
+        };
+      }
+
+      return res;
     } catch (err) {
       return checkForErrors(err);
     }

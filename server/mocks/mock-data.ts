@@ -109,11 +109,10 @@ export const newAnimator: IAnimator = {
   paycheck: 1000,
 };
 
-export const newAnimatorDocument: IAnimatorDocument = {
+export const newAnimatorDocument: Partial<IAnimatorDocument> = {
   _id: "67f5999dcaf56ff295efd4a9",
   fullName: "John Doe",
   username: "johndoe",
-  password: "password123",
   email: "john.doe@gmail.com",
   phone: "+381656196000",
   paycheck: 1000,

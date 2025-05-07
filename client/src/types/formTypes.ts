@@ -1,6 +1,8 @@
-import { Theme } from "@emotion/react";
-import { SxProps } from "@mui/material";
-import { Control, FieldValues, Path, SubmitHandler } from "react-hook-form";
+import { type Theme } from "@emotion/react";
+import { type SxProps } from "@mui/material";
+
+import { type Control, type FieldValues, type Path, type SubmitHandler } from "react-hook-form";
+
 import * as yup from "yup";
 
 export type FormInputProps<T extends FieldValues> = {
@@ -8,7 +10,7 @@ export type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   label: string;
   options?: { value: string; label: string }[];
-  type: "text" | "select" | "password" | "email";
+  type: "text" | "select" | "password" | "email" | "number";
   sx?: SxProps<Theme>;
 };
 

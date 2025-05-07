@@ -1,7 +1,9 @@
 import Box from "@mui/material/Box";
+
+import { useToggle } from "hooks/global/useToggle";
+
 import AppHeader from "./AppHeader";
 import SideDrawer from "./SideDrawer";
-import { useToggle } from "../../hooks/useToggle";
 
 interface ResponsiveDrawerProps {
   window?: () => Window;
@@ -17,14 +19,10 @@ export default function NavBar(props: ResponsiveDrawerProps) {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <AppHeader
-          handleDrawerToggle={toggleMobileOpen}
-
-        />
+        <AppHeader handleDrawerToggle={toggleMobileOpen} />
         <SideDrawer
           mobileOpen={mobileOpen}
           handleDrawerToggle={toggleMobileOpen}
-
           container={container}
         />
       </Box>

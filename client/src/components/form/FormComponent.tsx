@@ -1,6 +1,10 @@
+import { ObjectSchema } from "yup";
+
 import { DevTool } from "@hookform/devtools";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import { Button, Paper, Typography } from "@mui/material";
+
 import {
   DefaultValues,
   FieldValues,
@@ -9,11 +13,14 @@ import {
   Path,
   useForm,
 } from "react-hook-form";
-import { ObjectSchema } from "yup";
-import { FormProps } from "../../types/formTypes";
-import { defaultValues } from "../../utils/helperFunctions";
+
+import { type FormProps } from "types/formTypes";
+
+import { defaultValues } from "utils/helperFunctions";
+
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
+import { useLocation } from "react-router";
 
 const FormComponent = <T extends FieldValues>({
   formInputs,
@@ -33,6 +40,15 @@ const FormComponent = <T extends FieldValues>({
     defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
 
+  //if check to see if we are in animator form and item is not present
+  //in that case we display password field, otherwise we dont display it
+  const isAnimatorForm = () => {
+    const { pathname } = useLocation();
+    console.log(typeof pathname);
+    return pathname.includes("animators");
+  };
+  //when making new event, if user choose to put location outside of the database
+  //in case that value=none, display 2 new inputs to make custom location
   const locationValue = watch("location" as Path<T>);
 
   const onSubmit: SubmitHandler<T> = async (data) => {
@@ -63,10 +79,25 @@ const FormComponent = <T extends FieldValues>({
               display: locationValue.includes("none") ? "block" : "none",
             };
           }
+          //display password input when creating new animator
+          if (input.name === "password" && isAnimatorForm()) {
+            if (!item) {
+              return (
+                <FormInputText<T>
+                  key={String(input.name)}
+                  {...input}
+                  control={control}
+                  sx={fieldStyle}
+                />
+              );
+            }
+            return;
+          }
 
           return input.type === "text" ||
             input.type === "password" ||
-            input.type === "email" ? (
+            input.type === "email" ||
+            input.type === "number" ? (
             <FormInputText<T>
               key={String(input.name)}
               {...input}
@@ -93,7 +124,7 @@ const FormComponent = <T extends FieldValues>({
           sx={{ w: "100" }}
           loading={isSubmitting}
         >
-          Sacuvaj
+          Sačuvaj
         </Button>
       </form>
       <DevTool control={control} />

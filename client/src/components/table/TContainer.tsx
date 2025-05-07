@@ -4,7 +4,7 @@ import { useState } from "react";
 import TableContent from "./TableContent";
 import TableHeader from "./TableHeader";
 import TPagination from "./TPagination";
-import { TContainerProps } from "../../types/tableTypes";
+import { TContainerProps } from "types/tableTypes";
 
 const TContainer = <T extends { _id: string }>({
   data,

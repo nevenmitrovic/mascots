@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import { AnimatorRepository } from "animators/animator.repository";
 
 import { ErrorHandlerService } from "services/error-handler.service";
+import { hashPassword } from "utils/globalUtils";
 
 import { BadRequestError } from "errors/bad-request.error";
 import { NotFoundError } from "errors/not-found.error";
@@ -19,7 +20,13 @@ export class AnimatorService {
 
   async createAnimator(data: IAnimator): Promise<IAnimatorMessageResponse> {
     try {
-      const res = await this.animatorRepository.createAnimator(data);
+      const { password, ...rest } = data;
+      const hashedPassword = await hashPassword(password);
+
+      const res = await this.animatorRepository.createAnimator({
+        ...rest,
+        password: hashedPassword,
+      });
       return { message: "Animator created successfully", data: res };
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
@@ -27,7 +34,7 @@ export class AnimatorService {
     }
   }
 
-  async getAnimators(): Promise<IAnimatorDocument[]> {
+  async getAnimators(): Promise<Partial<IAnimatorDocument>[]> {
     try {
       const res = await this.animatorRepository.getAnimators();
       return res;
@@ -37,7 +44,7 @@ export class AnimatorService {
     }
   }
 
-  async getAnimatorById(id: string): Promise<IAnimatorDocument> {
+  async getAnimatorById(id: string): Promise<Partial<IAnimatorDocument>> {
     try {
       if (!Types.ObjectId.isValid(id)) {
         throw new BadRequestError("invalid id");
@@ -57,7 +64,7 @@ export class AnimatorService {
 
   async updateAnimator(
     id: string,
-    data: IAnimator
+    data: Partial<IAnimator>
   ): Promise<IAnimatorMessageResponse> {
     try {
       if (!data) {

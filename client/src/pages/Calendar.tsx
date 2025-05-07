@@ -1,8 +1,8 @@
-import CalendarContainer from "../components/calendar/CalendarContainer";
+import CalendarContainer from "components/calendar/CalendarContainer";
 
-import { CalendarFormDialogProvider } from "../contexts/CalendarFormDialogContext";
-import { FormDataProvider } from "../contexts/FormDataContext";
-import { EventCardDialogProvider } from "../contexts/EventCardDialogContext";
+import { CalendarFormDialogProvider } from "contexts/CalendarFormDialogContext";
+import { FormDataProvider } from "contexts/FormDataContext";
+import { EventCardDialogProvider } from "contexts/EventCardDialogContext";
 
 const Calendar = () => {
   return (
