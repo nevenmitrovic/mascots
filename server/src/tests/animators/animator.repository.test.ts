@@ -7,7 +7,6 @@ import { DatabaseError } from "../../errors/database.error";
 describe("Animators Repository", () => {
   let animatorRepository: AnimatorRepository;
   let validId = "67f5237dcaf56ff295efd4a9";
-  let invalidId = "invalid-id";
 
   beforeAll(() => {
     animatorRepository = new AnimatorRepository();
