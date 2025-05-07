@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { getDateFromData } from "../../utils/globalUtils";
 
 import { EventRepository } from "../../events/event.repository";
 import { EventService } from "../../events/event.service";
@@ -7,6 +7,8 @@ import {
   createdEvent,
   newEvent,
   newEventClient,
+  newEventDocs,
+  eventDoc,
 } from "../../../mocks/mock-data";
 
 jest.mock("../../events/event.repository");
@@ -23,6 +25,8 @@ describe("Event Service", () => {
     mockEventRepository = {
       createEvent: jest.fn(),
       getEvents: jest.fn(),
+      updateEvent: jest.fn(),
+      deleteEvent: jest.fn(),
       // add other methods your repository has
     } as unknown as jest.Mocked<EventRepository>;
 
@@ -76,44 +80,81 @@ describe("Event Service", () => {
     });
   });
 
-  //   describe("GET /events", () => {
-  //     it("should get events successfully", async () => {
-  //       const year = 2023;
-  //       const month = 10;
-  //       const events = [
-  //         {
-  //           title: "Test Event 1",
-  //           description: "Test Description 1",
-  //           date: new Date(),
-  //           time: "12:00",
-  //           location: "Test Location 1",
-  //         },
-  //         {
-  //           title: "Test Event 2",
-  //           description: "Test Description 2",
-  //           date: new Date(),
-  //           time: "14:00",
-  //           location: "Test Location 2",
-  //         },
-  //       ];
+  describe("GET /events", () => {
+    it("should get events successfully", async () => {
+      (mockEventRepository.getEvents as jest.Mock).mockResolvedValue(
+        newEventDocs
+      );
 
-  //       mockEventRepository.getEvents.mockResolvedValue(events);
+      const result = await eventService.getEvents(2025, 5);
 
-  //       const result = await eventService.getEvents(year, month);
+      expect(result).toEqual(newEventDocs);
+      expect(mockEventRepository.getEvents).toHaveBeenCalledWith(2025, 5);
+      expect(mockEventRepository.getEvents).toHaveBeenCalledTimes(1);
+    });
+  });
 
-  //       expect(result).toEqual(events);
-  //       expect(mockEventRepository.getEvents).toHaveBeenCalledWith(year, month);
-  //     });
+  describe("PUT /events/:id", () => {
+    it("should update an event successfully", async () => {
+      (mockEventRepository.updateEvent as jest.Mock).mockResolvedValue(
+        eventDoc
+      );
 
-  //     it("should handle error when getting events", async () => {
-  //       const errorMessage = "Error getting events";
-  //       const error = new Error(errorMessage);
+      const result = await eventService.updateEvent(validId, newEventClient);
 
-  //       mockEventRepository.getEvents.mockRejectedValue(error);
-  //       jest.spyOn(errorHandler, "handleError").mockReturnValue(error);
+      expect(result).toEqual({
+        message: "event updated successfully",
+        data: eventDoc,
+      });
+      expect(mockEventRepository.updateEvent).toHaveBeenCalledWith(
+        validId,
+        expect.objectContaining({
+          date: expect.any(Date),
+          location: expect.objectContaining({
+            link: newEvent.location.link,
+            address: newEvent.location.address,
+          }),
+          price: newEvent.price,
+          title: newEvent.title,
+          organizer: expect.objectContaining({
+            name: newEvent.organizer.name,
+            phone: newEvent.organizer.phone,
+            social: newEvent.organizer.social,
+          }),
+          mascots: newEvent.mascots,
+          animators: newEvent.animators,
+          confirmed: newEvent.confirmed,
+          collector: newEvent.collector,
+        })
+      );
+    });
 
-  //       await expect(eventService.getEvents(2023, 10)).rejects.toThrow(error);
-  //       expect(mockEventRepository.getEvents).toHaveBeenCalled();
-  //     });
-  //   });
+    it("should throw an error if id is invalid", async () => {
+      await expect(
+        eventService.updateEvent(invalidId, newEventClient)
+      ).rejects.toThrow("invalid id");
+    });
+  });
+
+  describe("DELETE /events/:id", () => {
+    it("should delete an event successfully", async () => {
+      (mockEventRepository.deleteEvent as jest.Mock).mockResolvedValue(
+        eventDoc
+      );
+
+      const result = await eventService.deleteEvent(validId);
+
+      expect(result).toEqual({
+        message: "event deleted successfully",
+        data: eventDoc,
+      });
+      expect(mockEventRepository.deleteEvent).toHaveBeenCalledWith(validId);
+    });
+
+    it("should throw an error if id is invalid", async () => {
+      await expect(eventService.deleteEvent(invalidId)).rejects.toThrow(
+        "invalid id"
+      );
+    });
+  });
 });

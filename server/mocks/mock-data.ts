@@ -226,3 +226,22 @@ export const newEventDocs: IEventDocument[] = [
     collector: [{ username: "Neven2" }],
   },
 ];
+export const eventDoc: IEventDocument = {
+  _id: "67f12346caf56ff295efd222",
+  date: new Date("2025-05-20T10:30:00"),
+  location: {
+    address: "456 Park Avenue, Downtown",
+    link: "https://maps.app.goo.gl/new",
+  },
+  price: 200,
+  title: "Corporate Event",
+  organizer: {
+    name: "Michael Brown",
+    phone: "+1987654321",
+    social: "whatsapp",
+  },
+  mascots: [{ name: "Neven2" }, { name: "Igor2" }],
+  animators: [{ username: "Neven2" }, { username: "Igor2" }],
+  confirmed: "pending",
+  collector: [{ username: "Neven2" }],
+};
