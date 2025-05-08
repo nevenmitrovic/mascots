@@ -35,7 +35,6 @@ const FormComponent = <T extends FieldValues>({
     handleSubmit,
     control,
     formState: { isSubmitting },
-    reset,
     watch, // watching the form value or values
   } = useForm<T>({
     resolver: yupResolver(schema as ObjectSchema<T>) as Resolver<T>,
@@ -49,6 +48,7 @@ const FormComponent = <T extends FieldValues>({
     console.log(typeof pathname);
     return pathname.includes("animators");
   };
+
   //when making new event, if user choose to put location outside of the database
   //in case that value=none, display 2 new inputs to make custom location
   const locationValue = watch("location" as Path<T>);
@@ -82,9 +82,53 @@ const FormComponent = <T extends FieldValues>({
             };
           }
 
-          //display password input when creating new animator
-          if (input.name === "password" && isAnimatorForm()) {
-            if (!item) {
+          switch (input.type) {
+             //display password input when creating new animator
+            case "password": {
+              if (!item && isAnimatorForm()) {
+                return (
+                  <FormInputText<T>
+                    key={String(input.name)}
+                    {...input}
+                    control={control}
+                    sx={fieldStyle}
+                  />
+                );
+              }
+              return;
+            }
+            case "picker": {
+              return input.name === "date" ? (
+                <FormDatePicker<T>
+                  key={String(input.name)}
+                  {...input}
+                  control={control}
+                  sx={fieldStyle}
+                />
+              ) : (
+                <FormTimePicker<T>
+                  key={String(input.name)}
+                  {...input}
+                  control={control}
+                  sx={fieldStyle}
+                />
+              );
+            }
+            case "select": {
+              return (
+                <FormInputAutocomplete<T>
+                  key={input.name}
+                  name={input.name}
+                  control={control}
+                  label={input.label}
+                  options={input.options || []}
+                  type={input.type}
+                  sx={fieldStyle}
+                />
+              );
+            }
+            default: {
+              //input type text/number/email
               return (
                 <FormInputText<T>
                   key={String(input.name)}
@@ -94,52 +138,7 @@ const FormComponent = <T extends FieldValues>({
                 />
               );
             }
-            return;
           }
-
-          if (input.name === "date") {
-            return (
-              <FormDatePicker<T>
-                key={String(input.name)}
-                {...input}
-                control={control}
-                sx={fieldStyle}
-              />
-            );
-          }
-
-          if(input.name==="time"){
-            return (
-              <FormTimePicker<T>
-                key={String(input.name)}
-                {...input}
-                control={control}
-                sx={fieldStyle}
-              />
-            );
-          }
-
-          return input.type === "text" ||
-            input.type === "password" ||
-            input.type === "email" ||
-            input.type === "number" ? (
-            <FormInputText<T>
-              key={String(input.name)}
-              {...input}
-              control={control}
-              sx={fieldStyle}
-            />
-          ) : (
-            <FormInputAutocomplete<T>
-              key={input.name}
-              name={input.name}
-              control={control}
-              label={input.label}
-              options={input.options || []}
-              type={input.type}
-              sx={fieldStyle}
-            />
-          );
         })}
 
         <Button
