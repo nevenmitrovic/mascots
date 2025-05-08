@@ -30,7 +30,7 @@ const FormDatePicker = <T extends FieldValues>({
             <DatePicker
               format="YYYY-MM-DD"
               label={label}
-              value={dayjs(field.value)}
+              value={field.value ? dayjs(field.value) : null}
               inputRef={field.ref}
               disablePast
               onChange={(date) => {

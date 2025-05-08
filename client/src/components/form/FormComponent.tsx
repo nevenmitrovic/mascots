@@ -22,6 +22,7 @@ import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
 import { useLocation } from "react-router";
 import FormDatePicker from "./FormDatePicker";
+import FormTimePicker from "./FormTimePicker";
 
 const FormComponent = <T extends FieldValues>({
   formInputs,
@@ -48,7 +49,6 @@ const FormComponent = <T extends FieldValues>({
     console.log(typeof pathname);
     return pathname.includes("animators");
   };
-
   //when making new event, if user choose to put location outside of the database
   //in case that value=none, display 2 new inputs to make custom location
   const locationValue = watch("location" as Path<T>);
@@ -100,6 +100,17 @@ const FormComponent = <T extends FieldValues>({
           if (input.name === "date") {
             return (
               <FormDatePicker<T>
+                key={String(input.name)}
+                {...input}
+                control={control}
+                sx={fieldStyle}
+              />
+            );
+          }
+
+          if(input.name==="time"){
+            return (
+              <FormTimePicker<T>
                 key={String(input.name)}
                 {...input}
                 control={control}
