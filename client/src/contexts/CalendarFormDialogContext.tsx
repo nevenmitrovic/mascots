@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { useEffect, useContext } from "react";
 
-import { useToggle } from "hooks/useToggle";
+import { useToggle } from "hooks/global/useToggle";
 
 import { FormDataContext } from "./FormDataContext";
 

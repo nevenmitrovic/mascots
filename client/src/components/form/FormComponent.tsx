@@ -21,6 +21,7 @@ import { defaultValues } from "utils/helperFunctions";
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
 import { useLocation } from "react-router";
+import FormDatePicker from "./FormDatePicker";
 
 const FormComponent = <T extends FieldValues>({
   formInputs,
@@ -47,6 +48,7 @@ const FormComponent = <T extends FieldValues>({
     console.log(typeof pathname);
     return pathname.includes("animators");
   };
+
   //when making new event, if user choose to put location outside of the database
   //in case that value=none, display 2 new inputs to make custom location
   const locationValue = watch("location" as Path<T>);
@@ -79,6 +81,7 @@ const FormComponent = <T extends FieldValues>({
               display: locationValue.includes("none") ? "block" : "none",
             };
           }
+
           //display password input when creating new animator
           if (input.name === "password" && isAnimatorForm()) {
             if (!item) {
@@ -92,6 +95,17 @@ const FormComponent = <T extends FieldValues>({
               );
             }
             return;
+          }
+
+          if (input.name === "date") {
+            return (
+              <FormDatePicker<T>
+                key={String(input.name)}
+                {...input}
+                control={control}
+                sx={fieldStyle}
+              />
+            );
           }
 
           return input.type === "text" ||
