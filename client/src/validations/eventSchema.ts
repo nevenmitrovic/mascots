@@ -54,13 +54,15 @@ export const eventSchema = yup.object().shape({
 
   customLocationLink: yup
     .string()
-    .matches(
-      /^https:\/\/maps\.app\.goo\.gl\/.+/,
-      "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
-    )
     .when("location", {
       is: (val: string[]) => Array.isArray(val) && val.includes("none"),
-      then: (schema) => schema.required("Link lokacije je obavezan"),
+      then: (schema) =>
+        schema
+          .required("Link lokacije je obavezan")
+          .matches(
+            /^https:\/\/maps\.app\.goo\.gl\/.+/,
+            "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
+          ),
       otherwise: (schema) => schema.optional(),
     }),
 });

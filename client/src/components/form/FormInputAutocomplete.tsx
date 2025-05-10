@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 
 import { Controller, FieldValues } from "react-hook-form";
 
-import {type  FormInputProps } from "types/formTypes";
+import { type FormInputProps } from "types/formTypes";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -23,6 +23,10 @@ const FormInputAutocomplete = <T extends FieldValues>({
   label,
   options,
 }: FormInputAutocompleteProps<T>) => {
+  //checking if its a location select input
+  //if true dont allow multiple select and close on select
+  //if false opposite
+  const isLocation = name === "location" ? true : false;
   return (
     <>
       <Controller
@@ -30,21 +34,38 @@ const FormInputAutocomplete = <T extends FieldValues>({
         control={control}
         render={({ field, fieldState }) => {
           const { onChange, value } = field;
-          const selectedValues: string[] = Array.isArray(value) ? value : [];
+
+          const selectedValues = isLocation
+            ? //we still want to keep location as string array
+              //if its location we display only index 0 item from array or null
+              //if not map through options and display choosen ones
+              options.find(
+                (option) => option.value === (value as string[])[0]
+              ) || null
+            : options.filter((option) =>
+                ((value as string[]) || []).includes(option.value)
+              );
 
           return (
             <Autocomplete
-              value={options.filter((option) =>
-                selectedValues.includes(option.value)
-              )}
-              multiple
+              value={selectedValues}
+              multiple={!isLocation}
               onChange={(_event, newValue) => {
-                onChange(newValue.map((option) => option.value));
+                //in case that is location Autocomplete returns object, but not array with an object
+                //ensures that the value is always an array no matter the usage
+                //clean the array of undefiend and null properties in case user cancel the choosen option
+                //map thru and change the state
+                const newValues = (
+                  Array.isArray(newValue) ? newValue : [newValue]
+                )
+                  .filter(Boolean)
+                  .map((option) => option?.value);
+                onChange(newValues);
               }}
               id={name}
               limitTags={2}
               options={options}
-              disableCloseOnSelect
+              disableCloseOnSelect={!isLocation}
               getOptionLabel={(option) => option.label}
               sx={{
                 width: "100%",
