@@ -26,13 +26,13 @@ export const eventFormInputs: FormInputConfig<any>[] = [
   {
     name: "date",
     label: "Datum događaja",
-    type: "text",
+    type: "picker",
     sx: { mb: "2rem" },
   },
   {
     name: "time",
     label: "Vreme događaja",
-    type: "text",
+    type: "picker",
     sx: { mb: "2rem" },
   },
   {

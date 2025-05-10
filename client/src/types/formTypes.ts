@@ -10,7 +10,7 @@ export type FormInputProps<T extends FieldValues> = {
   control: Control<T>;
   label: string;
   options?: { value: string; label: string }[];
-  type: "text" | "select" | "password" | "email" | "number";
+  type: "text" | "select" | "password" | "email" | "number" | "picker";
   sx?: SxProps<Theme>;
 };
 
