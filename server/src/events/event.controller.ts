@@ -5,6 +5,7 @@ import { Controller } from "interfaces/controller.interface";
 import { EventService } from "events/event.service";
 import { eventSchema } from "events/event.validate";
 import { validationMiddleware } from "middlewares/validate.middleware";
+import { authMiddleware } from "middlewares/auth.middleware";
 
 export class EventController extends Controller {
   private eventService = new EventService();
@@ -19,22 +20,26 @@ export class EventController extends Controller {
     this.router.post(
       `${this.path}`,
       validationMiddleware(this.schema),
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.createEvent(req, res, next)
     );
     this.router.get(
       `${this.path}/:year/:month`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.getEvents(req, res, next)
     );
     this.router.put(
       `${this.path}/:id`,
       validationMiddleware(this.schema),
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.updateEvent(req, res, next)
     );
     this.router.delete(
       `${this.path}/:id`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.deleteEvent(req, res, next)
     );
