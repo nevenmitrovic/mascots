@@ -5,6 +5,7 @@ import { Controller } from "interfaces/controller.interface";
 import { validationMiddleware } from "middlewares/validate.middleware";
 import { MascotService } from "mascots/mascot.service";
 import { mascotSchema } from "mascots/mascot.validate";
+import { authMiddleware } from "middlewares/auth.middleware";
 
 export class MascotController extends Controller {
   private mascotService = new MascotService();
@@ -19,22 +20,26 @@ export class MascotController extends Controller {
     this.router.post(
       `${this.path}`,
       validationMiddleware(this.schema),
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.createMascot(req, res, next)
     );
     this.router.get(
       `${this.path}`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.getMascots(req, res, next)
     );
     this.router.put(
       `${this.path}/:id`,
       validationMiddleware(this.schema),
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.updateMascot(req, res, next)
     );
     this.router.delete(
       `${this.path}/:id`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.deleteMascot(req, res, next)
     );

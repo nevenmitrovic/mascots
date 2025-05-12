@@ -34,7 +34,16 @@ export class AnimatorRepository {
     id: string
   ): Promise<Partial<IAnimatorDocument> | null> {
     try {
-      return this.animatorModel.findById(id, { password: 0 });
+      const animator = await this.animatorModel
+        .findById(id, { password: 0 })
+        .lean();
+
+      if (!animator) return null;
+
+      return {
+        ...animator,
+        _id: animator._id.toString(),
+      } as Partial<IAnimatorDocument>;
     } catch (err) {
       return checkForErrors(err);
     }

@@ -11,6 +11,7 @@ import {
 } from "animators/animator.validate";
 
 import { validationMiddleware } from "middlewares/validate.middleware";
+import { authMiddleware } from "middlewares/auth.middleware";
 
 export class AnimatorController extends Controller {
   private readonly animatorService = new AnimatorService();
@@ -26,18 +27,21 @@ export class AnimatorController extends Controller {
     this.router.post(
       `${this.path}`,
       validationMiddleware(this.schema),
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.createAnimator(req, res, next)
     );
 
     this.router.get(
       `${this.path}`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.getAnimators(req, res, next)
     );
 
     this.router.get(
       `${this.path}/:id`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.getAnimatorById(req, res, next)
     );
@@ -45,12 +49,14 @@ export class AnimatorController extends Controller {
     this.router.put(
       `${this.path}/:id`,
       validationMiddleware(this.updateSchema),
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.updateAnimator(req, res, next)
     );
 
     this.router.delete(
       `${this.path}/:id`,
+      authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.deleteAnimator(req, res, next)
     );
