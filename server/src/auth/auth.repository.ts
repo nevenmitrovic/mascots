@@ -7,12 +7,9 @@ export class AuthRepository {
 
   async getAnimatorByUsername(
     username: string
-  ): Promise<Omit<IAnimatorDocument, "password"> | null> {
+  ): Promise<IAnimatorDocument | null> {
     try {
-      const animator = await this.animatorModel
-        .findOne({ username })
-        .select("-password")
-        .lean();
+      const animator = await this.animatorModel.findOne({ username }).lean();
 
       if (!animator) return null;
 
