@@ -65,10 +65,28 @@ export const getMonthYearDetails = (initialDate: dayjs.Dayjs) => {
   return { month, year };
 };
 
+export const getNewMonthAndYear = (prevData, increment) => {
+  const { month, year } = prevData;
+
+  let newMonth = Number(month) + increment;
+  let newYear = Number(year);
+
+  if (newMonth > 12) {
+    newMonth = 1;
+    newYear += 1;
+  }
+  if (newMonth < 1) {
+    newMonth = 12;
+    newYear -= 1;
+  }
+  const updatedMonth = newMonth.toString().padStart(2, "0");
+  const updatedYear = newYear.toString();
+
+  return { month: updatedMonth, year: updatedYear };
+};
+
 //make path for fetching
 export const createPath = (data: string[]) => {
-  console.log(data);
   const params = data.join("/");
-  console.log(params);
   return params;
 };
