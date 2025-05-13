@@ -11,7 +11,7 @@ import { type FormInputProps } from "types/formTypes";
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-type SelectOptionProps = { value: string; label: string };
+type SelectOptionProps = { value: string | {}; label: string };
 type FormInputAutocompleteProps<T extends FieldValues> = FormInputProps<T> & {
   options: SelectOptionProps[];
 };

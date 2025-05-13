@@ -20,7 +20,6 @@ import { defaultValues } from "utils/helperFunctions";
 
 import FormInputAutocomplete from "./FormInputAutocomplete";
 import FormInputText from "./FormInputText";
-import { useLocation } from "react-router";
 import FormDatePicker from "./FormDatePicker";
 import FormTimePicker from "./FormTimePicker";
 
@@ -40,14 +39,6 @@ const FormComponent = <T extends FieldValues>({
     resolver: yupResolver(schema as ObjectSchema<T>) as Resolver<T>,
     defaultValues: (item || defaultValues(formInputs)) as DefaultValues<T>,
   });
-
-  //if check to see if we are in animator form and item is not present
-  //in that case we display password field, otherwise we dont display it
-  const isAnimatorForm = () => {
-    const { pathname } = useLocation();
-    console.log(typeof pathname);
-    return pathname.includes("animators");
-  };
 
   //when making new event, if user choose to put location outside of the database
   //in case that value=none, display 2 new inputs to make custom location
@@ -83,9 +74,9 @@ const FormComponent = <T extends FieldValues>({
           }
 
           switch (input.type) {
-             //display password input when creating new animator
+            //display password input when creating new animator
             case "password": {
-              if (!item && isAnimatorForm()) {
+              if (!item) {
                 return (
                   <FormInputText<T>
                     key={String(input.name)}

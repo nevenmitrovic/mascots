@@ -12,6 +12,8 @@ import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
 import { eventFormInputs } from "types/eventTypes";
 import { eventSchema, EventSchemaType } from "validations/eventSchema";
+import useEventActions from "hooks/useEventActions";
+import { formatEventData } from "utils/helperFunctions";
 
 const CalendarContainer = () => {
   const { open, toggleDialog } = useContext(CalendarFormDialogContext);
@@ -20,9 +22,12 @@ const CalendarContainer = () => {
     EventCardDialogContext
   );
   const { showToast } = useToast();
+  const { createEvent } = useEventActions();
 
   const handleEventSubmit = (data: any) => {
-    console.log(data);
+    console.log(data)
+    const formatData = formatEventData(data);
+    createEvent(formatData);
     toggleDialog();
     showToast("Lokacija je uspesno sacuvana", "success");
   };

@@ -90,3 +90,30 @@ export const createPath = (data: string[]) => {
   const params = data.join("/");
   return params;
 };
+
+
+//format data to create or edit event
+
+export const formatEventData = (data: any) => {
+  const {
+    name,
+    phone,
+    social,
+    location,
+    collector,
+    confirmed,
+    customLocationAddress,
+    customLocationLink,
+    ...restData
+  } = data;
+  const organizer = { name, phone: String(phone), social: social[0] };
+  const newLocation = { link: location[0], address: "String 123" };
+  const formatedData = {
+    ...restData,
+    organizer,
+    location: newLocation,
+    collector: Array(),
+  };
+  console.log(formatedData);
+  return formatedData;
+};

@@ -20,7 +20,7 @@ export const eventSchema = yup.object().shape({
     .min(1, "Lokacija je obavezna")
     .required("Lokacija je obavezna"),
 
-  maskotas: yup
+  mascots: yup
     .array()
     .of(yup.string().required("Minimum jedna maskota je obavezna"))
     .min(1, "Minimum jedna maskota je obavezna")
@@ -52,19 +52,31 @@ export const eventSchema = yup.object().shape({
     otherwise: (schema) => schema.optional(),
   }),
 
-  customLocationLink: yup
-    .string()
-    .when("location", {
-      is: (val: string[]) => Array.isArray(val) && val.includes("none"),
-      then: (schema) =>
-        schema
-          .required("Link lokacije je obavezan")
-          .matches(
-            /^https:\/\/maps\.app\.goo\.gl\/.+/,
-            "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
-          ),
-      otherwise: (schema) => schema.optional(),
-    }),
+  customLocationLink: yup.string().when("location", {
+    is: (val: string[]) => Array.isArray(val) && val.includes("none"),
+    then: (schema) =>
+      schema
+        .required("Link lokacije je obavezan")
+        .matches(
+          /^https:\/\/maps\.app\.goo\.gl\/.+/,
+          "location must be a valid Google Maps link (https://maps.app.goo.gl/...)"
+        ),
+    otherwise: (schema) => schema.optional(),
+  }),
+  name: yup.string().required("Event mora imati organizatora."),
+  phone: yup.string().required("Organizator mora imati broj telefona."),
+  social: yup
+    .array()
+    .of(yup.string().required("Minimum jedna opcija je obavezna."))
+    .test(
+      "valid-social-options",
+      "Opcije moraju biti 'facebook', 'instagram', 'whatsapp' ili 'viber'.",
+      (value) =>
+        Array.isArray(value) &&
+        value.every((option) =>
+          ["facebook", "instagram", "whatsapp", "viber"].includes(option)
+        )
+    ),
 });
 
 export type EventSchemaType = yup.InferType<typeof eventSchema>;

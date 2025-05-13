@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 
-import { useGetItems } from "./global/genericCRUDHooks";
+import { useCreateItem, useGetItems } from "./global/genericCRUDHooks";
 
 import { getMonthYearDetails, getNewMonthAndYear } from "utils/helperFunctions";
 
@@ -18,10 +18,16 @@ const useEventActions = () => {
     setMonthAndYear((prevData) => getNewMonthAndYear(prevData, increment));
   };
 
-  const data = useGetItems<IEvent>([queryKeys.events, monthAndYear.year, monthAndYear.month]);
+  const data = useGetItems<IEvent>([
+    queryKeys.events,
+    monthAndYear.year,
+    monthAndYear.month,
+  ]);
+  const createEvent = useCreateItem<IEvent>([queryKeys.events]);
 
   return {
     data,
+    createEvent,
     updateMonthAndYear,
   };
 };

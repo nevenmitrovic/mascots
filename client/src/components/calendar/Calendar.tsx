@@ -21,34 +21,14 @@ export const Calendar = () => {
   const { setFormData } = useContext(FormDataContext);
   const { toggleEventCardTuple } = useContext(EventCardDialogContext);
 
-  const [date, setDate] = useState<{ year: string; month: string } | null>(
-    null
-  );
   const { data, updateMonthAndYear } = useEventActions();
   const calendarRef = useRef<FullCalendar | null>(null);
 
   const next = () => {
     updateMonthAndYear(+1);
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      calendarApi.next();
-      setDate({
-        year: dayjs(calendarApi.getDate()).format("YYYY"),
-        month: dayjs(calendarApi.getDate()).format("MM"),
-      });
-    }
   };
   const prev = () => {
     updateMonthAndYear(-1);
-
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      calendarApi.prev();
-      setDate({
-        year: dayjs(calendarApi.getDate()).format("YYYY"),
-        month: dayjs(calendarApi.getDate()).format("MM"),
-      });
-    }
   };
 
   const addNewEvent = () => {
@@ -77,15 +57,6 @@ export const Calendar = () => {
     toggleEventCardTuple(info.event.id);
   };
 
-  const handleEventDrop = (eventDropInfo: EventDropArg) => {
-    const event = eventDropInfo.event;
-    const newDate = event.startStr;
-
-    // console.log(`Event "${event.title}" was moved to ${newDate}`);
-
-    // Logic to update the event with edit item form
-    // toggleDialog();
-  };
   const events = mapEventsToCalendar(data);
 
   return (
@@ -123,7 +94,6 @@ export const Calendar = () => {
         moreLinkClick={"popover"}
         dateClick={handleDateClick}
         events={events}
-        eventDrop={handleEventDrop}
         eventClick={handleEventClick}
       />
     </>

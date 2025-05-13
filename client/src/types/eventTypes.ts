@@ -75,12 +75,12 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     sx: { mb: "2rem", display: `none` },
   },
   {
-    name: "maskotas",
+    name: "mascots",
     label: "Maskote",
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "1", label: "Elsa" },
+      { value: "68079441488398d9cb229792", label: "Elsa" },
       { value: "2", label: "Spajdermen" },
       { value: "3", label: "Pepa Prase" },
     ],
@@ -91,7 +91,7 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     type: "select",
     sx: { mb: "2rem" },
     options: [
-      { value: "1", label: "Neven" },
+      { value: "6814b85276bf4fd4d785d8ef", label: "Neven" },
       { value: "2", label: "Igor" },
       { value: "3", label: "Neki Lik" },
     ],
@@ -101,5 +101,29 @@ export const eventFormInputs: FormInputConfig<any>[] = [
     label: "Cena",
     type: "text",
     sx: { mb: "2rem" },
+  },
+  {
+    name: "name",
+    label: "Ime organizatora",
+    type: "text",
+    sx: { mb: "2rem" },
+  },
+  {
+    name: "phone",
+    label: "Telefon",
+    type: "number",
+    sx: { mb: "2rem" },
+  },
+  {
+    name: "social",
+    label: "Način dogovora",
+    type: "select",
+    sx: { mb: "2rem" },
+    options: [
+      { value: "facebook", label: "Facebook" },
+      { value: "instagram", label: "Instagram" },
+      { value: "viber", label: "Viber" },
+      { value: "whatsapp", label: "Whats app" },
+    ],
   },
 ];
