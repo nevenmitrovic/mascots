@@ -10,9 +10,11 @@ import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
 import { useToast } from "contexts/ToastContext";
 import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
-import { eventFormInputs } from "types/eventTypes";
-import { eventSchema, EventSchemaType } from "validations/eventSchema";
 import useEventActions from "hooks/useEventActions";
+import useEventFormInputs from "hooks/useEventFormInputs";
+
+import { eventSchema, type EventSchemaType } from "validations/eventSchema";
+
 import { formatEventData } from "utils/helperFunctions";
 
 const CalendarContainer = () => {
@@ -21,11 +23,11 @@ const CalendarContainer = () => {
   const { eventCardTuple, toggleEventCardTuple } = useContext(
     EventCardDialogContext
   );
+  const eventFormInputs = useEventFormInputs();
   const { showToast } = useToast();
   const { createEvent } = useEventActions();
 
   const handleEventSubmit = (data: any) => {
-    console.log(data)
     const formatData = formatEventData(data);
     createEvent(formatData);
     toggleDialog();

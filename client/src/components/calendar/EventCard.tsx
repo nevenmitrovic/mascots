@@ -8,30 +8,23 @@ import {
   Box,
 } from "@mui/material";
 
-import {type EventCardProps, type IEvent } from "types/eventTypes";
+import { type EventCardProps, type IEvent } from "types/eventTypes";
 
 import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
+import useEventActions from "hooks/useEventActions";
 
 const EventCard = ({ id }: EventCardProps) => {
   // mock data
-  const event: IEvent = {
-    _id: "652f3c8e9f1b2a001c8e4d1a",
-    title: "Birthday Party - Marko",
-    date: "2025-04-10",
-    time: "17:30",
-    location: [
-      {
-        address: "Hotel Slavija",
-        location: "https://maps.app.goo.gl/crzt24379aAXrSAc6",
-      },
-    ],
-    maskotas: ["Mickey Mouse", "SpongeBob"],
-    animators: ["Ana", "Milan"],
-    price: "150",
-    confirmed: "y",
-    collector: "Milan",
-  };
+  const { data } = useEventActions();
+  const specificEvent: IEvent | undefined = data.find(
+    (event) => event._id === id
+  );
+  console.log(specificEvent?.mascots)
+    console.log(typeof specificEvent?.mascots)
 
+  if (!specificEvent) {
+    return <Typography>There is no event to display</Typography>;
+  }
   return (
     <>
       <CardContent
@@ -42,7 +35,7 @@ const EventCard = ({ id }: EventCardProps) => {
         }}
       >
         <Typography gutterBottom sx={{ fontSize: 24, fontWeight: "bold" }}>
-          {event.title}
+          {specificEvent.title}
         </Typography>
         <Box sx={{ mb: 1 }} component={"div"}>
           <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
@@ -53,19 +46,19 @@ const EventCard = ({ id }: EventCardProps) => {
               year: "numeric",
               month: "2-digit",
               day: "2-digit",
-            }).format(new Date(event.date))}
+            }).format(new Date(specificEvent.date))}
           </Typography>
-          <Typography sx={{ fontSize: 18 }}>{event.time}</Typography>
+          <Typography sx={{ fontSize: 18 }}>{specificEvent.time}</Typography>
         </Box>
         <Box sx={{ mb: 1 }} component={"div"}>
           <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
             Lokacija:
           </Typography>
           <Typography sx={{ fontSize: 18 }}>
-            {event.location[0].address}
+            {specificEvent.location.address}
           </Typography>
           <Link
-            to={event.location[0].location}
+            to={specificEvent.location.link}
             target="_blank"
             style={{
               textDecoration: "none",
@@ -80,17 +73,20 @@ const EventCard = ({ id }: EventCardProps) => {
           <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
             Maskote:
           </Typography>
-          {event.maskotas.map((macota) => (
-            <Typography key={macota} sx={{ fontSize: 18 }}>
-              {macota}
-            </Typography>
-          ))}
+          {specificEvent.mascots.map((mascot) => {
+            console.log(mascot);
+            return (
+              <Typography key={mascot.name} sx={{ fontSize: 18 }}>
+                {mascot}
+              </Typography>
+            );
+          })}
         </Box>
         <Box sx={{ mb: 1 }} component={"div"}>
           <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
             Animatori:
           </Typography>
-          {event.animators.map((animator) => (
+          {specificEvent.animators.map((animator) => (
             <Typography key={animator} sx={{ fontSize: 18 }}>
               {animator}
             </Typography>
@@ -105,7 +101,7 @@ const EventCard = ({ id }: EventCardProps) => {
               style: "currency",
               currency: "EUR",
               minimumFractionDigits: 0,
-            }).format(Number(event.price))}
+            }).format(Number(specificEvent.price))}
           </Typography>
         </Box>
       </CardContent>

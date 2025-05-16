@@ -1,6 +1,11 @@
 import dayjs from "dayjs";
 
-import { useCreateItem, useGetItems } from "./global/genericCRUDHooks";
+import {
+  useCreateItem,
+  useDeleteItem,
+  useEditItem,
+  useGetItems,
+} from "./global/genericCRUDHooks";
 
 import { getMonthYearDetails, getNewMonthAndYear } from "utils/helperFunctions";
 
@@ -24,11 +29,15 @@ const useEventActions = () => {
     monthAndYear.month,
   ]);
   const createEvent = useCreateItem<IEvent>([queryKeys.events]);
+  const editEvent = useEditItem<IEvent>([queryKeys.events]);
+  const deleteEvent = useDeleteItem([queryKeys.events]);
 
   return {
     data,
     createEvent,
     updateMonthAndYear,
+    editEvent,
+    deleteEvent
   };
 };
 

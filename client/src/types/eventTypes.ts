@@ -8,8 +8,13 @@ export type ConfirmedType = "pending" | "confirmed" | "rejected";
 
 export type LocationSelect = { link: string; address: string };
 
-export interface IEvent {
-  _id?: string;
+export interface IOrganizer {
+  name: string;
+  phone: string;
+  social: "facebook" | "instagram" | "viber" | "whatsapp";
+}
+
+export interface ICreateEvent {
   date: string;
   time: string;
   location: LocationSelect;
@@ -19,6 +24,22 @@ export interface IEvent {
   title: string;
   collector: string;
   confirmed: ConfirmedType;
+}
+
+export interface IEventDocument extends ICreateEvent {
+  _id: string;
+}
+
+export interface IEvent {
+  date: Date;
+  location: LocationSelect;
+  title: string;
+  price: number;
+  organizer: IOrganizer;
+  mascots: { name: string }[];
+  animators: { username: string }[];
+  confirmed: ConfirmedType;
+  collector: { username: string }[];
 }
 
 // MOCK DATA

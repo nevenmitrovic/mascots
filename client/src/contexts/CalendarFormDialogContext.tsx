@@ -27,13 +27,16 @@ export const CalendarFormDialogProvider = ({ children }: any) => {
         date: "",
         time: "",
         location: [],
-        maskotas: [],
+        mascots: [],
         animators: [],
         price: "",
         confirmed: "",
         collector: "",
         customLocationAddress: "",
         customLocationLink: "",
+        name: "",
+        phone: "",
+        social: [],
       });
     }
   }, [open]);
