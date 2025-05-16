@@ -1,24 +1,24 @@
 import { type FormInputConfig } from "./formTypes";
 
-import { type Location } from "./locationTypes";
-
 export interface EventCardProps {
   id: string | null;
 }
 
-export type confirmedType = "pending" | "confirmed" | "rejected";
+export type ConfirmedType = "pending" | "confirmed" | "rejected";
+
+export type LocationSelect = { link: string; address: string };
 
 export interface IEvent {
   _id?: string;
   date: string;
   time: string;
-  location: Omit<Location, "_id" | "name" | "phone">[];
+  location: LocationSelect;
   mascots: string[];
   animators: string[];
   price: string;
   title: string;
   collector: string;
-  confirmed: confirmedType;
+  confirmed: ConfirmedType;
 }
 
 // MOCK DATA

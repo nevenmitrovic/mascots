@@ -13,9 +13,20 @@ type AnimatorSelectProps =
 //function to map data to display select input for create/edit event form
 export const mapSelectedData = (data: AnimatorSelectProps) => {
   return data.map((item) => ({
-    title: "name" in item ? item.name : item.username,
+    label: "name" in item ? item.name : item.username,
     value: item._id,
   }));
+};
+//function to map data to display in location select input for create/edit event form
+//nova lokacija is added in case we want to add new location for the event which is not
+//used often and it will not be saved in DB as such
+export const mapSelectLocationData = (data: LocationDocument[]) => {
+  const customLocation = { label: "Nova lokacija", value: "none" };
+  const locationSelectData = data.map((item) => ({
+    label: item.name,
+    value: { link: item.location, address: item.address },
+  }));
+  return [customLocation, ...locationSelectData];
 };
 
 //default values for the form
@@ -90,7 +101,6 @@ export const createPath = (data: string[]) => {
   const params = data.join("/");
   return params;
 };
-
 
 //format data to create or edit event
 

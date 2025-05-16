@@ -69,7 +69,7 @@ const FormComponent = <T extends FieldValues>({
           ) {
             fieldStyle = {
               ...fieldStyle,
-              display: locationValue.includes("none") ? "block" : "none",
+              display: locationValue[0] === "none" ? "block" : "none",
             };
           }
 

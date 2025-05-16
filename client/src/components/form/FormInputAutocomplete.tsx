@@ -6,12 +6,12 @@ import TextField from "@mui/material/TextField";
 
 import { Controller, FieldValues } from "react-hook-form";
 
+import { type LocationSelect } from "types/eventTypes";
 import { type FormInputProps } from "types/formTypes";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
-
-type SelectOptionProps = { value: string | {}; label: string };
+type SelectOptionProps = { value: string | LocationSelect; label: string };
 type FormInputAutocompleteProps<T extends FieldValues> = FormInputProps<T> & {
   options: SelectOptionProps[];
 };
@@ -38,12 +38,13 @@ const FormInputAutocomplete = <T extends FieldValues>({
           const selectedValues = isLocation
             ? //we still want to keep location as string array
               //if its location we display only index 0 item from array or null
-              //if not map through options and display choosen ones
+              //if not map through options and display chosen ones
               options.find(
-                (option) => option.value === (value as string[])[0]
+                (option) =>
+                  JSON.stringify(value[0]) === JSON.stringify(option.value)
               ) || null
             : options.filter((option) =>
-                ((value as string[]) || []).includes(option.value)
+                (value as string[]).includes(option.value as string)
               );
 
           return (
