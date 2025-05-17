@@ -6,21 +6,43 @@ import {
   Typography,
 } from "@mui/material";
 import { useToggle } from "hooks/global/useToggle";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import useItemToDelete from "hooks/global/useItemToDelete";
+import useEventActions from "hooks/useEventActions";
+import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
+import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
 const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
+  //admin action menu select
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>();
   const [value, toggle] = useToggle(false);
+  //setting up an element from which select menu will appear and open the same
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     toggle();
     setAnchorEl(event.currentTarget);
   };
+  //closing and removing the anchor element from state
   const handleClose = () => {
     toggle();
     setAnchorEl(null);
+  };
+  
+  //closing eventCard from from header
+  const { toggleEventCardTuple } = useContext(EventCardDialogContext);
+  const { deleteEvent } = useEventActions();
+  
+  //implementing delete dialog hook
+  const { deleteId, setDelete, deleteDialog, handleDeleteDialogClose } =
+    useItemToDelete();
+  //confirm delete and close all the dialogs
+  const handleConfirmDelete = () => {
+    deleteEvent(deleteId);
+    handleDeleteDialogClose();
+    handleClose();
+    toggleEventCardTuple(null);
   };
   return (
     <>
@@ -56,12 +78,18 @@ const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
             <EditIcon color="primary" />
           </IconButton>
         </MenuItem>
-        <MenuItem onClick={handleClose} sx={{ padding: 0, margin: 0 }}>
+        <MenuItem onClick={() => setDelete(id)} sx={{ padding: 0, margin: 0 }}>
           <IconButton>
             <DeleteIcon color="error" />
           </IconButton>
         </MenuItem>
       </Menu>
+      <DeleteConfirmationDialog
+        message="Da li ste sigurni da želite da obrišete ovaj event?"
+        open={deleteDialog}
+        onClose={handleDeleteDialogClose}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   );
 };
