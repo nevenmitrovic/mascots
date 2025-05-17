@@ -78,6 +78,14 @@ export const getMonthYearDetails = (initialDate: dayjs.Dayjs) => {
   return { month, year, date, time };
 };
 
+export const formatPrice = (price:number)=>{
+  return Intl.NumberFormat("sr-RS", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 0,
+  }).format(Number(price))
+}
+
 export const getNewMonthAndYear = (prevData, increment) => {
   const { month, year } = prevData;
 

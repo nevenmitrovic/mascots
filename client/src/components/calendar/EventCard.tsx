@@ -6,102 +6,47 @@ import {
   Box,
   Divider,
   Card,
-  CardHeader,
-  IconButton,
-  Menu,
-  type MenuProps,
-  MenuItem,
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import LocationPinIcon from "@mui/icons-material/LocationPin";
+
+import EventCardHeader from "./EventCardHeader";
+import EventContentField from "./EventContentField";
 
 import { Link } from "react-router";
 
 import { type EventCardProps, type IEvent } from "types/eventTypes";
 
 import useEventActions from "hooks/useEventActions";
-import { getMonthYearDetails } from "utils/helperFunctions";
-import dayjs from "dayjs";
-import { useToggle } from "hooks/global/useToggle";
-import { useState } from "react";
 
-const ActionMenu = (props: MenuProps) => {
-  return (
-    <Menu
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      {...props}
-    />
-  );
-};
+import { formatPrice, getMonthYearDetails } from "utils/helperFunctions";
+
+import dayjs from "dayjs";
 
 const EventCard = ({ id }: EventCardProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>();
-  const [value, toggle] = useToggle(false);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    toggle();
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    toggle();
-    setAnchorEl(null);
-  };
-
-  // mock data
+  //getting event
   const { data } = useEventActions();
   const specificEvent: IEvent | undefined = data.find(
     (event) => event._id === id
   );
-  const { date, time } = getMonthYearDetails(dayjs(specificEvent?.date));
+
   if (!specificEvent) {
     return <Typography>There is no event to display</Typography>;
   }
+
+  //format date
+  const { date, time } = getMonthYearDetails(dayjs(specificEvent.date));
+  //format price
+  const price = formatPrice(specificEvent.price);
+
   return (
-    <Card sx={{ width: "400px" }}>
-      <CardHeader
-      sx={{margin:"0", paddingBottom:"0.5rem"}}
-        title={
-          <Typography gutterBottom sx={{ fontSize: 24, fontWeight: "bold" }}>
-            {specificEvent.title}
-          </Typography>
-        }
-        action={
-          <IconButton onClick={handleClick}>
-            <MoreVertIcon />
-          </IconButton>
-        }
-      />
-      <ActionMenu
-        anchorEl={anchorEl}
-        open={value}
-        onClose={handleClose}
-        sx={{ display: "flex" }}
-      >
-        <MenuItem onClick={handleClose} sx={{ padding: 0, margin: 0 }}>
-          <IconButton>
-            <EditIcon color="primary" />
-          </IconButton>
-        </MenuItem>
-        <MenuItem onClick={handleClose} sx={{ padding: 0, margin: 0 }}>
-          <IconButton>
-            <DeleteIcon color="error" />
-          </IconButton>
-        </MenuItem>
-      </ActionMenu>
+    <Card sx={{ minWidth: "350px" }}>
+      <EventCardHeader title={specificEvent.title} id={specificEvent._id} />
       <Divider />
       <CardContent
         sx={{
           color: "var(--color-primary)",
           margin: 0,
-          padding:'0.5rem 1rem'
+          padding: "0 1rem",
         }}
       >
         <Box
@@ -113,152 +58,55 @@ const EventCard = ({ id }: EventCardProps) => {
           }}
           component={"div"}
         >
-          <Box sx={{ width: "50%" }}>
-            <Typography
-              gutterBottom
-              sx={{ color: "text.secondary", fontSize: 14 }}
-            >
-              Datum:
-            </Typography>
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ fontSize: 20, fontWeight: "500" }}
-            >
-              {date}
-            </Typography>
-          </Box>
-
+          <EventContentField label="Datum" value={date} sx={{ width: "50%" }} />
           <Divider orientation="vertical" flexItem />
-          <Box sx={{ width: "50%", marginLeft: "1rem" }}>
-            <Typography
-              gutterBottom
-              sx={{ color: "text.secondary", fontSize: 14 }}
-            >
-              Vreme:
-            </Typography>
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ fontSize: 20, fontWeight: "500" }}
-            >
-              {time}
-            </Typography>
-          </Box>
+          <EventContentField
+            label="Vreme"
+            value={time}
+            sx={{ width: "50%", marginLeft: "1rem" }}
+          />
         </Box>
         <Divider />
-        <Box sx={{ margin: "0.5rem 0" }}>
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            Lokacija:
-          </Typography>
-          <Typography
-            variant="h5"
-            component="div"
-            sx={{ fontSize: 20, fontWeight: "500" }}
-          >
-            {specificEvent.location.address}{" "}
-            <Link
-              to={specificEvent.location.link}
-              target="_blank"
-              style={{
-                color: "var(--color-secondary)",
-                fontWeight: "bold",
-              }}
-            >
-              <LocationPinIcon />
-            </Link>
-          </Typography>
-        </Box>
+        <EventContentField
+          label="Lokacija"
+          value={
+            <>
+              {specificEvent.location.address}
+              <Link
+                to={specificEvent.location.link}
+                target="_blank"
+                style={{
+                  color: "var(--color-secondary)",
+                  fontWeight: "bold",
+                }}
+              >
+                <LocationPinIcon />
+              </Link>
+            </>
+          }
+          sx={{ width: "50%" }}
+        />
         <Divider />
-        <Box sx={{ margin: "0.5rem 0" }}>
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            Maskote:
-          </Typography>
-          {specificEvent.mascots.map((mascot) => {
-            return (
-              <Box sx={{ display: "flex" }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 20,
-                    fontWeight: "500",
-                    marginRight: "0.5rem",
-                  }}
-                >
-                  {mascot.name}
-                </Typography>{" "}
-                <Divider orientation="vertical" flexItem />
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ fontSize: 20, fontWeight: "500", marginLeft: "0.5rem" }}
-                >
-                  {mascot.name}
-                </Typography>
-              </Box>
-            );
-          })}
-        </Box>
+        <EventContentField
+          label={specificEvent.animators.length > 1 ? "Animatori" : "Animator"}
+          value={specificEvent.animators.map((a) => a.username).join(", ")}
+        />
         <Divider />
-        <Box sx={{ margin: "0.5rem 0" }}>
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            Animatori:
-          </Typography>
-          {specificEvent.animators.map((animator) => {
-            return (
-              <Box sx={{ display: "flex" }}>
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    fontSize: 20,
-                    fontWeight: "500",
-                    marginRight: "0.5rem",
-                  }}
-                >
-                  {animator.username}
-                </Typography>
-                <Divider orientation="vertical" flexItem />
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{ fontSize: 20, fontWeight: "500", marginLeft: "0.5rem" }}
-                >
-                  {animator.username}
-                </Typography>
-              </Box>
-            );
-          })}
-        </Box>
+        <EventContentField
+          label={specificEvent.mascots.length > 1 ? "Maskote" : "Maskota"}
+          value={specificEvent.mascots.map((a) => a.name).join(", ")}
+        />
         <Divider />
-        <Box sx={{ margin: "0.5rem 0" }}>
-          <Typography
-            gutterBottom
-            sx={{ color: "text.secondary", fontSize: 14 }}
-          >
-            Cena:
-          </Typography>
-          <Typography sx={{ fontSize: 18 }}>
-            {Intl.NumberFormat("sr-RS", {
-              style: "currency",
-              currency: "EUR",
-              minimumFractionDigits: 0,
-            }).format(Number(specificEvent.price))}
-          </Typography>
-        </Box>
+        <EventContentField label="cena" value={price} />
         <Divider />
       </CardContent>
-      <CardActions sx={{ display: "flex", justifyContent: "space-around" }}>
+      <CardActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginRight: "1rem",
+        }}
+      >
         <Button
           size="small"
           variant="outlined"
