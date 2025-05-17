@@ -67,6 +67,27 @@ const EventCard = ({ id }: EventCardProps) => {
           />
         </Box>
         <Divider />
+        <Box
+          sx={{
+            margin: "0.5rem 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+          component={"div"}
+        >
+          <EventContentField
+            label="Organizator"
+            value={specificEvent.organizer.name}
+            sx={{ width: "50%" }}
+          />
+          <EventContentField
+            label="telefon"
+            value={specificEvent.organizer.phone}
+            sx={{ width: "50%", marginLeft: "1rem" }}
+          />
+        </Box>
+        <Divider />
         <EventContentField
           label="Lokacija"
           value={
@@ -84,7 +105,6 @@ const EventCard = ({ id }: EventCardProps) => {
               </Link>
             </>
           }
-          sx={{ width: "50%" }}
         />
         <Divider />
         <EventContentField
