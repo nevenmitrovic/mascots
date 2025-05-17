@@ -1,3 +1,4 @@
+import { LocationSelect } from "types/eventTypes";
 import * as yup from "yup";
 
 export const eventSchema = yup.object().shape({
@@ -16,7 +17,7 @@ export const eventSchema = yup.object().shape({
 
   location: yup
     .array()
-    .of(yup.string().required("Lokacija je obavezna"))
+    .of(yup.object<LocationSelect>().required("Lokacija je obavezna"))
     .min(1, "Lokacija je obavezna")
     .required("Lokacija je obavezna"),
 
@@ -41,10 +42,6 @@ export const eventSchema = yup.object().shape({
     .string()
     .required("Naslov je obavezan")
     .min(3, "Naslov mora imati najmanje 3 karaktera"),
-
-  collector: yup.string().optional(),
-
-  confirmed: yup.string().optional(),
 
   customLocationAddress: yup.string().when("location", {
     is: (val: string[]) => Array.isArray(val) && val.includes("none"),

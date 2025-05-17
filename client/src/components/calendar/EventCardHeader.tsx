@@ -14,6 +14,12 @@ import useItemToDelete from "hooks/global/useItemToDelete";
 import useEventActions from "hooks/useEventActions";
 import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog";
 import { EventCardDialogContext } from "contexts/EventCardDialogContext";
+import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
+import { FormDataContext } from "contexts/FormDataContext";
+import { eventFormInputs, IEvent } from "types/eventTypes";
+import useMascotActions from "hooks/useMascotActions";
+import { formatDataForEdit } from "utils/helperFunctions";
+import useItemToEdit from "hooks/global/useItemToEdit";
 
 const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
   //admin action menu select
@@ -29,11 +35,29 @@ const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
     toggle();
     setAnchorEl(null);
   };
-  
+  const { data, deleteEvent } = useEventActions();
+
   //closing eventCard from from header
+  const { open, toggleDialog } = useContext(CalendarFormDialogContext);
   const { toggleEventCardTuple } = useContext(EventCardDialogContext);
-  const { deleteEvent } = useEventActions();
-  
+  const { setFormData } = useContext(FormDataContext);
+
+  const specificEvent: IEvent | undefined = data.find(
+    (event) => event._id === id
+  );
+  if (!specificEvent) {
+    return;
+  }
+  const handleEditEvent = () => {
+    // const { data: mascotData = [] } = useMascotActions();
+    // const mascotsUsed = mascotData.filter(
+    //   (mascot) => mascot.name === specificEvent?.mascots.name
+    // );
+    const eventForEdit = formatDataForEdit(specificEvent);
+    setFormData(eventForEdit);
+    toggleDialog();
+  };
+
   //implementing delete dialog hook
   const { deleteId, setDelete, deleteDialog, handleDeleteDialogClose } =
     useItemToDelete();
@@ -49,7 +73,14 @@ const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
       <CardHeader
         sx={{ margin: "0", paddingBottom: "0.5rem" }}
         title={
-          <Typography gutterBottom sx={{ fontSize: 24, fontWeight: "bold" }}>
+          <Typography
+            gutterBottom
+            sx={{
+              fontSize: 24,
+              textTransform: "capitalize",
+              fontWeight: "bold",
+            }}
+          >
             {title}
           </Typography>
         }
@@ -73,7 +104,7 @@ const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
         onClose={handleClose}
         sx={{ display: "flex" }}
       >
-        <MenuItem onClick={handleClose} sx={{ padding: 0, margin: 0 }}>
+        <MenuItem onClick={handleEditEvent} sx={{ padding: 0, margin: 0 }}>
           <IconButton>
             <EditIcon color="primary" />
           </IconButton>

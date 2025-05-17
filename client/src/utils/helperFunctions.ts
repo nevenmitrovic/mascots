@@ -1,9 +1,10 @@
-import { type IEvent } from "types/eventTypes";
+import { ICreateEvent, type IEvent } from "types/eventTypes";
 import { type LocationDocument } from "types/locationTypes";
 import { type MascotDocument } from "types/mascotTypes";
 import { type AnimatorDocument } from "types/animatorsTypes";
 
 import dayjs from "dayjs";
+import { EventSchemaType } from "validations/eventSchema";
 
 type AnimatorSelectProps =
   | LocationDocument[]
@@ -74,17 +75,18 @@ export const getMonthYearDetails = (initialDate: dayjs.Dayjs) => {
   const month = initialDate.format("MM");
   const year = initialDate.format("YYYY");
   const date = initialDate.format("DD.MM");
-  const time = initialDate.format("hh:mm");
-  return { month, year, date, time };
+  const formDate = initialDate.format("YYYY-MM-DD");
+  const time = initialDate.format("HH:mm");
+  return { month, year, date, time, formDate };
 };
 
-export const formatPrice = (price:number)=>{
+export const formatPrice = (price: number) => {
   return Intl.NumberFormat("sr-RS", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 0,
-  }).format(Number(price))
-}
+  }).format(Number(price));
+};
 
 export const getNewMonthAndYear = (prevData, increment) => {
   const { month, year } = prevData;
@@ -127,13 +129,34 @@ export const formatEventData = (data: any) => {
     ...restData
   } = data;
   const organizer = { name, phone: String(phone), social: social[0] };
-  const newLocation = { link: location[0], address: "String 123" };
   const formatedData = {
     ...restData,
     organizer,
-    location: newLocation,
+    location: location[0],
     collector: Array(),
   };
   console.log(formatedData);
   return formatedData;
+};
+
+export const formatDataForEdit = (data: IEvent): EventSchemaType => {
+  const { date, price, collector, confirmed, organizer, mascots, location,_id } = data;
+  const { time, formDate } = getMonthYearDetails(dayjs(date));
+//missing mascots and animators, tomorrow
+  const eventEditData = {
+    customLocationAddress:"",
+    customLocationLink:"",
+    social: [organizer.social],
+    mascots:[""],
+    animators:[""],
+    date: formDate,
+    time,
+    location:[location],
+    price: String(price),
+    title: data.title,
+    name: organizer.name,
+    phone: organizer.phone,
+    _id
+  };
+  return eventEditData;
 };
