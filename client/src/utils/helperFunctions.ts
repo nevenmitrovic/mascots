@@ -73,7 +73,9 @@ export function mapEventsToCalendar(events: IEvent[]) {
 export const getMonthYearDetails = (initialDate: dayjs.Dayjs) => {
   const month = initialDate.format("MM");
   const year = initialDate.format("YYYY");
-  return { month, year };
+  const date = initialDate.format("MM.DD");
+  const time = initialDate.format("hh:mm");
+  return { month, year, date, time };
 };
 
 export const getNewMonthAndYear = (prevData, increment) => {
