@@ -15,6 +15,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import LocationPinIcon from "@mui/icons-material/LocationPin";
 
 import { Link } from "react-router";
 
@@ -50,7 +51,7 @@ const EventCard = ({ id }: EventCardProps) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    toggle()
+    toggle();
     setAnchorEl(null);
   };
 
@@ -64,100 +65,187 @@ const EventCard = ({ id }: EventCardProps) => {
     return <Typography>There is no event to display</Typography>;
   }
   return (
-    <Card>
+    <Card sx={{ width: "400px" }}>
       <CardHeader
+      sx={{margin:"0", paddingBottom:"0.5rem"}}
         title={
           <Typography gutterBottom sx={{ fontSize: 24, fontWeight: "bold" }}>
             {specificEvent.title}
           </Typography>
         }
         action={
-          <IconButton
-            id="demo-customized-button"
-            aria-controls={value ? "demo-customized-menu" : undefined}
-            aria-expanded={value ? "true" : undefined}
-            onClick={handleClick}
-          >
+          <IconButton onClick={handleClick}>
             <MoreVertIcon />
           </IconButton>
         }
       />
       <ActionMenu
-        id="demo-customized-menu"
         anchorEl={anchorEl}
         open={value}
         onClose={handleClose}
+        sx={{ display: "flex" }}
       >
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={handleClose} sx={{ padding: 0, margin: 0 }}>
           <IconButton>
-            <EditIcon color="primary" /> Promeni
+            <EditIcon color="primary" />
           </IconButton>
         </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={handleClose} sx={{ padding: 0, margin: 0 }}>
           <IconButton>
-            <DeleteIcon color="error" /> Obrisi
+            <DeleteIcon color="error" />
           </IconButton>
         </MenuItem>
       </ActionMenu>
       <Divider />
       <CardContent
         sx={{
-          padding: "1rem",
           color: "var(--color-primary)",
+          margin: 0,
+          padding:'0.5rem 1rem'
         }}
       >
         <Box
-          sx={{ mb: 1, display: "flex", justifyContent: "space-between" }}
+          sx={{
+            margin: "0.5rem 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
           component={"div"}
         >
-          <Typography sx={{ fontSize: 20, fontWeight: "500" }}>
-            Datum: {date}
-          </Typography>
-          <Typography sx={{ fontSize: 20 }}>Vreme: {time}</Typography>
+          <Box sx={{ width: "50%" }}>
+            <Typography
+              gutterBottom
+              sx={{ color: "text.secondary", fontSize: 14 }}
+            >
+              Datum:
+            </Typography>
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ fontSize: 20, fontWeight: "500" }}
+            >
+              {date}
+            </Typography>
+          </Box>
+
+          <Divider orientation="vertical" flexItem />
+          <Box sx={{ width: "50%", marginLeft: "1rem" }}>
+            <Typography
+              gutterBottom
+              sx={{ color: "text.secondary", fontSize: 14 }}
+            >
+              Vreme:
+            </Typography>
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ fontSize: 20, fontWeight: "500" }}
+            >
+              {time}
+            </Typography>
+          </Box>
         </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+        <Divider />
+        <Box sx={{ margin: "0.5rem 0" }}>
+          <Typography
+            gutterBottom
+            sx={{ color: "text.secondary", fontSize: 14 }}
+          >
             Lokacija:
           </Typography>
-          <Typography sx={{ fontSize: 18 }}>
-            {specificEvent.location.address}
-          </Typography>
-          <Link
-            to={specificEvent.location.link}
-            target="_blank"
-            style={{
-              color: "var(--color-secondary)",
-              fontWeight: "bold",
-            }}
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{ fontSize: 20, fontWeight: "500" }}
           >
-            Otvori na mapi
-          </Link>
+            {specificEvent.location.address}{" "}
+            <Link
+              to={specificEvent.location.link}
+              target="_blank"
+              style={{
+                color: "var(--color-secondary)",
+                fontWeight: "bold",
+              }}
+            >
+              <LocationPinIcon />
+            </Link>
+          </Typography>
         </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+        <Divider />
+        <Box sx={{ margin: "0.5rem 0" }}>
+          <Typography
+            gutterBottom
+            sx={{ color: "text.secondary", fontSize: 14 }}
+          >
             Maskote:
           </Typography>
           {specificEvent.mascots.map((mascot) => {
-            console.log(mascot);
             return (
-              <Typography key={mascot.name} sx={{ fontSize: 18 }}>
-                {mascot.name}
-              </Typography>
+              <Box sx={{ display: "flex" }}>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: "500",
+                    marginRight: "0.5rem",
+                  }}
+                >
+                  {mascot.name}
+                </Typography>{" "}
+                <Divider orientation="vertical" flexItem />
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{ fontSize: 20, fontWeight: "500", marginLeft: "0.5rem" }}
+                >
+                  {mascot.name}
+                </Typography>
+              </Box>
             );
           })}
         </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+        <Divider />
+        <Box sx={{ margin: "0.5rem 0" }}>
+          <Typography
+            gutterBottom
+            sx={{ color: "text.secondary", fontSize: 14 }}
+          >
             Animatori:
           </Typography>
-          {specificEvent.animators.map((animator) => (
-            <Typography key={animator.username} sx={{ fontSize: 18 }}>
-              {animator.username}
-            </Typography>
-          ))}
+          {specificEvent.animators.map((animator) => {
+            return (
+              <Box sx={{ display: "flex" }}>
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: "500",
+                    marginRight: "0.5rem",
+                  }}
+                >
+                  {animator.username}
+                </Typography>
+                <Divider orientation="vertical" flexItem />
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{ fontSize: 20, fontWeight: "500", marginLeft: "0.5rem" }}
+                >
+                  {animator.username}
+                </Typography>
+              </Box>
+            );
+          })}
         </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
+        <Divider />
+        <Box sx={{ margin: "0.5rem 0" }}>
+          <Typography
+            gutterBottom
+            sx={{ color: "text.secondary", fontSize: 14 }}
+          >
             Cena:
           </Typography>
           <Typography sx={{ fontSize: 18 }}>
@@ -168,15 +256,31 @@ const EventCard = ({ id }: EventCardProps) => {
             }).format(Number(specificEvent.price))}
           </Typography>
         </Box>
+        <Divider />
       </CardContent>
-      <CardActions>
-        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+      <CardActions sx={{ display: "flex", justifyContent: "space-around" }}>
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ color: "var(--color-primary)", margin: "0.5rem" }}
+          disabled={specificEvent.confirmed !== "pending"}
+        >
           Potvrdi
         </Button>
-        <Button size="small" sx={{ color: "var(--color-primary)" }}>
-          Otkazi
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ color: "var(--color-primary)" }}
+          disabled={specificEvent.confirmed !== "pending"}
+        >
+          Otkaži
         </Button>
-        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ color: "var(--color-primary)" }}
+          disabled={specificEvent.collector.length > 0}
+        >
           Prikupio novac
         </Button>
       </CardActions>

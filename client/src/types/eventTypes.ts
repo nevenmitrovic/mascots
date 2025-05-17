@@ -31,6 +31,7 @@ export interface IEventDocument extends ICreateEvent {
 }
 
 export interface IEvent {
+  _id: string;
   date: Date;
   location: LocationSelect;
   title: string;
