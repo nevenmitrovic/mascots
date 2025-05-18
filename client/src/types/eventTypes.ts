@@ -1,5 +1,3 @@
-import { type FormInputConfig } from "./formTypes";
-
 export interface EventCardProps {
   id: string | null;
 }
@@ -14,6 +12,25 @@ export interface IOrganizer {
   social: "facebook" | "instagram" | "viber" | "whatsapp";
 }
 
+export interface IEventFormType {
+  date: string;
+  time: string;
+  location: Array<LocationSelect | "none">;
+  customLocationAddress?: string;
+  customLocationLink?: string;
+  mascots: string[];
+  animators: string[];
+  price: string;
+  title: string;
+  name: string;
+  phone: string;
+  social: Array<"facebook" | "instagram" | "viber" | "whatsapp">;
+}
+
+export interface IEventFormTypeDocument extends IEventFormType {
+  _id: string;
+}
+
 export interface ICreateEvent {
   date: string;
   time: string;
@@ -22,11 +39,10 @@ export interface ICreateEvent {
   animators: string[];
   price: string;
   title: string;
-  collector: string;
-  confirmed: ConfirmedType;
+  organizer: IOrganizer;
 }
 
-export interface IEventDocument extends ICreateEvent {
+export interface ICreateEventDocument extends ICreateEvent {
   _id: string;
 }
 

@@ -1,4 +1,10 @@
-import { ICreateEvent, type IEvent } from "types/eventTypes";
+import {
+  ICreateEvent,
+  IEventDocument,
+  IEventFormType,
+  IEventFormTypeDocument,
+  type IEvent,
+} from "types/eventTypes";
 import { type LocationDocument } from "types/locationTypes";
 import { type MascotDocument } from "types/mascotTypes";
 import { type AnimatorDocument } from "types/animatorsTypes";
@@ -116,43 +122,39 @@ export const createPath = (data: string[]) => {
 
 //format data to create or edit event
 
-export const formatEventData = (data: any) => {
+export const formatEventData = (data: IEventFormType): ICreateEvent => {
   const {
     name,
     phone,
     social,
     location,
-    collector,
-    confirmed,
     customLocationAddress,
     customLocationLink,
     ...restData
   } = data;
+  let newLocation;
+  if (location[0] === "none") {
+    newLocation = {
+      link: customLocationLink ?? "",
+      address: customLocationAddress ?? "",
+    };
+  } else {
+    newLocation = location[0];
+  }
   const organizer = { name, phone: String(phone), social: social[0] };
   const formatedData = {
     ...restData,
     organizer,
-    location: location[0],
+    location: newLocation,
     collector: Array(),
   };
-  console.log(formatedData);
   return formatedData;
 };
 
-export const formatDataForEdit = (data: IEvent): EventSchemaType => {
-  const {
-    date,
-    price,
-    animators,
-    organizer,
-    mascots,
-    location,
-    _id,
-  } = data;
+export const formatDataForEdit = (data: IEvent): IEventFormType => {
+  const { date, price, animators, organizer, mascots, location } = data;
   const { time, formDate } = getMonthYearDetails(dayjs(date));
   const eventEditData = {
-    customLocationAddress: "",
-    customLocationLink: "",
     social: [organizer.social],
     mascots: mascots.map((mascot) => mascot._id),
     animators: animators.map((animator) => animator._id),
@@ -163,7 +165,6 @@ export const formatDataForEdit = (data: IEvent): EventSchemaType => {
     title: data.title,
     name: organizer.name,
     phone: organizer.phone,
-    _id,
   };
   return eventEditData;
 };

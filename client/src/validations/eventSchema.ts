@@ -1,6 +1,21 @@
 import { LocationSelect } from "types/eventTypes";
 import * as yup from "yup";
 
+const locationSelectSchema = yup.lazy((value) => {
+  switch (typeof value) {
+    case "string":
+      return yup.string().oneOf(["none"]).required();
+    default:
+      return yup
+        .object()
+        .shape({
+          link: yup.string().required(),
+          address: yup.string().required(),
+        })
+        .required();
+  }
+});
+
 export const eventSchema = yup.object().shape({
   date: yup
     .string()
@@ -15,12 +30,7 @@ export const eventSchema = yup.object().shape({
     .required("Vreme događaja je obavezno")
     .matches(/^\d{2}:\d{2}$/, "Vreme mora biti u formatu HH:MM (19:00)"),
 
-  location: yup
-    .array()
-    .of(yup.object<LocationSelect>().required("Lokacija je obavezna"))
-    .min(1, "Lokacija je obavezna")
-    .required("Lokacija je obavezna"),
-
+  location: yup.array().of(locationSelectSchema).required(),
   mascots: yup
     .array()
     .of(yup.string().required("Minimum jedna maskota je obavezna"))
@@ -64,16 +74,13 @@ export const eventSchema = yup.object().shape({
   phone: yup.string().required("Organizator mora imati broj telefona."),
   social: yup
     .array()
-    .of(yup.string().required("Minimum jedna opcija je obavezna."))
-    .test(
-      "valid-social-options",
-      "Opcije moraju biti 'facebook', 'instagram', 'whatsapp' ili 'viber'.",
-      (value) =>
-        Array.isArray(value) &&
-        value.every((option) =>
-          ["facebook", "instagram", "whatsapp", "viber"].includes(option)
-        )
-    ),
+    .of(
+      yup
+        .string()
+        .oneOf(["facebook", "instagram", "whatsapp", "viber"])
+        .required("Minimum jedna opcija je obavezna.")
+    )
+    .required(),
 });
 
 export type EventSchemaType = yup.InferType<typeof eventSchema>;

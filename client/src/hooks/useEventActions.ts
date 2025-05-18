@@ -11,7 +11,7 @@ import { getMonthYearDetails, getNewMonthAndYear } from "utils/helperFunctions";
 
 import { queryKeys } from "reactQuery/constants";
 
-import { IEvent } from "types/eventTypes";
+import { ICreateEvent, IEvent } from "types/eventTypes";
 import { useState } from "react";
 
 const useEventActions = () => {
@@ -28,8 +28,8 @@ const useEventActions = () => {
     monthAndYear.year,
     monthAndYear.month,
   ]);
-  const createEvent = useCreateItem<IEvent>([queryKeys.events]);
-  const editEvent = useEditItem<IEvent>([queryKeys.events]);
+  const createEvent = useCreateItem<ICreateEvent>([queryKeys.events]);
+  const editEvent = useEditItem<ICreateEvent>([queryKeys.events]);
   const deleteEvent = useDeleteItem([queryKeys.events]);
 
   return {
