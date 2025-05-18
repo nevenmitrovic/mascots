@@ -16,10 +16,8 @@ import DeleteConfirmationDialog from "components/global/DeleteConfirmationDialog
 import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
 import { FormDataContext } from "contexts/FormDataContext";
-import { eventFormInputs, IEvent } from "types/eventTypes";
-import useMascotActions from "hooks/useMascotActions";
+import { IEvent } from "types/eventTypes";
 import { formatDataForEdit } from "utils/helperFunctions";
-import useItemToEdit from "hooks/global/useItemToEdit";
 
 const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
   //admin action menu select

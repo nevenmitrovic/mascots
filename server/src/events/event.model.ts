@@ -50,10 +50,10 @@ export interface IEvent {
   title: string;
   price: number;
   organizer: IOrganizer;
-  mascots: { name: string }[];
-  animators: { username: string }[];
+  mascots: { name: string; _id: string }[];
+  animators: { username: string; _id: string }[];
   confirmed: confirmedType;
-  collector: { username: string }[];
+  collector: { username: string; _id: string }[];
 }
 
 export interface IEventDocument extends IEvent {

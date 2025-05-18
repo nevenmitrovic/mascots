@@ -140,23 +140,30 @@ export const formatEventData = (data: any) => {
 };
 
 export const formatDataForEdit = (data: IEvent): EventSchemaType => {
-  const { date, price, collector, confirmed, organizer, mascots, location,_id } = data;
+  const {
+    date,
+    price,
+    animators,
+    organizer,
+    mascots,
+    location,
+    _id,
+  } = data;
   const { time, formDate } = getMonthYearDetails(dayjs(date));
-//missing mascots and animators, tomorrow
   const eventEditData = {
-    customLocationAddress:"",
-    customLocationLink:"",
+    customLocationAddress: "",
+    customLocationLink: "",
     social: [organizer.social],
-    mascots:[""],
-    animators:[""],
+    mascots: mascots.map((mascot) => mascot._id),
+    animators: animators.map((animator) => animator._id),
     date: formDate,
     time,
-    location:[location],
+    location: [location],
     price: String(price),
     title: data.title,
     name: organizer.name,
     phone: organizer.phone,
-    _id
+    _id,
   };
   return eventEditData;
 };
