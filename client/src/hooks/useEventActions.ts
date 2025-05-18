@@ -1,28 +1,17 @@
-import dayjs from "dayjs";
-
 import {
   useCreateItem,
   useDeleteItem,
   useEditItem,
   useGetItems,
 } from "./global/genericCRUDHooks";
-
-import { getMonthYearDetails, getNewMonthAndYear } from "utils/helperFunctions";
-
 import { queryKeys } from "reactQuery/constants";
 
 import { ICreateEvent, IEvent } from "types/eventTypes";
-import { useState } from "react";
+import { useCalendarDate } from "contexts/CalendarDateContext";
 
 const useEventActions = () => {
-  const { month, year } = getMonthYearDetails(dayjs());
-
-  const [monthAndYear, setMonthAndYear] = useState({ month, year });
-
-  const updateMonthAndYear = (increment: 1 | -1) => {
-    setMonthAndYear((prevData) => getNewMonthAndYear(prevData, increment));
-  };
-
+  const { monthAndYear, updateMonthAndYear } = useCalendarDate();
+  console.log(1);
   const data = useGetItems<IEvent>([
     queryKeys.events,
     monthAndYear.year,
@@ -37,7 +26,7 @@ const useEventActions = () => {
     createEvent,
     updateMonthAndYear,
     editEvent,
-    deleteEvent
+    deleteEvent,
   };
 };
 

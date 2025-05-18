@@ -34,11 +34,11 @@ const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
     setAnchorEl(null);
   };
   const { data, deleteEvent } = useEventActions();
-
+  console.log(data);
   //closing eventCard from from header
-  const { open, toggleDialog } = useContext(CalendarFormDialogContext);
+  const { toggleDialog } = useContext(CalendarFormDialogContext);
   const { toggleEventCardTuple } = useContext(EventCardDialogContext);
-  const { setFormData } = useContext(FormDataContext);
+  const { setIsEditing, setItemEdit } = useContext(FormDataContext);
 
   const specificEvent: IEvent | undefined = data.find(
     (event) => event._id === id
@@ -47,13 +47,11 @@ const EventCardHeader = ({ title, id }: { title: string; id: string }) => {
     return;
   }
   const handleEditEvent = () => {
-    // const { data: mascotData = [] } = useMascotActions();
-    // const mascotsUsed = mascotData.filter(
-    //   (mascot) => mascot.name === specificEvent?.mascots.name
-    // );
     const eventForEdit = formatDataForEdit(specificEvent);
-    setFormData(eventForEdit);
+    setItemEdit({ ...eventForEdit, _id: id });
+    setIsEditing();
     toggleDialog();
+    toggleEventCardTuple(null);
   };
 
   //implementing delete dialog hook

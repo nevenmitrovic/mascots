@@ -1,33 +1,33 @@
-import { EventDropArg, EventClickArg } from "@fullcalendar/core";
+import { EventClickArg } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
-import { useState, useRef } from "react";
-import dayjs from "dayjs";
+import { useRef } from "react";
 
 import { useContext } from "react";
 
-import { FormDataContext } from "contexts/FormDataContext";
 import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
 import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
 import { mapEventsToCalendar } from "utils/helperFunctions";
 
-import { type IEvent } from "types/eventTypes";
 import useEventActions from "hooks/useEventActions";
+import { useCalendarDate } from "contexts/CalendarDateContext";
 
 export const Calendar = () => {
   const { toggleDialog } = useContext(CalendarFormDialogContext);
-  const { setFormData } = useContext(FormDataContext);
   const { toggleEventCardTuple } = useContext(EventCardDialogContext);
 
-  const { data, updateMonthAndYear } = useEventActions();
+  const { data } = useEventActions();
+  const { updateMonthAndYear } = useCalendarDate();
   const calendarRef = useRef<FullCalendar | null>(null);
 
   const next = () => {
+    calendarRef.current?.getApi().next();
     updateMonthAndYear(+1);
   };
   const prev = () => {
+    calendarRef.current?.getApi().prev();
     updateMonthAndYear(-1);
   };
 
@@ -49,8 +49,6 @@ export const Calendar = () => {
       customLocationAddress: "",
       customLocationLink: "",
     };
-    setFormData(data);
-    toggleDialog();
   };
 
   const handleEventClick = (info: EventClickArg) => {

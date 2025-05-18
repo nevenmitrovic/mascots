@@ -1,8 +1,6 @@
 import {
-  ICreateEvent,
-  IEventDocument,
-  IEventFormType,
-  IEventFormTypeDocument,
+  type ICreateEvent,
+  type IEventFormType,
   type IEvent,
 } from "types/eventTypes";
 import { type LocationDocument } from "types/locationTypes";
@@ -10,7 +8,6 @@ import { type MascotDocument } from "types/mascotTypes";
 import { type AnimatorDocument } from "types/animatorsTypes";
 
 import dayjs from "dayjs";
-import { EventSchemaType } from "validations/eventSchema";
 
 type AnimatorSelectProps =
   | LocationDocument[]
