@@ -3,13 +3,14 @@ import { NextFunction, Request, Response } from "express";
 import { Controller } from "interfaces/controller.interface";
 
 import { EventService } from "events/event.service";
-import { eventSchema } from "events/event.validate";
+import { eventPatchSchema, eventSchema } from "events/event.validate";
 import { validationMiddleware } from "middlewares/validate.middleware";
 import { authMiddleware } from "middlewares/auth.middleware";
 
 export class EventController extends Controller {
   private eventService = new EventService();
   private schema = eventSchema;
+  private patchSchema = eventPatchSchema;
 
   constructor() {
     super("/events");
@@ -42,6 +43,13 @@ export class EventController extends Controller {
       authMiddleware,
       (req: Request, res: Response, next: NextFunction) =>
         this.deleteEvent(req, res, next)
+    );
+    this.router.patch(
+      `${this.path}/:id`,
+      validationMiddleware(this.patchSchema),
+      authMiddleware,
+      (req: Request, res: Response, next: NextFunction) =>
+        this.patchEvent(req, res, next)
     );
   }
 
@@ -84,6 +92,17 @@ export class EventController extends Controller {
     try {
       const { id } = req.params;
       const event = await this.eventService.deleteEvent(id);
+
+      return res.status(200).json(event);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async patchEvent(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const event = await this.eventService.patchEvent(id, req.body);
 
       return res.status(200).json(event);
     } catch (err) {

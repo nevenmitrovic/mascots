@@ -76,3 +76,8 @@ export const eventSchema = yup.object({
     )
     .optional(),
 });
+
+export const eventPatchSchema = yup.object().shape({
+  collector: eventSchema.fields.collector,
+  confirmed: eventSchema.fields.confirmed,
+});
