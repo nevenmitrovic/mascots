@@ -14,6 +14,7 @@ import {
   IUpdateEventResponse,
   IUpdateEventClient,
   IDeleteEventResponse,
+  IEvent,
 } from "events/event.model";
 
 import { getDateFromData } from "utils/globalUtils";
@@ -100,6 +101,27 @@ export class EventService {
       return {
         message: "event deleted successfully",
         data: deletedEvent,
+      };
+    } catch (err) {
+      const error = this.errorHandler.handleError(err as Error);
+      throw error;
+    }
+  }
+
+  async patchEvent(id: string, data: Pick<IEvent, "confirmed" | "collector">) {
+    try {
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid id");
+      }
+
+      const patchedEvent = await this.eventRepository.patchEvent(id, data);
+      if (!patchedEvent) {
+        throw new NotFoundError("event not found");
+      }
+
+      return {
+        message: "event patched successfully",
+        data: patchedEvent,
       };
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);

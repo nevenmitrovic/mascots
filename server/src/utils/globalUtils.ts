@@ -11,7 +11,12 @@ import {
 
 import { MongoServerError } from "mongodb";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import bcrypt from "bcryptjs";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const checkForErrors = (error: unknown) => {
   if (error instanceof MongoServerError && error.code === 11000) {

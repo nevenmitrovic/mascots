@@ -6,6 +6,7 @@ import {
   IEventDocument,
   ICreatedEvent,
   IUpdateEvent,
+  IEvent,
 } from "events/event.model";
 
 export class EventRepository {
@@ -76,13 +77,37 @@ export class EventRepository {
 
   async deleteEvent(id: string): Promise<IEventDocument | null> {
     try {
-      const event = this.eventModel
+      const event = await this.eventModel
         .findByIdAndDelete(id)
         .populate([
           { path: "collector", select: "-_id username" },
           { path: "animators", select: "-_id username" },
           { path: "mascots", select: "-_id name" },
         ])
+        .lean<IEventDocument>()
+        .exec();
+
+      return event;
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
+
+  async patchEvent(
+    id: string,
+    data: Pick<IEvent, "confirmed" | "collector">
+  ): Promise<IEventDocument | null> {
+    try {
+      const event = await this.eventModel
+        .findByIdAndUpdate(
+          id,
+          { $set: data },
+          {
+            new: true,
+            runValidators: true,
+          }
+        )
+        .populate([{ path: "collector", select: "-_id username" }])
         .lean<IEventDocument>()
         .exec();
 
