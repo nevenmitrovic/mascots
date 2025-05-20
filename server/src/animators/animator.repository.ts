@@ -92,4 +92,19 @@ export class AnimatorRepository {
       return checkForErrors(err);
     }
   }
+
+  async getAnimatorsEmails(): Promise<
+    Pick<IAnimatorDocument, "_id" | "email">[]
+  > {
+    try {
+      const res = await this.animatorModel.find({}).select("_id email").lean();
+
+      return res.map((animator) => ({
+        ...animator,
+        _id: animator._id.toString(),
+      }));
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
 }
