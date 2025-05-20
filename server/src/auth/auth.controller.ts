@@ -36,8 +36,8 @@ export class AuthController extends Controller {
     const { username, password } = req.body;
 
     try {
-      const token = await this.authService.login(username, password);
-      res.status(200).json({ token });
+      const response = await this.authService.login(username, password);
+      res.status(200).json(response);
     } catch (err) {
       next(err);
     }

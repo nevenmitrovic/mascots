@@ -13,12 +13,17 @@ import { BadRequestError } from "errors/bad-request.error";
 import { UnauthorizedError } from "errors/unauthorized.error";
 import { NotFoundError } from "errors/not-found.error";
 
+interface LoginResponse {
+  token: string;
+  user: IAnimatorDocument;
+}
+
 export class AuthService {
   private readonly authRepository = new AuthRepository();
   private readonly animatorRepository = new AnimatorRepository();
   private errorHandler = new ErrorHandlerService();
 
-  async login(username: string, password: string): Promise<string> {
+  async login(username: string, password: string): Promise<LoginResponse> {
     try {
       const animator = await this.authRepository.getAnimatorByUsername(
         username
@@ -34,7 +39,10 @@ export class AuthService {
       }
 
       const token = this.createToken(animator._id.toString());
-      return token;
+      return {
+        token,
+        user: animator,
+      };
     } catch (err) {
       this.errorHandler.handleError(err as Error);
       throw err;
