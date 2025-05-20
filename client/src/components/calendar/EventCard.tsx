@@ -24,7 +24,7 @@ import dayjs from "dayjs";
 
 const EventCard = ({ id }: EventCardProps) => {
   //getting event
-  const { data } = useEventActions();
+  const { data, partialEditEvent } = useEventActions();
   const specificEvent: IEvent | undefined = data.find(
     (event) => event._id === id
   );
@@ -132,6 +132,7 @@ const EventCard = ({ id }: EventCardProps) => {
           variant="outlined"
           sx={{ color: "var(--color-primary)", margin: "0.5rem" }}
           disabled={specificEvent.confirmed !== "pending"}
+          onClick={() => partialEditEvent({ data: "confirmed", id })}
         >
           Potvrdi
         </Button>
@@ -140,6 +141,7 @@ const EventCard = ({ id }: EventCardProps) => {
           variant="outlined"
           sx={{ color: "var(--color-primary)" }}
           disabled={specificEvent.confirmed !== "pending"}
+          onClick={() => partialEditEvent({ data: "rejected", id })}
         >
           Otkaži
         </Button>
@@ -148,6 +150,9 @@ const EventCard = ({ id }: EventCardProps) => {
           variant="outlined"
           sx={{ color: "var(--color-primary)" }}
           disabled={specificEvent.collector.length > 0}
+          onClick={() =>
+            partialEditEvent({ data: ["6814b85276bf4fd4d785d8ef"], id })
+          }
         >
           Prikupio novac
         </Button>

@@ -3,10 +3,11 @@ import {
   useDeleteItem,
   useEditItem,
   useGetItems,
+  usePartialEditItem,
 } from "./global/genericCRUDHooks";
 import { queryKeys } from "reactQuery/constants";
 
-import { ICreateEvent, IEvent } from "types/eventTypes";
+import { EditEvent, ICreateEvent, IEvent } from "types/eventTypes";
 import { useCalendarDate } from "contexts/CalendarDateContext";
 
 const useEventActions = () => {
@@ -19,11 +20,13 @@ const useEventActions = () => {
   ]);
   const createEvent = useCreateItem<ICreateEvent>([queryKeys.events]);
   const editEvent = useEditItem<ICreateEvent>([queryKeys.events]);
+  const partialEditEvent = usePartialEditItem<EditEvent>([queryKeys.events])
   const deleteEvent = useDeleteItem([queryKeys.events]);
 
   return {
     data,
     createEvent,
+    partialEditEvent,
     updateMonthAndYear,
     editEvent,
     deleteEvent,

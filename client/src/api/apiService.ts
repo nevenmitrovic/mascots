@@ -9,6 +9,7 @@ export const createItem = async <T>(
   URLextension: string,
   data: T
 ): Promise<T> => {
+  console.log(data)
   return apiRequest(() => api.post(`/${URLextension}`, data));
 };
 
@@ -18,6 +19,14 @@ export const editItem = async <T>(
   data: T
 ): Promise<T> => {
   return apiRequest(() => api.put(`/${URLextension}/${id}`, data));
+};
+
+export const partialEditItem = async <T>(
+  URLextension: string,
+  id: string,
+  data: T
+): Promise<T> => {
+  return apiRequest(() => api.patch(`/${URLextension}/${id}`, data));
 };
 
 export const deleteItem = async (

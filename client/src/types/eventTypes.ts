@@ -1,5 +1,5 @@
 export interface EventCardProps {
-  id: string | null;
+  id: string;
 }
 
 export type ConfirmedType = "pending" | "confirmed" | "rejected";
@@ -58,3 +58,7 @@ export interface IEvent {
   confirmed: ConfirmedType;
   collector: { username: string; _id: string }[];
 }
+
+export type EditCollector = [string];
+
+export type EditEvent = EditCollector | ConfirmedType;

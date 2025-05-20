@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryClient } from "reactQuery/queryClient";
 
-import { createItem, deleteItem, editItem, fetchAll } from "api/apiService";
+import { createItem, deleteItem, editItem, fetchAll, partialEditItem } from "api/apiService";
 
 import { useToast } from "contexts/ToastContext";
 
@@ -52,7 +52,27 @@ export const useEditItem = <T>(queryKey: string[]) => {
       showToast("Item je uspešno ažuriran!", "success");
     },
     onError: (error: any) => {
-      showToast(`Item nije ažurirana: ${error.message}`, "error");
+      showToast(`Item nije ažuriran: ${error.message}`, "error");
+    },
+  });
+  return mutate;
+};
+
+export const usePartialEditItem = <T>(queryKey: string[]) => {
+  const { showToast } = useToast();
+
+  const URLextension = queryKey[0];
+
+  const { mutate } = useMutation({
+    mutationFn: ({ data, id }: { data: T; id: string }) => {
+      return partialEditItem<T>(URLextension, id, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      showToast("Item je uspešno ažuriran!", "success");
+    },
+    onError: (error: any) => {
+      showToast(`Item nije ažuriran: ${error.message}`, "error");
     },
   });
   return mutate;
