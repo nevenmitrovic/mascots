@@ -7,6 +7,7 @@ export interface IAnimator {
   email: string;
   phone: string;
   paycheck: number;
+  role: "user" | "admin";
 }
 
 export interface IAnimatorDocument extends IAnimator {
@@ -46,6 +47,11 @@ const animatorSchema = new Schema<IAnimator>(
       type: Number,
       required: true,
       default: 0,
+    },
+    role: {
+      type: String,
+      required: true,
+      default: "user",
     },
   },
   {

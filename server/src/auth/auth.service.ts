@@ -15,7 +15,7 @@ import { NotFoundError } from "errors/not-found.error";
 
 interface LoginResponse {
   token: string;
-  user: IAnimatorDocument;
+  user: Omit<IAnimatorDocument, "password">;
 }
 
 export class AuthService {
@@ -23,7 +23,7 @@ export class AuthService {
   private readonly animatorRepository = new AnimatorRepository();
   private errorHandler = new ErrorHandlerService();
 
-  async login(username: string, password: string): Promise<LoginResponse> {
+  async login(username: string, pass: string): Promise<LoginResponse> {
     try {
       const animator = await this.authRepository.getAnimatorByUsername(
         username
@@ -33,15 +33,16 @@ export class AuthService {
         throw new UnauthorizedError("invalid credentials");
       }
 
-      const isPasswordValid = await bcrypt.compare(password, animator.password);
+      const isPasswordValid = await bcrypt.compare(pass, animator.password);
       if (!isPasswordValid) {
         throw new UnauthorizedError("invalid credentials");
       }
 
       const token = this.createToken(animator._id.toString());
+      const { password, ...user } = animator;
       return {
         token,
-        user: animator,
+        user: user,
       };
     } catch (err) {
       this.errorHandler.handleError(err as Error);
