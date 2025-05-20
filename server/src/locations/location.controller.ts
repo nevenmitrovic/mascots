@@ -6,6 +6,7 @@ import { LocationService } from "locations/location.service";
 import { locationSchema } from "locations/location.validate";
 import { validationMiddleware } from "middlewares/validate.middleware";
 import { authMiddleware } from "middlewares/auth.middleware";
+import { authorizeMiddleware } from "middlewares/authorize.middleware";
 
 export class LocationController extends Controller {
   private readonly locationService = new LocationService();
@@ -21,6 +22,7 @@ export class LocationController extends Controller {
       `${this.path}`,
       validationMiddleware(this.schema),
       authMiddleware,
+      authorizeMiddleware(["admin"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.createLocation(req, res, next)
     );
@@ -28,6 +30,7 @@ export class LocationController extends Controller {
     this.router.get(
       `${this.path}`,
       authMiddleware,
+      authorizeMiddleware(["admin", "user"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.getLocations(req, res, next)
     );
@@ -35,6 +38,7 @@ export class LocationController extends Controller {
     this.router.get(
       `${this.path}/:id`,
       authMiddleware,
+      authorizeMiddleware(["admin", "user"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.getLocationById(req, res, next)
     );
@@ -43,6 +47,7 @@ export class LocationController extends Controller {
       `${this.path}/:id`,
       validationMiddleware(this.schema),
       authMiddleware,
+      authorizeMiddleware(["admin"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.updateLocation(req, res, next)
     );
@@ -50,6 +55,7 @@ export class LocationController extends Controller {
     this.router.delete(
       `${this.path}/:id`,
       authMiddleware,
+      authorizeMiddleware(["admin"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.deleteLocation(req, res, next)
     );

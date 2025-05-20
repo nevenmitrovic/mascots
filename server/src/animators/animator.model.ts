@@ -51,6 +51,7 @@ const animatorSchema = new Schema<IAnimator>(
     role: {
       type: String,
       required: true,
+      enum: ["user", "admin"],
       default: "user",
     },
   },

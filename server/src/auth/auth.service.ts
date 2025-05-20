@@ -38,7 +38,7 @@ export class AuthService {
         throw new UnauthorizedError("invalid credentials");
       }
 
-      const token = this.createToken(animator._id.toString());
+      const token = this.createToken(animator._id.toString(), animator.role);
       const { password, ...user } = animator;
       return {
         token,
@@ -50,12 +50,12 @@ export class AuthService {
     }
   }
 
-  public createToken(id: string): string {
+  public createToken(id: string, role: "user" | "admin"): string {
     if (!Types.ObjectId.isValid(id)) {
       throw new BadRequestError("invalid id");
     }
 
-    return jwt.sign({ _id: id }, env.SECRET_KEY, { expiresIn: "1h" });
+    return jwt.sign({ _id: id, role }, env.SECRET_KEY, { expiresIn: "1h" });
   }
 
   private removePassword(

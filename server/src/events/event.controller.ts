@@ -6,6 +6,7 @@ import { EventService } from "events/event.service";
 import { eventPatchSchema, eventSchema } from "events/event.validate";
 import { validationMiddleware } from "middlewares/validate.middleware";
 import { authMiddleware } from "middlewares/auth.middleware";
+import { authorizeMiddleware } from "middlewares/authorize.middleware";
 
 export class EventController extends Controller {
   private eventService = new EventService();
@@ -22,12 +23,14 @@ export class EventController extends Controller {
       `${this.path}`,
       validationMiddleware(this.schema),
       authMiddleware,
+      authorizeMiddleware(["admin"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.createEvent(req, res, next)
     );
     this.router.get(
       `${this.path}/:year/:month`,
       authMiddleware,
+      authorizeMiddleware(["admin", "user"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.getEvents(req, res, next)
     );
@@ -35,12 +38,14 @@ export class EventController extends Controller {
       `${this.path}/:id`,
       validationMiddleware(this.schema),
       authMiddleware,
+      authorizeMiddleware(["admin"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.updateEvent(req, res, next)
     );
     this.router.delete(
       `${this.path}/:id`,
       authMiddleware,
+      authorizeMiddleware(["admin"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.deleteEvent(req, res, next)
     );
@@ -48,6 +53,7 @@ export class EventController extends Controller {
       `${this.path}/:id`,
       validationMiddleware(this.patchSchema),
       authMiddleware,
+      authorizeMiddleware(["admin", "user"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.patchEvent(req, res, next)
     );

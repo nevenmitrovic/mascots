@@ -4,15 +4,16 @@ import jwt from "jsonwebtoken";
 import { UnauthorizedError } from "errors/unauthorized.error";
 
 import { env } from "config/env";
-import { AuthService } from "auth/auth.service";
+
+export interface AuthenticatedRequest extends Request {
+  role?: "user" | "admin";
+}
 
 export function authMiddleware(
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) {
-  const authService = new AuthService();
-
   const authHeaeder =
     (req.headers["Authorization"] as string) ||
     (req.headers["authorization"] as string);
@@ -26,11 +27,13 @@ export function authMiddleware(
     return next(new UnauthorizedError("missing token"));
   }
 
-  const decoded = jwt.verify(token, env.SECRET_KEY) as { _id: string };
-  if (!decoded._id) return next(new UnauthorizedError("invalid token"));
+  const decoded = jwt.verify(token, env.SECRET_KEY) as {
+    _id: string;
+    role: "user" | "admin";
+  };
+  if (!decoded._id) next(new UnauthorizedError("invalid token"));
+  if (!decoded.role) next(new UnauthorizedError("invalid token"));
 
-  const user = authService.isLoggedIn(decoded._id);
-  if (!user) return next(new UnauthorizedError("invalid token"));
-
+  req.role = decoded.role;
   next();
 }

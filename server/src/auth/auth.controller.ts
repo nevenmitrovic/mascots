@@ -7,6 +7,7 @@ import { authMiddleware } from "middlewares/auth.middleware";
 import { NextFunction, Request, Response } from "express";
 
 import { BadRequestError } from "errors/bad-request.error";
+import { authorizeMiddleware } from "middlewares/authorize.middleware";
 
 export class AuthController extends Controller {
   private readonly authService = new AuthService();
@@ -27,6 +28,7 @@ export class AuthController extends Controller {
     this.router.get(
       `${this.path}/me/:id`,
       authMiddleware,
+      authorizeMiddleware(["admin", "user"]),
       (req: Request, res: Response, next: NextFunction) =>
         this.isLoggedIn(req, res, next)
     );
