@@ -2,13 +2,13 @@ import { useState } from "react";
 
 import { useToggle } from "./useToggle";
 
-type ItemToEdit<T> = {
+export type ItemToEdit<T> = {
   id: string;
   item: Omit<T, "_id">;
 };
 
 const useItemToEdit = <T extends { _id: string }>() => {
-  const [itemToEdit, setItemToEdit] = useState<ItemToEdit<T> | null>();
+  const [itemToEdit, setItemToEdit] = useState<ItemToEdit<T> | null>(null);
   const [editDialog, toggleEditDialog] = useToggle(false);
 
   const setItemEdit = (data: T | null) => {

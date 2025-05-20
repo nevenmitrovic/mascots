@@ -1,24 +1,42 @@
-import { createContext, useState } from "react";
-
-import { EventSchemaType } from "validations/eventSchema";
+import useItemToEdit, { ItemToEdit } from "hooks/global/useItemToEdit";
+import { useToggle } from "hooks/global/useToggle";
+import { createContext } from "react";
+import {
+  type IEventFormType,
+  type IEventFormTypeDocument,
+} from "types/eventTypes";
 
 type FormDataContextType = {
-  formData: EventSchemaType | undefined;
-  setFormData: (data: EventSchemaType | undefined) => void;
+  isEditing: boolean;
+  setIsEditing: () => void;
+  itemToEdit: ItemToEdit<IEventFormType> | null;
+  setItemEdit: (data: IEventFormTypeDocument | null) => void;
 };
 
 export const FormDataContext = createContext<FormDataContextType>({
-  formData: undefined,
-  setFormData: () => {},
+  isEditing: false,
+  setIsEditing: () => {},
+  itemToEdit: null,
+  setItemEdit: () => {},
 });
 
-export const FormDataProvider = ({ children }: any) => {
-  const [formData, setFormData] = useState<EventSchemaType | undefined>(
-    undefined
-  );
+export const FormDataProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const { itemToEdit, setItemEdit } = useItemToEdit<IEventFormTypeDocument>();
+  const [isEditing, setIsEditing] = useToggle(false);
 
   return (
-    <FormDataContext.Provider value={{ formData, setFormData }}>
+    <FormDataContext.Provider
+      value={{
+        isEditing,
+        setIsEditing,
+        itemToEdit,
+        setItemEdit,
+      }}
+    >
       {children}
     </FormDataContext.Provider>
   );

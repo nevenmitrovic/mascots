@@ -10,20 +10,33 @@ import { CalendarFormDialogContext } from "contexts/CalendarFormDialogContext";
 import { useToast } from "contexts/ToastContext";
 import { EventCardDialogContext } from "contexts/EventCardDialogContext";
 
-import { eventFormInputs } from "types/eventTypes";
-import { eventSchema, EventSchemaType } from "validations/eventSchema";
+import useEventActions from "hooks/useEventActions";
+import useEventFormInputs from "hooks/useEventFormInputs";
+
+import { eventSchema } from "validations/eventSchema";
+
+import { formatEventData } from "utils/helperFunctions";
+import { IEventFormType } from "types/eventTypes";
 
 const CalendarContainer = () => {
-  const { open, toggleDialog } = useContext(CalendarFormDialogContext);
-  const { formData } = useContext(FormDataContext);
+  const { open, handleDialogClose } = useContext(CalendarFormDialogContext);
+  const { isEditing, setIsEditing, itemToEdit } = useContext(FormDataContext);
   const { eventCardTuple, toggleEventCardTuple } = useContext(
     EventCardDialogContext
   );
+  const eventFormInputs = useEventFormInputs();
   const { showToast } = useToast();
+  const { createEvent, editEvent } = useEventActions();
 
-  const handleEventSubmit = (data: any) => {
-    console.log(data);
-    toggleDialog();
+  const handleEventSubmit = (data: IEventFormType) => {
+    const formatData = formatEventData(data);
+    setIsEditing();
+    if (isEditing && itemToEdit) {
+      editEvent({ data: formatData, id: itemToEdit.id });
+    } else {
+      createEvent(formatData);
+    }
+    handleDialogClose();
     showToast("Lokacija je uspesno sacuvana", "success");
   };
 
@@ -32,13 +45,13 @@ const CalendarContainer = () => {
       <Box sx={{ padding: "0.5rem" }}>
         <Calendar />
       </Box>
-      <Dialog open={open} onClose={toggleDialog}>
-        <FormComponent<EventSchemaType>
+      <Dialog open={open} onClose={handleDialogClose}>
+        <FormComponent<IEventFormType>
           formInputs={eventFormInputs}
           handleFormSubmitt={handleEventSubmit}
           schema={eventSchema}
           header="Dodaj dogadjaj"
-          item={formData}
+          item={itemToEdit?.item}
         />
       </Dialog>
       <Dialog

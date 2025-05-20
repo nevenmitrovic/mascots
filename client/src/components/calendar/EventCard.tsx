@@ -1,126 +1,163 @@
-import { useContext, useEffect } from "react";
-import { Link } from "react-router";
 import {
   CardContent,
   Typography,
   CardActions,
   Button,
   Box,
+  Divider,
+  Card,
 } from "@mui/material";
+import LocationPinIcon from "@mui/icons-material/LocationPin";
 
-import {type EventCardProps, type IEvent } from "types/eventTypes";
+import EventCardHeader from "./EventCardHeader";
+import EventContentField from "./EventContentField";
 
-import { EventCardDialogContext } from "../../contexts/EventCardDialogContext";
+import { Link } from "react-router";
+
+import { type EventCardProps, type IEvent } from "types/eventTypes";
+
+import useEventActions from "hooks/useEventActions";
+
+import { formatPrice, getMonthYearDetails } from "utils/helperFunctions";
+
+import dayjs from "dayjs";
 
 const EventCard = ({ id }: EventCardProps) => {
-  // mock data
-  const event: IEvent = {
-    _id: "652f3c8e9f1b2a001c8e4d1a",
-    title: "Birthday Party - Marko",
-    date: "2025-04-10",
-    time: "17:30",
-    location: [
-      {
-        address: "Hotel Slavija",
-        location: "https://maps.app.goo.gl/crzt24379aAXrSAc6",
-      },
-    ],
-    maskotas: ["Mickey Mouse", "SpongeBob"],
-    animators: ["Ana", "Milan"],
-    price: "150",
-    confirmed: "y",
-    collector: "Milan",
-  };
+  //getting event
+  const { data, partialEditEvent } = useEventActions();
+  const specificEvent: IEvent | undefined = data.find(
+    (event) => event._id === id
+  );
+
+  if (!specificEvent) {
+    return <Typography>There is no event to display</Typography>;
+  }
+
+  //format date
+  const { date, time } = getMonthYearDetails(dayjs(specificEvent.date));
+  //format price
+  const price = formatPrice(specificEvent.price);
 
   return (
-    <>
+    <Card sx={{ minWidth: "350px" }}>
+      <EventCardHeader title={specificEvent.title} id={specificEvent._id} />
+      <Divider />
       <CardContent
         sx={{
-          padding: "1rem",
-          backgroundColor: "var(--color-accent)",
           color: "var(--color-primary)",
+          margin: 0,
+          padding: "0 1rem",
         }}
       >
-        <Typography gutterBottom sx={{ fontSize: 24, fontWeight: "bold" }}>
-          {event.title}
-        </Typography>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
-            Datum i vreme:
-          </Typography>
-          <Typography sx={{ fontSize: 18 }}>
-            {Intl.DateTimeFormat("sr-RS", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            }).format(new Date(event.date))}
-          </Typography>
-          <Typography sx={{ fontSize: 18 }}>{event.time}</Typography>
+        <Box
+          sx={{
+            margin: "0.5rem 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+          component={"div"}
+        >
+          <EventContentField label="Datum" value={date} sx={{ width: "50%" }} />
+          <Divider orientation="vertical" flexItem />
+          <EventContentField
+            label="Vreme"
+            value={time}
+            sx={{ width: "50%", marginLeft: "1rem" }}
+          />
         </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
-            Lokacija:
-          </Typography>
-          <Typography sx={{ fontSize: 18 }}>
-            {event.location[0].address}
-          </Typography>
-          <Link
-            to={event.location[0].location}
-            target="_blank"
-            style={{
-              textDecoration: "none",
-              color: "var(--color-secondary)",
-              fontWeight: "bold",
-            }}
-          >
-            Google Maps Link
-          </Link>
+        <Divider />
+        <Box
+          sx={{
+            margin: "0.5rem 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+          }}
+          component={"div"}
+        >
+          <EventContentField
+            label="Organizator"
+            value={specificEvent.organizer.name}
+            sx={{ width: "50%" }}
+          />
+          <EventContentField
+            label="telefon"
+            value={specificEvent.organizer.phone}
+            sx={{ width: "50%", marginLeft: "1rem" }}
+          />
         </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
-            Maskote:
-          </Typography>
-          {event.maskotas.map((macota) => (
-            <Typography key={macota} sx={{ fontSize: 18 }}>
-              {macota}
-            </Typography>
-          ))}
-        </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
-            Animatori:
-          </Typography>
-          {event.animators.map((animator) => (
-            <Typography key={animator} sx={{ fontSize: 18 }}>
-              {animator}
-            </Typography>
-          ))}
-        </Box>
-        <Box sx={{ mb: 1 }} component={"div"}>
-          <Typography sx={{ fontSize: 20, fontWeight: "bold" }}>
-            Cena:
-          </Typography>
-          <Typography sx={{ fontSize: 18 }}>
-            {Intl.NumberFormat("sr-RS", {
-              style: "currency",
-              currency: "EUR",
-              minimumFractionDigits: 0,
-            }).format(Number(event.price))}
-          </Typography>
-        </Box>
+        <Divider />
+        <EventContentField
+          label="Lokacija"
+          value={
+            <>
+              {specificEvent.location.address}
+              <Link
+                to={specificEvent.location.link}
+                target="_blank"
+                style={{
+                  color: "var(--color-secondary)",
+                  fontWeight: "bold",
+                }}
+              >
+                <LocationPinIcon />
+              </Link>
+            </>
+          }
+        />
+        <Divider />
+        <EventContentField
+          label={specificEvent.animators.length > 1 ? "Animatori" : "Animator"}
+          value={specificEvent.animators.map((a) => a.username).join(", ")}
+        />
+        <Divider />
+        <EventContentField
+          label={specificEvent.mascots.length > 1 ? "Maskote" : "Maskota"}
+          value={specificEvent.mascots.map((a) => a.name).join(", ")}
+        />
+        <Divider />
+        <EventContentField label="cena" value={price} />
+        <Divider />
       </CardContent>
-      <CardActions>
-        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+      <CardActions
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginRight: "1rem",
+        }}
+      >
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ color: "var(--color-primary)", margin: "0.5rem" }}
+          disabled={specificEvent.confirmed !== "pending"}
+          onClick={() => partialEditEvent({ data: "confirmed", id })}
+        >
           Potvrdi
         </Button>
-        <Button size="small" sx={{ color: "var(--color-primary)" }}>
-          Otkazi
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ color: "var(--color-primary)" }}
+          disabled={specificEvent.confirmed !== "pending"}
+          onClick={() => partialEditEvent({ data: "rejected", id })}
+        >
+          Otkaži
         </Button>
-        <Button size="small" sx={{ color: "var(--color-primary)" }}>
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ color: "var(--color-primary)" }}
+          disabled={specificEvent.collector.length > 0}
+          onClick={() =>
+            partialEditEvent({ data: ["6814b85276bf4fd4d785d8ef"], id })
+          }
+        >
           Prikupio novac
         </Button>
       </CardActions>
-    </>
+    </Card>
   );
 };
 

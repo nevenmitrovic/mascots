@@ -1,105 +1,64 @@
-import { type FormInputConfig } from "./formTypes";
-
-import { type Location } from "./locationTypes";
-
 export interface EventCardProps {
-  id: string | null;
+  id: string;
 }
 
-export type confirmedType = "pending" | "confirmed" | "rejected";
+export type ConfirmedType = "pending" | "confirmed" | "rejected";
 
-export interface IEvent {
-  _id?: string;
+export type LocationSelect = { link: string; address: string };
+
+export interface IOrganizer {
+  name: string;
+  phone: string;
+  social: "facebook" | "instagram" | "viber" | "whatsapp";
+}
+
+export interface IEventFormType {
   date: string;
   time: string;
-  location: Omit<Location, "_id" | "name" | "phone">[];
+  location: Array<LocationSelect | "none">;
+  customLocationAddress?: string;
+  customLocationLink?: string;
   mascots: string[];
   animators: string[];
   price: string;
   title: string;
-  collector: string;
-  confirmed: confirmedType;
+  name: string;
+  phone: string;
+  social: Array<"facebook" | "instagram" | "viber" | "whatsapp">;
 }
 
-// MOCK DATA
-export const eventFormInputs: FormInputConfig<any>[] = [
-  {
-    name: "date",
-    label: "Datum događaja",
-    type: "picker",
-    sx: { mb: "2rem" },
-  },
-  {
-    name: "time",
-    label: "Vreme događaja",
-    type: "picker",
-    sx: { mb: "2rem" },
-  },
-  {
-    name: "title",
-    label: "Naziv događaja",
-    type: "text",
-    sx: { mb: "2rem" },
-  },
-  {
-    name: "location",
-    label: "Lokacija",
-    type: "select",
-    sx: { mb: "2rem" },
-    options: [
-      {
-        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL91",
-        label: "Igraonica Test3",
-      },
-      {
-        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL92",
-        label: "Igraonica Test2",
-      },
-      {
-        value: "https://maps.app.goo.gl/Fj6R7U4AaD9wfsWL93",
-        label: "Igraonica Test",
-      },
-      { value: "none", label: "Lokacija nije u ponudi" },
-    ],
-  },
-  {
-    name: "customLocationAddress",
-    label: "Adresa Lokacije",
-    type: "text",
-    sx: { mb: "2rem", display: `none` },
-  },
-  {
-    name: "customLocationLink",
-    label: "Google maps link Lokacije",
-    type: "text",
-    sx: { mb: "2rem", display: `none` },
-  },
-  {
-    name: "maskotas",
-    label: "Maskote",
-    type: "select",
-    sx: { mb: "2rem" },
-    options: [
-      { value: "1", label: "Elsa" },
-      { value: "2", label: "Spajdermen" },
-      { value: "3", label: "Pepa Prase" },
-    ],
-  },
-  {
-    name: "animators",
-    label: "Animatori",
-    type: "select",
-    sx: { mb: "2rem" },
-    options: [
-      { value: "1", label: "Neven" },
-      { value: "2", label: "Igor" },
-      { value: "3", label: "Neki Lik" },
-    ],
-  },
-  {
-    name: "price",
-    label: "Cena",
-    type: "text",
-    sx: { mb: "2rem" },
-  },
-];
+export interface IEventFormTypeDocument extends IEventFormType {
+  _id: string;
+}
+
+export interface ICreateEvent {
+  date: string;
+  time: string;
+  location: LocationSelect;
+  mascots: string[];
+  animators: string[];
+  price: string;
+  title: string;
+  organizer: IOrganizer;
+}
+
+export interface ICreateEventDocument extends ICreateEvent {
+  _id: string;
+}
+
+export interface IEvent {
+  _id: string;
+  date: Date;
+  location: LocationSelect;
+  title: string;
+  price: number;
+  organizer: IOrganizer;
+  mascots: { name: string; _id: string }[];
+  animators: { username: string; _id: string }[];
+  confirmed: ConfirmedType;
+  collector: { username: string; _id: string }[];
+}
+
+export type EditCollector = [string];
+
+export type EditEvent = EditCollector | ConfirmedType;

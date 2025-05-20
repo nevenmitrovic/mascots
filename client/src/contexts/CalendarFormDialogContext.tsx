@@ -7,39 +7,30 @@ import { FormDataContext } from "./FormDataContext";
 
 type CalendarFormDialogContextType = {
   open: boolean;
-  toggleDialog: () => void;
+  handleDialogClose: () => void;
+   toggleDialog: () => void,
 };
 
 export const CalendarFormDialogContext =
   createContext<CalendarFormDialogContextType>({
     open: false,
+    handleDialogClose: () => {},
     toggleDialog: () => {},
   });
 
 export const CalendarFormDialogProvider = ({ children }: any) => {
-  const { setFormData } = useContext(FormDataContext);
   const [open, toggleDialog] = useToggle(false);
-
-  useEffect(() => {
-    if (!open) {
-      setFormData({
-        title: "",
-        date: "",
-        time: "",
-        location: [],
-        maskotas: [],
-        animators: [],
-        price: "",
-        confirmed: "",
-        collector: "",
-        customLocationAddress: "",
-        customLocationLink: "",
-      });
-    }
-  }, [open]);
+  const { setIsEditing, setItemEdit } = useContext(FormDataContext);
+  const handleDialogClose = () => {
+    toggleDialog();
+    setIsEditing();
+    setItemEdit(null);
+  };
 
   return (
-    <CalendarFormDialogContext.Provider value={{ open, toggleDialog }}>
+    <CalendarFormDialogContext.Provider
+      value={{ open, handleDialogClose, toggleDialog }}
+    >
       {children}
     </CalendarFormDialogContext.Provider>
   );

@@ -39,9 +39,9 @@ export class EventRepository {
           },
         })
         .populate([
-          { path: "collector", select: "-_id username" },
-          { path: "animators", select: "-_id username" },
-          { path: "mascots", select: "-_id name" },
+          { path: "collector", select: "_id username" },
+          { path: "animators", select: "_id username" },
+          { path: "mascots", select: "_id name" },
         ])
         .lean<IEventDocument[]>()
         .exec();
