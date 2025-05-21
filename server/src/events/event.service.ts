@@ -24,6 +24,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { Types } from "mongoose";
+import { transporter } from "config/nodemailer";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -137,21 +138,22 @@ export class EventService {
       const allAnimatorsEmails =
         await this.animatorRepository.getAnimatorsEmails();
 
-      const filteredEmails = allAnimatorsEmails.map((animator) => {
-        if (ids.includes(animator._id)) return animator;
-      });
+      const filteredEmails = allAnimatorsEmails
+        .filter((animator) => ids.includes(animator._id))
+        .map((animator) => animator.email);
 
-      // await nodemailerClient.sendMail({
-      //   from: '"prolearner" <nevenmitrovic4@gmail.com>',
-      //   replyTo: "nevenmitrovic4@gmail.com, igor.sasic.coding@gmail.com",
-      //   to: filteredEmails.join(", "),
-      //   subject: "Dogadjaj kreiran",
-      //   text:
-      //     "Postovani,\n\n" +
-      //     "Dogadjaj u kom ste navedeni je kreiran, molimo vas udjite na website i pogledajte detaljne informacije.\n\n" +
-      //     "Srdacan pozdrav,\n" +
-      //     "Vas nadredjeni.",
-      // });
+      // email will go to promotion section in inbox (this can be resolved by implementing @getbrevo package)
+      await transporter.sendMail({
+        from: '"prolearner" <nevenmitrovic4@gmail.com>',
+        replyTo: "nevenmitrovic4@gmail.com, igor.sasic.coding@gmail.com",
+        to: filteredEmails.join(", "),
+        subject: "Dogadjaj kreiran",
+        text:
+          "Postovani,\n\n" +
+          "Dogadjaj u kom ste navedeni je kreiran, molimo vas udjite na website i pogledajte detaljne informacije.\n\n" +
+          "Srdacan pozdrav,\n" +
+          "Vas nadredjeni.",
+      });
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
       throw error;
