@@ -1,5 +1,14 @@
 import { Schema, model } from "mongoose";
 
+export interface IReport {
+  animatorId: string;
+  payPeriod: string;
+  paid: boolean;
+  total: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 const ReportSchema = new Schema(
   {
     animatorId: {
@@ -30,4 +39,4 @@ const ReportSchema = new Schema(
 
 ReportSchema.index({ animatorId: 1, payPeriod: 1 }, { unique: true });
 
-export const ReportModel = model("Report", ReportSchema);
+export const ReportModel = model<IReport>("Report", ReportSchema);
