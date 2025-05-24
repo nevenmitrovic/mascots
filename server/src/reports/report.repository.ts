@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { IReport, IReportDocument, ReportModel } from "reports/report.model";
 import { checkForErrors, getRangeForDates } from "utils/globalUtils";
 
@@ -18,12 +19,16 @@ export class ReportRepository {
     }
   }
 
+  // method can be called only if the month is in the past - disable button on client side
   async getReportForAnimator(
     id: string,
     year: number,
     month: number
   ): Promise<IReportDocument | null> {
     try {
+      // checking if the requested month is in the future
+      if (month > dayjs().get("month") + 1) return null;
+
       const { from, to } = getRangeForDates(year, month);
 
       const report = await this.reportModel
