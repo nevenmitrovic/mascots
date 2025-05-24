@@ -2,11 +2,15 @@ import { Schema, model } from "mongoose";
 
 export interface IReport {
   animatorId: string;
-  payPeriod: string;
+  payPeriod: Date;
   paid: boolean;
   total: number;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface IReportDocument extends IReport {
+  _id: string;
 }
 
 const ReportSchema = new Schema(
@@ -17,7 +21,7 @@ const ReportSchema = new Schema(
       required: true,
     },
     payPeriod: {
-      type: String, // YYYY-MM
+      type: Date,
       index: true,
       required: true,
     },
