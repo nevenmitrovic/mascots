@@ -2,8 +2,13 @@ import { Schema, model } from "mongoose";
 
 const ReportSchema = new Schema(
   {
+    animatorId: {
+      type: Schema.Types.ObjectId,
+      ref: "Animator",
+      required: true,
+    },
     payPeriod: {
-      type: String, // Format: 'YYYY-MM'
+      type: String, // YYYY-MM
       index: true,
       required: true,
     },
@@ -15,14 +20,14 @@ const ReportSchema = new Schema(
     total: {
       type: Number,
       required: true,
-      default: 0,
     },
   },
   {
     versionKey: false,
+    timestamps: true,
   }
 );
 
-ReportSchema.index({ payPeriod: 1 }, { unique: true });
+ReportSchema.index({ animatorId: 1, payPeriod: 1 }, { unique: true });
 
-export const Paycheck = model("Report", ReportSchema);
+export const ReportModel = model("Report", ReportSchema);
