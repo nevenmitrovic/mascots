@@ -22,7 +22,7 @@ export class ReportRepository {
     id: string,
     year: number,
     month: number
-  ): Promise<IReport | null> {
+  ): Promise<IReportDocument | null> {
     try {
       const { from, to } = getRangeForDates(year, month);
 
@@ -34,12 +34,68 @@ export class ReportRepository {
             $lt: to,
           },
         })
-        .lean<IReport>()
+        .lean<IReportDocument>()
         .exec();
 
       if (!report) return null;
 
-      return report;
+      return {
+        ...report,
+        _id: report._id.toString(),
+      };
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
+
+  async createReportForAnimator(data: IReport): Promise<IReportDocument> {
+    try {
+      const report = await this.reportModel.create(data);
+
+      return {
+        ...report,
+        _id: report._id.toString(),
+      };
+    } catch (err) {
+      return checkForErrors(err);
+    }
+  }
+
+  async patchReport(
+    id: string,
+    data: Pick<IReport, "paid">,
+    year: number,
+    month: number
+  ): Promise<IReportDocument | null> {
+    try {
+      const { from, to } = getRangeForDates(year, month);
+
+      const report = await this.reportModel
+        .findOneAndUpdate(
+          {
+            animatorId: id,
+            payPeriod: {
+              $gte: from,
+              $lt: to,
+            },
+          },
+          {
+            $set: data,
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        )
+        .lean<IReportDocument>()
+        .exec();
+
+      if (!report) return null;
+
+      return {
+        ...report,
+        _id: report._id.toString(),
+      };
     } catch (err) {
       return checkForErrors(err);
     }
