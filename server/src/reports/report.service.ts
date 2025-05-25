@@ -9,8 +9,9 @@ import { BadRequestError } from "errors/bad-request.error";
 import { NotFoundError } from "errors/not-found.error";
 
 import { ErrorHandlerService } from "services/error-handler.service";
+import dayjs from "dayjs";
 
-class ReportService {
+export class ReportService {
   private eventRepository = new EventRepository();
   private reportRepository = new ReportRepository();
   private animatorRepository = new AnimatorRepository();
@@ -46,7 +47,6 @@ class ReportService {
           event.animators.forEach(
             (animator) => animator._id.includes(id) && countAnimatorEvents++
           );
-
           // sum the animator's paycheck for a specific month
           event.collector.forEach(
             (collector) =>
@@ -57,7 +57,22 @@ class ReportService {
         animatorEarned = animator.paycheck * countAnimatorEvents;
         const paycheck = animatorEarned - animatorOwe;
 
-        // TO DO: LOGIC FOR CREATE REPORT
+        const reportData: IReport = {
+          animatorId: id,
+          payPeriod: dayjs()
+            .year(year)
+            .month(month - 1)
+            .date(1)
+            .toDate(),
+          paid: false,
+          total: paycheck,
+        };
+
+        // Create a new report if it doesn't exist
+        const newReport = await this.reportRepository.createReportForAnimator(
+          reportData
+        );
+        return newReport;
       }
 
       return report;
