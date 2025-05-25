@@ -20,19 +20,44 @@ export class ReportController extends Controller {
   protected initializeRoutes(): void {
     this.router
       .route(`${this.path}/:year/:month/:id`)
+      .post(
+        authMiddleware,
+        authorizeMiddleware(["admin"]),
+        (req: Request, res: Response, next: NextFunction) =>
+          this.getReportForLastMonth(req, res, next)
+      );
+
+    this.router
+      .route(`${this.path}/:year/:month/:id`)
       .get(
         authMiddleware,
         authorizeMiddleware(["admin"]),
         (req: Request, res: Response, next: NextFunction) =>
-          this.getReportForAnimator(req, res, next)
+          this.getCurrentMonthReport(req, res, next)
       );
   }
 
-  async getReportForAnimator(req: Request, res: Response, next: NextFunction) {
+  async getReportForLastMonth(req: Request, res: Response, next: NextFunction) {
     try {
       const { year, month, id } = req.params;
 
-      const report = await this.reportService.getReportForAnimator(
+      const report = await this.reportService.getReportForLastMonth(
+        Number(year),
+        Number(month),
+        id
+      );
+
+      return res.status(201).json(report);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getCurrentMonthReport(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { year, month, id } = req.params;
+
+      const report = await this.reportService.getCurrentMonthReport(
         Number(year),
         Number(month),
         id
