@@ -41,6 +41,8 @@ export class ReportService {
         let animatorOwe = 0;
 
         const events = await this.eventRepository.getEvents(year, month);
+        if (events.length == 0)
+          throw new NotFoundError("events for provided date range not found");
 
         events.forEach((event) => {
           // count the number of animator events for a specific month
@@ -94,6 +96,33 @@ export class ReportService {
       );
 
       return createdReport;
+    } catch (err) {
+      const error = this.errorHandler.handleError(err as Error);
+      throw error;
+    }
+  }
+
+  async patchReport(
+    id: string,
+    data: Pick<IReport, "paid">,
+    year: number,
+    month: number
+  ): Promise<IReportDocument> {
+    try {
+      if (!data) throw new BadRequestError("data missing");
+      if (!Types.ObjectId.isValid(id)) {
+        throw new BadRequestError("invalid id");
+      }
+
+      const patchedReport = await this.reportRepository.patchReport(
+        id,
+        data,
+        year,
+        month
+      );
+      if (!patchedReport) throw new NotFoundError("report not found");
+
+      return patchedReport;
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
       throw error;
