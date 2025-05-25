@@ -18,9 +18,9 @@ export class ReportService {
   private errorHandler = new ErrorHandlerService();
 
   async getReportForAnimator(
-    id: string,
     year: number,
-    month: number
+    month: number,
+    id: string
   ): Promise<IReportDocument> {
     try {
       if (!Types.ObjectId.isValid(id)) {
@@ -84,7 +84,9 @@ export class ReportService {
     }
   }
 
-  async createReportForAnimator(data: IReport): Promise<IReportDocument> {
+  private async createReportForAnimator(
+    data: IReport
+  ): Promise<IReportDocument> {
     try {
       if (!data) throw new BadRequestError("data missing");
       if (!Types.ObjectId.isValid(data.animatorId)) {

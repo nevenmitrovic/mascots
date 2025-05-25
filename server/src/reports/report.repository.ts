@@ -26,8 +26,8 @@ export class ReportRepository {
     month: number
   ): Promise<IReportDocument | null> {
     try {
-      // checking if the requested month is in the future
-      if (month > dayjs().get("month") + 1) return null;
+      // checking if the requested month is in the future or current
+      if (month >= dayjs().get("month") + 1) return null;
 
       const { from, to } = getRangeForDates(year, month);
 
