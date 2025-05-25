@@ -2,11 +2,13 @@ import { Types } from "mongoose";
 
 import { EventRepository } from "events/event.repository";
 import { ReportRepository } from "reports/report.repository";
-import { IReportDocument } from "reports/report.model";
+import { IReport, IReportDocument } from "reports/report.model";
 import { AnimatorRepository } from "animators/animator.repository";
+
 import { BadRequestError } from "errors/bad-request.error";
-import { ErrorHandlerService } from "services/error-handler.service";
 import { NotFoundError } from "errors/not-found.error";
+
+import { ErrorHandlerService } from "services/error-handler.service";
 
 class ReportService {
   private eventRepository = new EventRepository();
@@ -54,9 +56,29 @@ class ReportService {
 
         animatorEarned = animator.paycheck * countAnimatorEvents;
         const paycheck = animatorEarned - animatorOwe;
+
+        // TO DO: LOGIC FOR CREATE REPORT
       }
 
       return report;
+    } catch (err) {
+      const error = this.errorHandler.handleError(err as Error);
+      throw error;
+    }
+  }
+
+  async createReportForAnimator(data: IReport): Promise<IReportDocument> {
+    try {
+      if (!data) throw new BadRequestError("data missing");
+      if (!Types.ObjectId.isValid(data.animatorId)) {
+        throw new BadRequestError("invalid id");
+      }
+
+      const createdReport = await this.reportRepository.createReportForAnimator(
+        data
+      );
+
+      return createdReport;
     } catch (err) {
       const error = this.errorHandler.handleError(err as Error);
       throw error;
