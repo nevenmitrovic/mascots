@@ -5,11 +5,11 @@ import { checkForErrors, getRangeForDates } from "utils/globalUtils";
 export class ReportRepository {
   private reportModel = ReportModel;
 
-  async getReportsForAnimator(id: string): Promise<IReport[] | null> {
+  async getReportsForAnimator(id: string): Promise<IReportDocument[] | null> {
     try {
       const reports = await this.reportModel
         .find({ animatorId: id })
-        .lean<IReport[]>();
+        .lean<IReportDocument[]>();
 
       if (!reports || reports.length === 0) return null;
 
@@ -26,8 +26,8 @@ export class ReportRepository {
     month: number
   ): Promise<IReportDocument | null> {
     try {
-      // checking if the requested month is in the future or current
-      if (month >= dayjs().get("month") + 1) return null;
+      // checking if the requested month is in the future
+      if (month > dayjs().get("month") + 1) return null;
 
       const { from, to } = getRangeForDates(year, month);
 
