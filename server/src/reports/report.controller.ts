@@ -19,7 +19,7 @@ export class ReportController extends Controller {
 
   protected initializeRoutes(): void {
     this.router
-      .route(`${this.path}/animator/:year/:month/:id`)
+      .route(`${this.path}/:year/:month/:id`)
       .get(
         authMiddleware,
         authorizeMiddleware(["admin"]),

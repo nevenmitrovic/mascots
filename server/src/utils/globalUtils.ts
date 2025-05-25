@@ -18,7 +18,7 @@ import bcrypt from "bcryptjs";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const checkForErrors = (error: unknown) => {
+export const checkForErrors = (error: Error) => {
   if (error instanceof MongoServerError && error.code === 11000) {
     const field = Object.keys(error.keyPattern)[0];
     const value = Object.values(error.keyValue)[0];
@@ -28,7 +28,7 @@ export const checkForErrors = (error: unknown) => {
     throw new DatabaseError("failed to create: MongooseError");
   }
 
-  throw new Error("unknown error in repository");
+  throw new Error(error.message);
 };
 
 export function getRangeForDates(year: number, month: number) {

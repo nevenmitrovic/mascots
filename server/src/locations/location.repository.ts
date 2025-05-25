@@ -17,7 +17,7 @@ export class LocationRepository {
         _id: res._id.toString(),
       } as ILocationDocument;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -25,7 +25,7 @@ export class LocationRepository {
     try {
       return this.locationModel.find({});
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -33,7 +33,7 @@ export class LocationRepository {
     try {
       return this.locationModel.findById(id);
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -47,7 +47,7 @@ export class LocationRepository {
         timestamps: false,
       });
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -55,7 +55,7 @@ export class LocationRepository {
     try {
       return await this.locationModel.findByIdAndDelete(id);
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 }

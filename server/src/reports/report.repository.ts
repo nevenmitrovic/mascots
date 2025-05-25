@@ -15,7 +15,7 @@ export class ReportRepository {
 
       return reports;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -31,7 +31,7 @@ export class ReportRepository {
 
       const { from, to } = getRangeForDates(year, month);
 
-      const report = await this.reportModel
+      const reports = await this.reportModel
         .find({
           animatorId: id,
           payPeriod: {
@@ -39,30 +39,32 @@ export class ReportRepository {
             $lt: to,
           },
         })
-        .lean<IReportDocument>()
+        .lean<IReportDocument[]>()
         .exec();
 
-      if (!report) return null;
+      if (!reports || reports.length === 0) return null;
+
+      const report = reports[0];
 
       return {
         ...report,
         _id: report._id.toString(),
       };
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
   async createReportForAnimator(data: IReport): Promise<IReportDocument> {
     try {
-      const report = await this.reportModel.create(data);
+      const report = (await this.reportModel.create(data)).toObject();
 
       return {
         ...report,
         _id: report._id.toString(),
       };
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -102,7 +104,7 @@ export class ReportRepository {
         _id: report._id.toString(),
       };
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 }

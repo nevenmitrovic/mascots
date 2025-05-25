@@ -47,12 +47,13 @@ export class ReportService {
         events.forEach((event) => {
           // count the number of animator events for a specific month
           event.animators.forEach(
-            (animator) => animator._id.includes(id) && countAnimatorEvents++
+            (animator) =>
+              animator._id.toString() === id && countAnimatorEvents++
           );
           // sum the animator's paycheck for a specific month
           event.collector.forEach(
             (collector) =>
-              collector._id.includes(id) && (animatorOwe += event.price)
+              collector._id.toString() === id && (animatorOwe += event.price)
           );
         });
 

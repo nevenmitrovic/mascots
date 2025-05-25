@@ -23,7 +23,7 @@ export class EventRepository {
         collector: res.collector.map((collector) => collector.toString()),
       } as ICreatedEvent;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -48,7 +48,7 @@ export class EventRepository {
 
       return events;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -71,7 +71,7 @@ export class EventRepository {
 
       return event;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -89,7 +89,7 @@ export class EventRepository {
 
       return event;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 
@@ -113,7 +113,7 @@ export class EventRepository {
 
       return event;
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 }
