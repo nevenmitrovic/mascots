@@ -7,6 +7,7 @@ import { reportPatchSchema } from "reports/report.validate";
 import { validationMiddleware } from "middlewares/validate.middleware";
 import { authMiddleware } from "middlewares/auth.middleware";
 import { authorizeMiddleware } from "middlewares/authorize.middleware";
+import { IReport } from "reports/report.model";
 
 export class ReportController extends Controller {
   private reportService = new ReportService();
@@ -35,6 +36,16 @@ export class ReportController extends Controller {
         (req: Request, res: Response, next: NextFunction) =>
           this.getCurrentMonthReport(req, res, next)
       );
+
+    this.router
+      .route(`${this.path}/:year/:month/:id`)
+      .patch(
+        authMiddleware,
+        authorizeMiddleware(["admin"]),
+        validationMiddleware(this.patchSchema),
+        (req: Request, res: Response, next: NextFunction) =>
+          this.patchReport(req, res, next)
+      );
   }
 
   async getReportForLastMonth(req: Request, res: Response, next: NextFunction) {
@@ -61,6 +72,24 @@ export class ReportController extends Controller {
         Number(year),
         Number(month),
         id
+      );
+
+      return res.status(200).json(report);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async patchReport(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { year, month, id } = req.params;
+      const data = req.body;
+
+      const report = await this.reportService.patchReport(
+        id,
+        data,
+        Number(year),
+        Number(month)
       );
 
       return res.status(200).json(report);
