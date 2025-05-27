@@ -32,7 +32,7 @@ export class AnimatorRepository {
 
   async getAnimatorById(
     id: string
-  ): Promise<Partial<IAnimatorDocument> | null> {
+  ): Promise<Omit<IAnimatorDocument, "password"> | null> {
     try {
       const animator = await this.animatorModel
         .findById(id, { password: 0 })
@@ -43,7 +43,7 @@ export class AnimatorRepository {
       return {
         ...animator,
         _id: animator._id.toString(),
-      } as Partial<IAnimatorDocument>;
+      } as Omit<IAnimatorDocument, "password">;
     } catch (err) {
       return checkForErrors(err);
     }

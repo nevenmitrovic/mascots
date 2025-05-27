@@ -44,7 +44,9 @@ export class AnimatorService {
     }
   }
 
-  async getAnimatorById(id: string): Promise<Partial<IAnimatorDocument>> {
+  async getAnimatorById(
+    id: string
+  ): Promise<Omit<IAnimatorDocument, "password">> {
     try {
       if (!Types.ObjectId.isValid(id)) {
         throw new BadRequestError("invalid id");

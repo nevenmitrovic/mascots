@@ -18,7 +18,7 @@ export class AuthRepository {
         _id: animator._id.toString(),
       };
     } catch (err) {
-      return checkForErrors(err);
+      return checkForErrors(err as Error);
     }
   }
 }

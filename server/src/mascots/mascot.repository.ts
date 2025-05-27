@@ -12,7 +12,7 @@ export class MascotRepository {
         _id: res._id.toString(),
       } as MascotDocument;
     } catch (error) {
-      return checkForErrors(error);
+      return checkForErrors(error as Error);
     }
   }
 
@@ -20,7 +20,7 @@ export class MascotRepository {
     try {
       return await this.mascotModel.find({});
     } catch (error) {
-      return checkForErrors(error);
+      return checkForErrors(error as Error);
     }
   }
 
@@ -33,7 +33,7 @@ export class MascotRepository {
         new: true,
       });
     } catch (error) {
-      return checkForErrors(error);
+      return checkForErrors(error as Error);
     }
   }
 
@@ -41,7 +41,7 @@ export class MascotRepository {
     try {
       return await this.mascotModel.findByIdAndDelete(id);
     } catch (error) {
-      return checkForErrors(error);
+      return checkForErrors(error as Error);
     }
   }
 }
