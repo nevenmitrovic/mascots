@@ -5,7 +5,7 @@ const PageHeader = ({
   onAdd,
   headline,
 }: {
-  onAdd: () => void;
+  onAdd?: () => void;
   headline: string;
 }) => (
   <Box
@@ -27,13 +27,15 @@ const PageHeader = ({
       }}
       onClick={onAdd}
     >
-      <Typography
-        component="p"
-        sx={{ display: "flex", alignItems: "flex-end" }}
-      >
-        Dodaj
-        <AddCircleIcon sx={{ ml: "0.5rem", color: "var(--color-primary)" }} />
-      </Typography>
+      {onAdd && (
+        <Typography
+          component="p"
+          sx={{ display: "flex", alignItems: "flex-end" }}
+        >
+          Dodaj
+          <AddCircleIcon sx={{ ml: "0.5rem", color: "var(--color-primary)" }} />
+        </Typography>
+      )}
     </Box>
   </Box>
 );
