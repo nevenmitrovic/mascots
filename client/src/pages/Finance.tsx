@@ -48,7 +48,7 @@ const Finance = () => {
     value ? setYear(value.year()) : dayjs().year();
 
   return (
-    <Box sx={{ padding: "1rem" }}>
+    <Box sx={{ padding: "1rem", overflowY: "auto" }}>
       <PageHeader headline="Finansijski izveštaj" />
       <Divider sx={{ marginBottom: "1rem" }} />
 
@@ -63,10 +63,10 @@ const Finance = () => {
         />
       </LocalizationProvider>
 
-      {MONTHS.map((month) => (
+      {MONTHS.map((month, index) => (
         <AnimatorsFinanceList
           key={month}
-          animators={data}
+          animators={dummyEmployees}
           title={month}
           onShowClick={handleShowClick}
         />
