@@ -6,6 +6,7 @@ import Locations from "pages/Locations";
 import NotFound from "pages/NotFound";
 import SignIn from "pages/SignIn";
 import Mascots from "pages/Mascots";
+import Finance from "pages/Finance";
 
 import Layout from "./Layout";
 
@@ -33,6 +34,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/finance",
+        element: <Finance />,
       },
     ],
   },
